@@ -1,113 +1,225 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Miata Garage — Админка</title>
+<title>Miata Garage — Admin</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      background: #0b0b0d;
-      color: #fff;
-      font-family: Arial, sans-serif;
-    }
+body {
+  margin: 0;
+  background: #09090b;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
 
-    .container {
-      max-width: 700px;
-      margin: auto;
-      padding: 20px;
-    }
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
 
-    h1 {
-      margin-bottom: 20px;
-    }
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 16px;
+}
 
-    .card {
-      background: #151519;
-      border: 1px solid #29292f;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 18px;
-    }
+h1 {
+  margin: 0 0 18px;
+}
 
-    input,
-    textarea,
-    select {
-      width: 100%;
-      padding: 13px;
-      margin: 7px 0 12px;
-      border-radius: 10px;
-      border: 1px solid #33343a;
-      background: #0f0f12;
-      color: white;
-      font-size: 16px;
-    }
+h2 {
+  margin-top: 0;
+}
 
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
+.card {
+  background: #151518;
+  border: 1px solid #29292e;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
 
-    button {
-      width: 100%;
-      padding: 14px;
-      border: 0;
-      border-radius: 10px;
-      background: #fff;
-      color: #000;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 5px;
-    }
+.hidden {
+  display: none !important;
+}
 
-    button.danger {
-      background: #c62828;
-      color: white;
-    }
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0 12px;
+  background: #0d0d10;
+  color: white;
+  border: 1px solid #34343b;
+  border-radius: 10px;
+}
 
-    button.secondary {
-      background: #29292f;
-      color: white;
-    }
+textarea {
+  min-height: 100px;
+}
 
-    .hidden {
-      display: none;
-    }
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 14px;
+  cursor: pointer;
+  font-weight: bold;
+}
 
-    .product {
-      border-top: 1px solid #29292f;
-      padding-top: 15px;
-      margin-top: 15px;
-    }
+.primary {
+  background: white;
+  color: black;
+}
 
-    .product img {
-      width: 100%;
-      max-height: 260px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 12px;
-    }
+.secondary {
+  background: #29292f;
+  color: white;
+}
 
-    .status {
-      margin: 12px 0;
-      padding: 12px;
-      border-radius: 10px;
-      background: #202025;
-    }
+.danger {
+  background: #b3261e;
+  color: white;
+}
 
-    .file-name {
-      color: #aaa;
-      font-size: 14px;
-      margin: 5px 0 12px;
-    }
-  </style>
+.tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 16px;
+}
+
+.tab {
+  white-space: nowrap;
+  background: #19191d;
+  color: #aaa;
+}
+
+.tab.active {
+  background: white;
+  color: black;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+th,
+td {
+  padding: 11px 8px;
+  border-bottom: 1px solid #29292e;
+  text-align: left;
+  vertical-align: middle;
+}
+
+th {
+  color: #999;
+  font-size: 13px;
+}
+
+.product-img {
+  width: 55px;
+  height: 55px;
+  border-radius: 9px;
+  object-fit: cover;
+  background: #222;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.status {
+  display: inline-block;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: #24242a;
+  font-size: 13px;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 10;
+}
+
+.modal-box {
+  width: 100%;
+  max-width: 550px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #151518;
+  border: 1px solid #303038;
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.close {
+  float: right;
+  background: #29292f;
+  color: white;
+}
+
+.order-row {
+  cursor: pointer;
+}
+
+.order-row:hover {
+  background: #1c1c21;
+}
+
+.total {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.message {
+  padding: 10px;
+  border-radius: 10px;
+  background: #202025;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 10px;
+  }
+
+  .toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+</style>
 </head>
 
 <body>
@@ -116,11 +228,11 @@
 
   <!-- LOGIN -->
 
-  <div id="loginBlock" class="card">
+  <div id="loginScreen" class="card">
 
-    <h1>🔐 Miata Garage</h1>
+    <h1>🚗 Miata Garage</h1>
 
-    <p>Вход администратора</p>
+    <p>Панель администратора</p>
 
     <input
       id="email"
@@ -134,89 +246,260 @@
       placeholder="Пароль"
     >
 
-    <button onclick="login()">
+    <button class="primary" onclick="login()">
       Войти
     </button>
 
-    <div id="loginStatus" class="status hidden"></div>
+    <div id="loginMessage" class="message hidden"></div>
 
   </div>
 
 
   <!-- ADMIN -->
 
-  <div id="adminBlock" class="hidden">
+  <div id="adminScreen" class="hidden">
 
-    <h1>🚗 Miata Garage</h1>
+    <h1>Miata Garage</h1>
 
-    <div class="card">
+    <div class="tabs">
 
-      <h2>Добавить товар</h2>
-
-      <input
-        id="productName"
-        type="text"
-        placeholder="Название товара"
+      <button
+        id="productsTab"
+        class="tab active"
+        onclick="showTab('products')"
       >
-
-      <textarea
-        id="productDescription"
-        placeholder="Описание товара"
-      ></textarea>
-
-      <input
-        id="productPrice"
-        type="number"
-        step="0.01"
-        placeholder="Цена"
-      >
-
-      <input
-        id="productCategory"
-        type="text"
-        placeholder="Категория"
-      >
-
-      <input
-        id="productStock"
-        type="number"
-        placeholder="Количество"
-        value="0"
-      >
-
-      <label>
-        📷 Фотография товара
-      </label>
-
-      <input
-        id="productImage"
-        type="file"
-        accept="image/*"
-        onchange="showFileName()"
-      >
-
-      <div id="fileName" class="file-name">
-        Фото не выбрано
-      </div>
-
-      <button onclick="addProduct()">
-        ➕ Добавить товар
+        📦 Товары
       </button>
 
-      <div id="productStatus" class="status hidden"></div>
+      <button
+        id="ordersTab"
+        class="tab"
+        onclick="showTab('orders')"
+      >
+        🛒 Заказы
+      </button>
 
     </div>
 
 
-    <div class="card">
+    <!-- PRODUCTS -->
 
-      <h2>📦 Товары</h2>
+    <section id="productsSection">
 
-      <div id="products">
-        Загрузка...
+      <div class="toolbar">
+
+        <h2>Товары</h2>
+
+        <button
+          class="primary"
+          onclick="openProductModal()"
+        >
+          ＋ Добавить
+        </button>
+
       </div>
 
-    </div>
+      <div
+        id="productsMessage"
+        class="message hidden"
+      ></div>
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Фото</th>
+                <th>Название</th>
+                <th>Цена</th>
+                <th>Категория</th>
+                <th>Остаток</th>
+                <th>Статус</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+
+            <tbody id="productsTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ORDERS -->
+
+    <section
+      id="ordersSection"
+      class="hidden"
+    >
+
+      <h2>Заказы</h2>
+
+      <div class="tabs">
+
+        <button
+          class="tab active"
+          id="ordersNewTab"
+          onclick="setOrderFilter('new')"
+        >
+          🆕 Активные
+        </button>
+
+        <button
+          class="tab"
+          id="ordersDeliveryTab"
+          onclick="setOrderFilter('delivery')"
+        >
+          🚚 В доставке
+        </button>
+
+        <button
+          class="tab"
+          id="ordersDoneTab"
+          onclick="setOrderFilter('done')"
+        >
+          ✅ Прошедшие
+        </button>
+
+      </div>
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>№</th>
+                <th>Клиент</th>
+                <th>Сумма</th>
+                <th>Дата</th>
+                <th>Статус</th>
+              </tr>
+            </thead>
+
+            <tbody id="ordersTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</div>
+
+
+<!-- PRODUCT MODAL -->
+
+<div
+  id="productModal"
+  class="modal hidden"
+>
+
+  <div class="modal-box">
+
+    <button
+      class="close"
+      onclick="closeProductModal()"
+    >
+      ✕
+    </button>
+
+    <h2 id="productModalTitle">
+      Добавить товар
+    </h2>
+
+    <input
+      id="productName"
+      placeholder="Название"
+    >
+
+    <textarea
+      id="productDescription"
+      placeholder="Описание"
+    ></textarea>
+
+    <input
+      id="productPrice"
+      type="number"
+      step="0.01"
+      placeholder="Цена"
+    >
+
+    <input
+      id="productCategory"
+      placeholder="Категория"
+    >
+
+    <input
+      id="productStock"
+      type="number"
+      placeholder="Остаток"
+      value="0"
+    >
+
+    <label>
+      📷 Фотография
+    </label>
+
+    <input
+      id="productImage"
+      type="file"
+      accept="image/*"
+    >
+
+    <p id="selectedFile">
+      Фото не выбрано
+    </p>
+
+    <button
+      class="primary"
+      onclick="saveProduct()"
+    >
+      💾 Сохранить
+    </button>
+
+    <div
+      id="productModalMessage"
+      class="message hidden"
+    ></div>
+
+  </div>
+
+</div>
+
+
+<!-- ORDER MODAL -->
+
+<div
+  id="orderModal"
+  class="modal hidden"
+>
+
+  <div class="modal-box">
+
+    <button
+      class="close"
+      onclick="closeOrderModal()"
+    >
+      ✕
+    </button>
+
+    <h2>🛒 Заказ</h2>
+
+    <div id="orderDetails"></div>
 
   </div>
 
@@ -226,56 +509,49 @@
 <script>
 
 /* =========================
-   НАСТРОЙКИ SUPABASE
+   SUPABASE
 ========================= */
 
 const SUPABASE_URL =
   "https://qbuethosjrghgdwpanhb.supabase.co";
 
+/*
+  ВСТАВЬ СЮДА СВОЙ НОВЫЙ
+  PUBLISHABLE KEY
+*/
+
 const SUPABASE_KEY =
   "sb_publishable_l-Jn1GONymTw-fuN1eEgBw_FjtbUyzg";
-
 
 const BUCKET =
   "product-images";
 
-
 let accessToken = "";
+
+let editingProductId = null;
+
+let currentOrderFilter = "new";
 
 
 /* =========================
-   ПОЛУЧИТЬ ЗАГОЛОВКИ
+   HEADERS
 ========================= */
 
 function headers() {
 
   return {
     "apikey": SUPABASE_KEY,
-    "Authorization": "Bearer " + accessToken,
-    "Content-Type": "application/json"
+    "Authorization":
+      "Bearer " + accessToken,
+    "Content-Type":
+      "application/json"
   };
 
 }
 
 
 /* =========================
-   ПОКАЗАТЬ СТАТУС
-========================= */
-
-function showStatus(id, text) {
-
-  const element =
-    document.getElementById(id);
-
-  element.textContent = text;
-
-  element.classList.remove("hidden");
-
-}
-
-
-/* =========================
-   ВХОД
+   LOGIN
 ========================= */
 
 async function login() {
@@ -288,14 +564,14 @@ async function login() {
 
   if (!email || !password) {
 
-    showStatus(
-      "loginStatus",
+    showMessage(
+      "loginMessage",
       "Введите email и пароль"
     );
 
     return;
-  }
 
+  }
 
   try {
 
@@ -307,7 +583,8 @@ async function login() {
 
         headers: {
           "apikey": SUPABASE_KEY,
-          "Content-Type": "application/json"
+          "Content-Type":
+            "application/json"
         },
 
         body: JSON.stringify({
@@ -317,345 +594,36 @@ async function login() {
       }
     );
 
-
     const data =
       await response.json();
-
 
     if (!response.ok) {
 
       throw new Error(
         data.error_description ||
-        data.msg ||
         data.message ||
         "Ошибка входа"
       );
 
     }
 
-
     accessToken =
       data.access_token;
 
-
     document
-      .getElementById("loginBlock")
+      .getElementById("loginScreen")
       .classList.add("hidden");
 
-
     document
-      .getElementById("adminBlock")
+      .getElementById("adminScreen")
       .classList.remove("hidden");
 
-
     loadProducts();
 
   } catch (error) {
 
-    showStatus(
-      "loginStatus",
-      "Ошибка: " + error.message
-    );
-
-  }
-
-}
-
-
-/* =========================
-   НАЗВАНИЕ ФАЙЛА
-========================= */
-
-function showFileName() {
-
-  const file =
-    document.getElementById(
-      "productImage"
-    ).files[0];
-
-
-  const element =
-    document.getElementById(
-      "fileName"
-    );
-
-
-  if (file) {
-
-    element.textContent =
-      "Выбрано: " + file.name;
-
-  } else {
-
-    element.textContent =
-      "Фото не выбрано";
-
-  }
-
-}
-
-
-/* =========================
-   ЗАГРУЗКА ФОТО
-========================= */
-
-async function uploadImage(file) {
-
-  if (!file) {
-
-    return "";
-
-  }
-
-
-  const extension =
-    file.name
-      .split(".")
-      .pop()
-      .toLowerCase();
-
-
-  const fileName =
-    Date.now() +
-    "_" +
-    Math.random()
-      .toString(36)
-      .substring(2) +
-    "." +
-    extension;
-
-
-  const path =
-    fileName;
-
-
-  const response =
-    await fetch(
-      SUPABASE_URL +
-      "/storage/v1/object/" +
-      BUCKET +
-      "/" +
-      path,
-      {
-        method: "POST",
-
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Authorization":
-            "Bearer " + accessToken,
-          "Content-Type":
-            file.type,
-          "x-upsert":
-            "false"
-        },
-
-        body: file
-      }
-    );
-
-
-  const data =
-    await response.text();
-
-
-  if (!response.ok) {
-
-    throw new Error(
-      "Не удалось загрузить фото: " +
-      data
-    );
-
-  }
-
-
-  return (
-    SUPABASE_URL +
-    "/storage/v1/object/public/" +
-    BUCKET +
-    "/" +
-    path
-  );
-
-}
-
-
-/* =========================
-   ДОБАВИТЬ ТОВАР
-========================= */
-
-async function addProduct() {
-
-  const name =
-    document
-      .getElementById("productName")
-      .value
-      .trim();
-
-
-  const description =
-    document
-      .getElementById("productDescription")
-      .value
-      .trim();
-
-
-  const price =
-    document
-      .getElementById("productPrice")
-      .value;
-
-
-  const category =
-    document
-      .getElementById("productCategory")
-      .value
-      .trim();
-
-
-  const stock =
-    document
-      .getElementById("productStock")
-      .value || 0;
-
-
-  const file =
-    document
-      .getElementById("productImage")
-      .files[0];
-
-
-  if (!name) {
-
-    showStatus(
-      "productStatus",
-      "Введите название товара"
-    );
-
-    return;
-
-  }
-
-
-  if (!price) {
-
-    showStatus(
-      "productStatus",
-      "Введите цену"
-    );
-
-    return;
-
-  }
-
-
-  try {
-
-    showStatus(
-      "productStatus",
-      "⏳ Сохраняем товар..."
-    );
-
-
-    let imageUrl = "";
-
-
-    if (file) {
-
-      imageUrl =
-        await uploadImage(file);
-
-    }
-
-
-    const response =
-      await fetch(
-        SUPABASE_URL +
-        "/rest/v1/products",
-        {
-          method: "POST",
-
-          headers: {
-            ...headers(),
-            "Prefer":
-              "return=representation"
-          },
-
-          body: JSON.stringify({
-            name: name,
-            description: description,
-            price: Number(price),
-            category: category,
-            stock: Number(stock),
-            image_url: imageUrl,
-            is_active: true
-          })
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        data.message ||
-        data.error ||
-        JSON.stringify(data)
-      );
-
-    }
-
-
-    showStatus(
-      "productStatus",
-      "✅ Товар добавлен!"
-    );
-
-
-    document
-      .getElementById("productName")
-      .value = "";
-
-
-    document
-      .getElementById("productDescription")
-      .value = "";
-
-
-    document
-      .getElementById("productPrice")
-      .value = "";
-
-
-    document
-      .getElementById("productCategory")
-      .value = "";
-
-
-    document
-      .getElementById("productStock")
-      .value = "0";
-
-
-    document
-      .getElementById("productImage")
-      .value = "";
-
-
-    document
-      .getElementById("fileName")
-      .textContent =
-        "Фото не выбрано";
-
-
-    loadProducts();
-
-  } catch (error) {
-
-    showStatus(
-      "productStatus",
+    showMessage(
+      "loginMessage",
       "❌ " + error.message
     );
 
@@ -665,16 +633,61 @@ async function addProduct() {
 
 
 /* =========================
-   ЗАГРУЗИТЬ ТОВАРЫ
+   TABS
+========================= */
+
+function showTab(tab) {
+
+  document
+    .getElementById("productsSection")
+    .classList.toggle(
+      "hidden",
+      tab !== "products"
+    );
+
+  document
+    .getElementById("ordersSection")
+    .classList.toggle(
+      "hidden",
+      tab !== "orders"
+    );
+
+  document
+    .getElementById("productsTab")
+    .classList.toggle(
+      "active",
+      tab === "products"
+    );
+
+  document
+    .getElementById("ordersTab")
+    .classList.toggle(
+      "active",
+      tab === "orders"
+    );
+
+  if (tab === "orders") {
+
+    loadOrders();
+
+  }
+
+}
+
+
+/* =========================
+   PRODUCTS
 ========================= */
 
 async function loadProducts() {
 
-  const container =
+  const table =
     document.getElementById(
-      "products"
+      "productsTable"
     );
 
+  table.innerHTML =
+    "<tr><td colspan='7'>Загрузка...</td></tr>";
 
   try {
 
@@ -687,10 +700,8 @@ async function loadProducts() {
         }
       );
 
-
     const products =
       await response.json();
-
 
     if (!response.ok) {
 
@@ -700,93 +711,112 @@ async function loadProducts() {
 
     }
 
-
     if (!products.length) {
 
-      container.innerHTML =
-        "<p>Товаров пока нет.</p>";
+      table.innerHTML =
+        "<tr><td colspan='7'>Товаров пока нет.</td></tr>";
 
       return;
 
     }
 
+    table.innerHTML =
+      products.map(product => {
 
-    container.innerHTML =
-      products
-        .map(product => {
+        const image =
+          product.image_url || "";
 
-          const image =
-            product.image_url
-              ? product.image_url
-              : "";
+        return `
+          <tr>
 
-
-          return `
-            <div class="product">
-
+            <td>
               ${
                 image
-                ? `<img src="${image}" alt="">`
-                : ""
+                ? `<img
+                    class="product-img"
+                    src="${escapeHtml(image)}"
+                  >`
+                : "—"
               }
+            </td>
 
-              <h3>
+            <td>
+              <b>
                 ${escapeHtml(product.name)}
-              </h3>
+              </b>
+            </td>
 
-              <p>
-                ${Number(product.price).toFixed(2)}
-              </p>
+            <td>
+              ${Number(product.price).toFixed(2)} €
+            </td>
 
-              <p>
-                Категория:
-                ${escapeHtml(product.category || "—")}
-              </p>
+            <td>
+              ${escapeHtml(product.category || "—")}
+            </td>
 
-              <p>
-                Остаток:
-                ${product.stock}
-              </p>
+            <td>
+              ${product.stock}
+            </td>
 
-              <p>
+            <td>
+              <span class="status">
                 ${
                   product.is_active
                   ? "🟢 Активен"
                   : "🔴 Скрыт"
                 }
-              </p>
+              </span>
+            </td>
 
-              <button
-                class="secondary"
-                onclick="toggleProduct(${product.id}, ${product.is_active})"
-              >
-                ${
-                  product.is_active
-                  ? "Скрыть товар"
-                  : "Показать товар"
-                }
-              </button>
+            <td>
 
-              <button
-                class="danger"
-                onclick="deleteProduct(${product.id})"
-              >
-                🗑 Удалить
-              </button>
+              <div class="actions">
 
-            </div>
-          `;
+                <button
+                  class="secondary"
+                  onclick="editProduct(${product.id})"
+                >
+                  ✏️
+                </button>
 
-        })
-        .join("");
+                <button
+                  class="secondary"
+                  onclick="toggleProduct(
+                    ${product.id},
+                    ${product.is_active}
+                  )"
+                >
+                  ${
+                    product.is_active
+                    ? "Скрыть"
+                    : "Показать"
+                  }
+                </button>
 
+                <button
+                  class="danger"
+                  onclick="deleteProduct(${product.id})"
+                >
+                  🗑
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+        `;
+
+      }).join("");
 
   } catch (error) {
 
-    container.innerHTML =
-      "<p>Ошибка: " +
-      escapeHtml(error.message) +
-      "</p>";
+    table.innerHTML =
+      `<tr>
+        <td colspan="7">
+          ❌ ${escapeHtml(error.message)}
+        </td>
+      </tr>`;
 
   }
 
@@ -794,7 +824,451 @@ async function loadProducts() {
 
 
 /* =========================
-   СКРЫТЬ / ПОКАЗАТЬ
+   PRODUCT MODAL
+========================= */
+
+function openProductModal() {
+
+  editingProductId = null;
+
+  document
+    .getElementById("productModalTitle")
+    .textContent =
+      "Добавить товар";
+
+  clearProductForm();
+
+  document
+    .getElementById("productModal")
+    .classList.remove("hidden");
+
+}
+
+
+function closeProductModal() {
+
+  document
+    .getElementById("productModal")
+    .classList.add("hidden");
+
+}
+
+
+function clearProductForm() {
+
+  document.getElementById(
+    "productName"
+  ).value = "";
+
+  document.getElementById(
+    "productDescription"
+  ).value = "";
+
+  document.getElementById(
+    "productPrice"
+  ).value = "";
+
+  document.getElementById(
+    "productCategory"
+  ).value = "";
+
+  document.getElementById(
+    "productStock"
+  ).value = "0";
+
+  document.getElementById(
+    "productImage"
+  ).value = "";
+
+  document.getElementById(
+    "selectedFile"
+  ).textContent =
+    "Фото не выбрано";
+
+}
+
+
+document
+  .getElementById("productImage")
+  .addEventListener(
+    "change",
+    function() {
+
+      const file =
+        this.files[0];
+
+      document
+        .getElementById(
+          "selectedFile"
+        )
+        .textContent =
+          file
+          ? "Выбрано: " + file.name
+          : "Фото не выбрано";
+
+    }
+  );
+
+
+/* =========================
+   UPLOAD IMAGE
+========================= */
+
+async function uploadImage(file) {
+
+  const extension =
+    file.name
+      .split(".")
+      .pop()
+      .toLowerCase();
+
+  const fileName =
+    Date.now() +
+    "_" +
+    Math.random()
+      .toString(36)
+      .substring(2) +
+    "." +
+    extension;
+
+  const response =
+    await fetch(
+      SUPABASE_URL +
+      "/storage/v1/object/" +
+      BUCKET +
+      "/" +
+      fileName,
+      {
+        method: "POST",
+
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization":
+            "Bearer " + accessToken,
+          "Content-Type":
+            file.type
+        },
+
+        body: file
+      }
+    );
+
+  const text =
+    await response.text();
+
+  if (!response.ok) {
+
+    throw new Error(
+      "Ошибка загрузки фото: " +
+      text
+    );
+
+  }
+
+  return (
+    SUPABASE_URL +
+    "/storage/v1/object/public/" +
+    BUCKET +
+    "/" +
+    fileName
+  );
+
+}
+
+
+/* =========================
+   SAVE PRODUCT
+========================= */
+
+async function saveProduct() {
+
+  const name =
+    document
+      .getElementById("productName")
+      .value.trim();
+
+  const description =
+    document
+      .getElementById("productDescription")
+      .value.trim();
+
+  const price =
+    document
+      .getElementById("productPrice")
+      .value;
+
+  const category =
+    document
+      .getElementById("productCategory")
+      .value.trim();
+
+  const stock =
+    document
+      .getElementById("productStock")
+      .value || 0;
+
+  const file =
+    document
+      .getElementById("productImage")
+      .files[0];
+
+
+  if (!name) {
+
+    showMessage(
+      "productModalMessage",
+      "Введите название"
+    );
+
+    return;
+
+  }
+
+
+  if (!price) {
+
+    showMessage(
+      "productModalMessage",
+      "Введите цену"
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    showMessage(
+      "productModalMessage",
+      "⏳ Сохраняем..."
+    );
+
+
+    let imageUrl = null;
+
+
+    if (file) {
+
+      imageUrl =
+        await uploadImage(file);
+
+    }
+
+
+    const product = {
+
+      name: name,
+
+      description: description,
+
+      price: Number(price),
+
+      category: category,
+
+      stock: Number(stock)
+
+    };
+
+
+    if (imageUrl) {
+
+      product.image_url =
+        imageUrl;
+
+    }
+
+
+    let response;
+
+
+    if (editingProductId) {
+
+      response =
+        await fetch(
+          SUPABASE_URL +
+          "/rest/v1/products?id=eq." +
+          editingProductId,
+          {
+            method: "PATCH",
+
+            headers: {
+              ...headers(),
+              "Prefer":
+                "return=representation"
+            },
+
+            body:
+              JSON.stringify(product)
+          }
+        );
+
+    } else {
+
+      product.is_active = true;
+
+      response =
+        await fetch(
+          SUPABASE_URL +
+          "/rest/v1/products",
+          {
+            method: "POST",
+
+            headers: {
+              ...headers(),
+              "Prefer":
+                "return=representation"
+            },
+
+            body:
+              JSON.stringify(product)
+          }
+        );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        JSON.stringify(data)
+      );
+
+    }
+
+
+    closeProductModal();
+
+    loadProducts();
+
+
+  } catch (error) {
+
+    showMessage(
+      "productModalMessage",
+      "❌ " + error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   EDIT PRODUCT
+========================= */
+
+async function editProduct(id) {
+
+  try {
+
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/products?id=eq." +
+        id,
+        {
+          headers: headers()
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if (!response.ok) {
+
+      throw new Error(
+        JSON.stringify(data)
+      );
+
+    }
+
+    const product =
+      data[0];
+
+    if (!product) return;
+
+
+    editingProductId =
+      product.id;
+
+
+    document
+      .getElementById(
+        "productModalTitle"
+      )
+      .textContent =
+        "Изменить товар";
+
+
+    document.getElementById(
+      "productName"
+    ).value =
+      product.name || "";
+
+
+    document.getElementById(
+      "productDescription"
+    ).value =
+      product.description || "";
+
+
+    document.getElementById(
+      "productPrice"
+    ).value =
+      product.price || "";
+
+
+    document.getElementById(
+      "productCategory"
+    ).value =
+      product.category || "";
+
+
+    document.getElementById(
+      "productStock"
+    ).value =
+      product.stock || 0;
+
+
+    document.getElementById(
+      "productImage"
+    ).value = "";
+
+
+    document.getElementById(
+      "selectedFile"
+    ).textContent =
+      product.image_url
+      ? "Текущее фото сохранится, если новое не выбрать"
+      : "Фото не выбрано";
+
+
+    document
+      .getElementById(
+        "productModal"
+      )
+      .classList.remove("hidden");
+
+
+  } catch (error) {
+
+    alert(
+      "Ошибка: " +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   TOGGLE
 ========================= */
 
 async function toggleProduct(
@@ -828,11 +1302,8 @@ async function toggleProduct(
 
     if (!response.ok) {
 
-      const data =
-        await response.json();
-
       throw new Error(
-        JSON.stringify(data)
+        await response.text()
       );
 
     }
@@ -853,14 +1324,14 @@ async function toggleProduct(
 
 
 /* =========================
-   УДАЛИТЬ
+   DELETE
 ========================= */
 
 async function deleteProduct(id) {
 
   if (
     !confirm(
-      "Удалить этот товар?"
+      "Удалить товар?"
     )
   ) {
 
@@ -885,11 +1356,8 @@ async function deleteProduct(id) {
 
     if (!response.ok) {
 
-      const data =
-        await response.json();
-
       throw new Error(
-        JSON.stringify(data)
+        await response.text()
       );
 
     }
@@ -910,8 +1378,498 @@ async function deleteProduct(id) {
 
 
 /* =========================
-   ЗАЩИТА HTML
+   ORDERS
 ========================= */
+
+function setOrderFilter(filter) {
+
+  currentOrderFilter =
+    filter;
+
+
+  document
+    .getElementById(
+      "ordersNewTab"
+    )
+    .classList.toggle(
+      "active",
+      filter === "new"
+    );
+
+  document
+    .getElementById(
+      "ordersDeliveryTab"
+    )
+    .classList.toggle(
+      "active",
+      filter === "delivery"
+    );
+
+  document
+    .getElementById(
+      "ordersDoneTab"
+    )
+    .classList.toggle(
+      "active",
+      filter === "done"
+    );
+
+
+  loadOrders();
+
+}
+
+
+async function loadOrders() {
+
+  const table =
+    document.getElementById(
+      "ordersTable"
+    );
+
+  table.innerHTML =
+    "<tr><td colspan='5'>Загрузка...</td></tr>";
+
+
+  try {
+
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/orders?select=*&order=id.desc",
+        {
+          headers: headers()
+        }
+      );
+
+
+    const orders =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        JSON.stringify(orders)
+      );
+
+    }
+
+
+    const filtered =
+      orders.filter(order => {
+
+        if (
+          currentOrderFilter === "new"
+        ) {
+
+          return [
+            "new",
+            "processing"
+          ].includes(
+            order.status
+          );
+
+        }
+
+        if (
+          currentOrderFilter === "delivery"
+        ) {
+
+          return order.status ===
+            "delivery";
+
+        }
+
+        return [
+          "completed",
+          "cancelled"
+        ].includes(
+          order.status
+        );
+
+      });
+
+
+    if (!filtered.length) {
+
+      table.innerHTML =
+        "<tr><td colspan='5'>Заказов пока нет.</td></tr>";
+
+      return;
+
+    }
+
+
+    table.innerHTML =
+      filtered.map(order => {
+
+        const date =
+          new Date(
+            order.created_at
+          ).toLocaleString(
+            "ru-RU"
+          );
+
+
+        return `
+          <tr
+            class="order-row"
+            onclick="openOrder(${order.id})"
+          >
+
+            <td>
+              #${order.id}
+            </td>
+
+            <td>
+              ${escapeHtml(
+                order.customer_name
+              )}
+            </td>
+
+            <td>
+              <b>
+                ${Number(
+                  order.total
+                ).toFixed(2)} €
+              </b>
+            </td>
+
+            <td>
+              ${date}
+            </td>
+
+            <td>
+              ${statusName(
+                order.status
+              )}
+            </td>
+
+          </tr>
+        `;
+
+      }).join("");
+
+
+  } catch (error) {
+
+    table.innerHTML =
+      `<tr>
+        <td colspan="5">
+          ❌ ${escapeHtml(
+            error.message
+          )}
+        </td>
+      </tr>`;
+
+  }
+
+}
+
+
+/* =========================
+   OPEN ORDER
+========================= */
+
+async function openOrder(id) {
+
+  try {
+
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/orders?id=eq." +
+        id,
+        {
+          headers: headers()
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        JSON.stringify(data)
+      );
+
+    }
+
+
+    const order =
+      data[0];
+
+
+    if (!order) return;
+
+
+    document
+      .getElementById(
+        "orderDetails"
+      )
+      .innerHTML = `
+
+        <p>
+          <b>Заказ:</b> #${order.id}
+        </p>
+
+        <p>
+          <b>Клиент:</b>
+          ${escapeHtml(
+            order.customer_name
+          )}
+        </p>
+
+        <p>
+          <b>Контакт:</b>
+          ${escapeHtml(
+            order.customer_contact || "—"
+          )}
+        </p>
+
+        <p>
+          <b>Город:</b>
+          ${escapeHtml(
+            order.city || "—"
+          )}
+        </p>
+
+        <p>
+          <b>Доставка:</b>
+          ${escapeHtml(
+            order.delivery_method || "—"
+          )}
+        </p>
+
+        <p>
+          <b>Комментарий:</b>
+          ${escapeHtml(
+            order.comment || "—"
+          )}
+        </p>
+
+        <p class="total">
+          Сумма:
+          ${Number(
+            order.total
+          ).toFixed(2)} €
+        </p>
+
+        <hr>
+
+        <label>
+          Статус заказа
+        </label>
+
+        <select
+          id="orderStatus"
+        >
+
+          <option
+            value="new"
+            ${order.status === "new"
+              ? "selected"
+              : ""}
+          >
+            🆕 Новый
+          </option>
+
+          <option
+            value="processing"
+            ${order.status === "processing"
+              ? "selected"
+              : ""}
+          >
+            ⚙️ Обработка
+          </option>
+
+          <option
+            value="delivery"
+            ${order.status === "delivery"
+              ? "selected"
+              : ""}
+          >
+            🚚 В доставке
+          </option>
+
+          <option
+            value="completed"
+            ${order.status === "completed"
+              ? "selected"
+              : ""}
+          >
+            ✅ Завершён
+          </option>
+
+          <option
+            value="cancelled"
+            ${order.status === "cancelled"
+              ? "selected"
+              : ""}
+          >
+            ❌ Отменён
+          </option>
+
+        </select>
+
+        <button
+          class="primary"
+          onclick="updateOrderStatus(${order.id})"
+        >
+          Сохранить статус
+        </button>
+
+      `;
+
+
+    document
+      .getElementById(
+        "orderModal"
+      )
+      .classList.remove(
+        "hidden"
+      );
+
+
+  } catch (error) {
+
+    alert(
+      "Ошибка: " +
+      error.message
+    );
+
+  }
+
+}
+
+
+function closeOrderModal() {
+
+  document
+    .getElementById(
+      "orderModal"
+    )
+    .classList.add(
+      "hidden"
+    );
+
+}
+
+
+/* =========================
+   UPDATE ORDER STATUS
+========================= */
+
+async function updateOrderStatus(id) {
+
+  const status =
+    document
+      .getElementById(
+        "orderStatus"
+      )
+      .value;
+
+
+  try {
+
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/orders?id=eq." +
+        id,
+        {
+          method: "PATCH",
+
+          headers: {
+            ...headers(),
+            "Prefer":
+              "return=representation"
+          },
+
+          body: JSON.stringify({
+            status: status
+          })
+        }
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        await response.text()
+      );
+
+    }
+
+
+    closeOrderModal();
+
+    loadOrders();
+
+  } catch (error) {
+
+    alert(
+      "Ошибка изменения статуса: " +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function statusName(status) {
+
+  const names = {
+
+    new:
+      "🆕 Новый",
+
+    processing:
+      "⚙️ Обработка",
+
+    delivery:
+      "🚚 В доставке",
+
+    completed:
+      "✅ Завершён",
+
+    cancelled:
+      "❌ Отменён"
+
+  };
+
+  return names[status] ||
+    status;
+
+}
+
+
+function showMessage(
+  id,
+  text
+) {
+
+  const element =
+    document.getElementById(id);
+
+  element.textContent =
+    text;
+
+  element.classList.remove(
+    "hidden"
+  );
+
+}
+
 
 function escapeHtml(text) {
 
