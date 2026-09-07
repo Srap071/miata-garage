@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Miata Garage — Админка</title>
+  <title>Миата Гараж — Админка</title>
 
   <style>
     * {
@@ -12,196 +12,251 @@
 
     body {
       margin: 0;
+      background: #0d0d0f;
+      color: #fff;
       font-family: Arial, sans-serif;
-      background: #111;
-      color: white;
     }
 
     .container {
-      max-width: 700px;
+      max-width: 900px;
       margin: auto;
       padding: 20px;
     }
 
     h1 {
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #999;
       margin-bottom: 25px;
     }
 
     .card {
-      background: #1c1c1c;
-      border: 1px solid #303030;
+      background: #17171b;
+      border: 1px solid #29292f;
       border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 15px;
+      padding: 18px;
+      margin-bottom: 18px;
     }
 
     input,
     textarea,
     select {
       width: 100%;
-      margin-top: 7px;
-      margin-bottom: 15px;
       padding: 13px;
-      border-radius: 10px;
-      border: 1px solid #444;
-      background: #111;
+      margin-top: 7px;
+      margin-bottom: 13px;
+      background: #0f0f12;
       color: white;
-      font-size: 16px;
+      border: 1px solid #33333a;
+      border-radius: 10px;
+      font-size: 15px;
     }
 
     textarea {
-      min-height: 100px;
+      min-height: 90px;
       resize: vertical;
+    }
+
+    label {
+      color: #bbb;
+      font-size: 14px;
     }
 
     button {
       border: 0;
       border-radius: 10px;
       padding: 12px 16px;
-      font-size: 15px;
-      font-weight: bold;
       cursor: pointer;
+      font-weight: bold;
+      margin: 4px;
     }
 
     .primary {
-      width: 100%;
       background: white;
       color: black;
     }
 
-    .danger {
-      background: #333;
+    .secondary {
+      background: #29292f;
       color: white;
     }
 
-    .hidden {
-      display: none;
+    .danger {
+      background: #9f2424;
+      color: white;
     }
 
     .product {
-      padding: 15px 0;
-      border-bottom: 1px solid #333;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #29292f;
     }
 
     .product:last-child {
       border-bottom: 0;
     }
 
-    .price {
-      color: #aaa;
-      margin: 5px 0 12px;
+    .product img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 12px;
+      background: #222;
     }
 
-    .message {
-      margin-bottom: 15px;
+    .product-info {
+      flex: 1;
+    }
+
+    .product-name {
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    .product-meta {
+      color: #999;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .hidden {
+      opacity: .45;
+    }
+
+    #loginScreen {
+      max-width: 450px;
+      margin: 80px auto;
+      padding: 20px;
+    }
+
+    #adminScreen {
+      display: none;
+    }
+
+    #message {
+      margin: 10px 0;
       color: #aaa;
+    }
+
+    #preview {
+      display: none;
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin: 10px 0;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .product {
+        align-items: flex-start;
+      }
+
+      .product img {
+        width: 65px;
+        height: 65px;
+      }
+
+      .product-actions {
+        display: flex;
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<div class="container">
+<div id="loginScreen">
+  <div class="card">
+    <h1>Миата Гараж</h1>
+    <div class="subtitle">Панель администратора</div>
 
-  <!-- ВХОД -->
+    <label>Email</label>
+    <input id="email" type="email" placeholder="Введите email">
 
-  <div id="loginScreen">
+    <label>Пароль</label>
+    <input id="password" type="password" placeholder="Введите пароль">
 
-    <h1>🔐 Миата Гараж</h1>
+    <button class="primary" onclick="login()">Войти</button>
 
-    <div class="card">
+    <div id="loginMessage"></div>
+  </div>
+</div>
 
-      <h2>Вход в админку</h2>
 
-      <label>Email</label>
-      <input
-        type="email"
-        id="email"
-        placeholder="admin@example.com"
-      >
+<div id="adminScreen">
+  <div class="container">
 
-      <label>Пароль</label>
-      <input
-        type="password"
-        id="password"
-        placeholder="Пароль"
-      >
+    <div class="topbar">
+      <div>
+        <h1>Миата Гараж</h1>
+        <div class="subtitle">Управление магазином</div>
+      </div>
 
-      <button class="primary" onclick="login()">
-        Войти
-      </button>
-
-      <p id="loginMessage" class="message"></p>
-
+      <button class="secondary" onclick="logout()">Выйти</button>
     </div>
 
-  </div>
-
-
-  <!-- АДМИНКА -->
-
-  <div id="adminScreen" class="hidden">
-
-    <h1>🏎️ Админка</h1>
-
-    <button class="danger" onclick="logout()">
-      Выйти
-    </button>
 
     <div class="card">
 
-      <h2>➕ Добавить товар</h2>
+      <h2 id="formTitle">Добавить товар</h2>
 
-      <label>Название</label>
-      <input id="name" placeholder="Например: Масляный фильтр">
+      <input type="hidden" id="productId">
+
+      <label>Название товара</label>
+      <input id="name" placeholder="Например: Фары для Miata">
 
       <label>Описание</label>
-      <textarea
-        id="description"
-        placeholder="Описание товара"
-      ></textarea>
+      <textarea id="description" placeholder="Описание товара"></textarea>
 
-      <label>Цена, ₽</label>
-      <input
-        id="price"
-        type="number"
-        placeholder="1500"
-      >
+      <label>Цена</label>
+      <input id="price" type="number" step="0.01" placeholder="5000">
 
       <label>Категория</label>
-      <input
-        id="category"
-        placeholder="Запчасти"
-      >
+      <input id="category" placeholder="Например: Оптика">
 
-      <label>Количество</label>
-      <input
-        id="stock"
-        type="number"
-        value="0"
-      >
+      <label>Остаток</label>
+      <input id="stock" type="number" placeholder="10">
 
-      <label>Ссылка на фотографию</label>
-      <input
-        id="image_url"
-        placeholder="https://..."
-      >
+      <label>Фотография</label>
+      <input id="imageFile" type="file" accept="image/*" onchange="previewImage()">
 
-      <button
-        class="primary"
-        onclick="addProduct()"
-      >
+      <img id="preview">
+
+      <button class="primary" onclick="saveProduct()">
         Сохранить товар
       </button>
 
-      <p id="productMessage" class="message"></p>
+      <button
+        id="cancelButton"
+        class="secondary"
+        onclick="cancelEdit()"
+        style="display:none;"
+      >
+        Отмена
+      </button>
+
+      <div id="message"></div>
 
     </div>
 
 
     <div class="card">
 
-      <h2>📦 Товары</h2>
+      <h2>Товары</h2>
 
       <div id="products">
         Загрузка...
@@ -210,192 +265,155 @@
     </div>
 
   </div>
-
 </div>
 
 
 <script>
 
-const SUPABASE_URL =
-  "https://qbuethosjrghgdwpanhb.supabase.co";
+const SUPABASE_URL = "https://qbuethosjrghgdwpanhb.supabase.co/rest/v1/";
+const SUPABASE_KEY = "sb_publishable_l-Jn1GONymTw-fuN1eEgBw_FjtbUyzg";
 
-const SUPABASE_KEY =
-  "sb_publishable_l-Jn1GONymTw-fuN1eEgBw_FjtbUyzg";
+const BUCKET = "product-images";
+
+let accessToken = localStorage.getItem("miata_access_token");
 
 
-async function supabaseRequest(
-  endpoint,
-  options = {}
-) {
+function headers(json = false) {
 
-  const response = await fetch(
-    SUPABASE_URL + endpoint,
-    {
-      ...options,
+  const h = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": "Bearer " + accessToken
+  };
 
-      headers: {
-        "Content-Type": "application/json",
+  if (json) {
+    h["Content-Type"] = "application/json";
+  }
 
-        "apikey": SUPABASE_KEY,
-
-        "Authorization":
-          "Bearer " + SUPABASE_KEY,
-
-        ...(options.headers || {})
-      }
-    }
-  );
-
-  return response;
+  return h;
 }
 
 
 async function login() {
 
-  const email =
-    document.getElementById("email").value;
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
 
-  const password =
-    document.getElementById("password").value;
+  const response = await fetch(
+    SUPABASE_URL + "/auth/v1/token?grant_type=password",
+    {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        password
+      })
+    }
+  );
 
-  const message =
-    document.getElementById("loginMessage");
-
-  message.textContent = "Выполняется вход...";
-
-  const response =
-    await fetch(
-      SUPABASE_URL +
-      "/auth/v1/token?grant_type=password",
-      {
-
-        method: "POST",
-
-        headers: {
-          "Content-Type":
-            "application/json",
-
-          "apikey":
-            SUPABASE_KEY
-        },
-
-        body: JSON.stringify({
-          email: email,
-          password: password
-        })
-
-      }
-    );
-
-  const data =
-    await response.json();
+  const data = await response.json();
 
   if (!response.ok) {
 
-    message.textContent =
-      data.error_description ||
-      data.msg ||
-      "Ошибка входа";
+    document.getElementById("loginMessage").textContent =
+      data.message || "Ошибка входа";
 
     return;
   }
 
+  accessToken = data.access_token;
+
   localStorage.setItem(
     "miata_access_token",
-    data.access_token
+    accessToken
   );
 
-  document
-    .getElementById("loginScreen")
-    .classList.add("hidden");
+  showAdmin();
 
-  document
-    .getElementById("adminScreen")
-    .classList.remove("hidden");
+}
+
+
+function showAdmin() {
+
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("adminScreen").style.display = "block";
 
   loadProducts();
+
 }
 
 
 function logout() {
 
-  localStorage.removeItem(
-    "miata_access_token"
-  );
+  localStorage.removeItem("miata_access_token");
+
+  accessToken = null;
 
   location.reload();
+
 }
 
 
-async function addProduct() {
+function previewImage() {
 
-  const token =
-    localStorage.getItem(
-      "miata_access_token"
-    );
+  const file =
+    document.getElementById("imageFile").files[0];
 
-  const product = {
+  const preview =
+    document.getElementById("preview");
 
-    name:
-      document.getElementById("name").value,
+  if (!file) {
 
-    description:
-      document.getElementById("description").value,
+    preview.style.display = "none";
 
-    price:
-      Number(
-        document.getElementById("price").value
-      ),
+    return;
+  }
 
-    category:
-      document.getElementById("category").value,
+  preview.src = URL.createObjectURL(file);
 
-    stock:
-      Number(
-        document.getElementById("stock").value
-      ),
+  preview.style.display = "block";
 
-    image_url:
-      document.getElementById("image_url").value,
-
-    is_active: true
-
-  };
+}
 
 
-  const response =
-    await fetch(
-      SUPABASE_URL +
-      "/rest/v1/products",
-      {
+async function uploadImage(file) {
 
-        method: "POST",
+  if (!file) return null;
 
-        headers: {
+  const extension =
+    file.name.split(".").pop().toLowerCase();
 
-          "Content-Type":
-            "application/json",
+  const fileName =
+    Date.now() +
+    "-" +
+    Math.random().toString(36).substring(2) +
+    "." +
+    extension;
 
-          "apikey":
-            SUPABASE_KEY,
-
-          "Authorization":
-            "Bearer " + token,
-
-          "Prefer":
-            "return=minimal"
-
-        },
-
-        body:
-          JSON.stringify(product)
-
-      }
-    );
+  const path =
+    "products/" + fileName;
 
 
-  const message =
-    document.getElementById("productMessage");
+  const response = await fetch(
+    SUPABASE_URL +
+    "/storage/v1/object/" +
+    BUCKET +
+    "/" +
+    path,
+    {
+      method: "POST",
+
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + accessToken,
+        "Content-Type": file.type
+      },
+
+      body: file
+    }
+  );
 
 
   if (!response.ok) {
@@ -403,67 +421,192 @@ async function addProduct() {
     const error =
       await response.text();
 
-    message.textContent =
-      "Ошибка: " + error;
+    throw new Error(
+      "Ошибка загрузки фото: " + error
+    );
+
+  }
+
+
+  return (
+    SUPABASE_URL +
+    "/storage/v1/object/public/" +
+    BUCKET +
+    "/" +
+    path
+  );
+
+}
+
+
+async function saveProduct() {
+
+  const id =
+    document.getElementById("productId").value;
+
+  const name =
+    document.getElementById("name").value.trim();
+
+  const description =
+    document.getElementById("description").value.trim();
+
+  const price =
+    Number(document.getElementById("price").value);
+
+  const category =
+    document.getElementById("category").value.trim();
+
+  const stock =
+    Number(document.getElementById("stock").value);
+
+  const file =
+    document.getElementById("imageFile").files[0];
+
+
+  if (!name) {
+
+    alert("Введите название товара");
 
     return;
   }
 
 
-  message.textContent =
-    "✅ Товар добавлен!";
+  try {
+
+    document.getElementById("message").textContent =
+      "Сохраняем...";
 
 
-  document.getElementById("name").value = "";
-  document.getElementById("description").value = "";
-  document.getElementById("price").value = "";
-  document.getElementById("category").value = "";
-  document.getElementById("stock").value = "0";
-  document.getElementById("image_url").value = "";
+    let imageUrl = null;
 
 
-  loadProducts();
+    if (file) {
+
+      imageUrl =
+        await uploadImage(file);
+
+    }
+
+
+    const product = {
+
+      name,
+      description,
+      price,
+      category,
+      stock,
+      is_active: true
+
+    };
+
+
+    if (imageUrl) {
+
+      product.image_url = imageUrl;
+
+    }
+
+
+    let response;
+
+
+    if (id) {
+
+      response = await fetch(
+
+        SUPABASE_URL +
+        "/rest/v1/products?id=eq." +
+        id,
+
+        {
+          method: "PATCH",
+
+          headers: headers(true),
+
+          body: JSON.stringify(product)
+
+        }
+
+      );
+
+    } else {
+
+      response = await fetch(
+
+        SUPABASE_URL +
+        "/rest/v1/products",
+
+        {
+          method: "POST",
+
+          headers: {
+            ...headers(true),
+            "Prefer": "return=representation"
+          },
+
+          body: JSON.stringify(product)
+
+        }
+
+      );
+
+    }
+
+
+    if (!response.ok) {
+
+      const error =
+        await response.text();
+
+      throw new Error(error);
+
+    }
+
+
+    document.getElementById("message").textContent =
+      id
+      ? "Товар обновлён ✅"
+      : "Товар добавлен ✅";
+
+
+    clearForm();
+
+    loadProducts();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    document.getElementById("message").textContent =
+      "Ошибка: " + error.message;
+
+  }
 
 }
 
 
 async function loadProducts() {
 
-  const token =
-    localStorage.getItem(
-      "miata_access_token"
-    );
+  const response = await fetch(
 
-  const container =
-    document.getElementById("products");
+    SUPABASE_URL +
+    "/rest/v1/products?select=*&order=id.desc",
 
+    {
+      headers: headers()
+    }
 
-  const response =
-    await fetch(
-      SUPABASE_URL +
-      "/rest/v1/products?select=*&order=id.desc",
-      {
-
-        headers: {
-
-          "apikey":
-            SUPABASE_KEY,
-
-          "Authorization":
-            "Bearer " + token
-
-        }
-
-      }
-    );
+  );
 
 
   if (!response.ok) {
 
-    container.textContent =
-      "Не удалось загрузить товары.";
+    document.getElementById("products").textContent =
+      "Ошибка загрузки товаров";
 
     return;
+
   }
 
 
@@ -471,36 +614,261 @@ async function loadProducts() {
     await response.json();
 
 
-  if (products.length === 0) {
+  const container =
+    document.getElementById("products");
+
+
+  if (!products.length) {
 
     container.textContent =
-      "Товаров пока нет.";
+      "Товаров пока нет";
 
     return;
+
   }
 
 
-  container.innerHTML =
-    products.map(product => `
+  container.innerHTML = products.map(product => `
 
-      <div class="product">
+    <div class="product ${product.is_active ? "" : "hidden"}">
 
-        <strong>
+      ${
+        product.image_url
+        ? `<img src="${product.image_url}">`
+        : `<img src="https://via.placeholder.com/80?text=NO+PHOTO">`
+      }
+
+      <div class="product-info">
+
+        <div class="product-name">
           ${escapeHtml(product.name)}
-        </strong>
-
-        <div class="price">
-          ${Number(product.price).toLocaleString("ru-RU")} ₽
         </div>
 
-        <div>
-          Остаток:
-          ${product.stock}
+        <div class="product-meta">
+
+          ${product.price} ₽ ·
+          Остаток: ${product.stock}
+
+          ${
+            product.category
+            ? " · " + escapeHtml(product.category)
+            : ""
+          }
+
+          ${
+            product.is_active
+            ? ""
+            : " · СКРЫТ"
+          }
+
         </div>
 
       </div>
 
-    `).join("");
+      <div class="product-actions">
+
+        <button
+          class="secondary"
+          onclick="editProduct(${product.id})"
+        >
+          ✏️
+        </button>
+
+        <button
+          class="secondary"
+          onclick="toggleProduct(${product.id}, ${product.is_active})"
+        >
+          ${product.is_active ? "👁️" : "👁️‍🗨️"}
+        </button>
+
+        <button
+          class="danger"
+          onclick="deleteProduct(${product.id})"
+        >
+          🗑️
+        </button>
+
+      </div>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+async function editProduct(id) {
+
+  const response = await fetch(
+
+    SUPABASE_URL +
+    "/rest/v1/products?id=eq." +
+    id +
+    "&select=*",
+
+    {
+      headers: headers()
+    }
+
+  );
+
+
+  const data =
+    await response.json();
+
+  if (!data.length) {
+
+    alert("Товар не найден");
+
+    return;
+
+  }
+
+
+  const product =
+    data[0];
+
+
+  document.getElementById("productId").value =
+    product.id;
+
+  document.getElementById("name").value =
+    product.name || "";
+
+  document.getElementById("description").value =
+    product.description || "";
+
+  document.getElementById("price").value =
+    product.price || "";
+
+  document.getElementById("category").value =
+    product.category || "";
+
+  document.getElementById("stock").value =
+    product.stock || 0;
+
+
+  document.getElementById("formTitle").textContent =
+    "Редактировать товар";
+
+  document.getElementById("cancelButton").style.display =
+    "inline-block";
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+async function toggleProduct(id, currentState) {
+
+  const response = await fetch(
+
+    SUPABASE_URL +
+    "/rest/v1/products?id=eq." +
+    id,
+
+    {
+      method: "PATCH",
+
+      headers: headers(true),
+
+      body: JSON.stringify({
+        is_active: !currentState
+      })
+
+    }
+
+  );
+
+
+  if (!response.ok) {
+
+    alert("Не удалось изменить статус");
+
+    return;
+
+  }
+
+
+  loadProducts();
+
+}
+
+
+async function deleteProduct(id) {
+
+  const ok =
+    confirm("Удалить этот товар?");
+
+  if (!ok) return;
+
+
+  const response = await fetch(
+
+    SUPABASE_URL +
+    "/rest/v1/products?id=eq." +
+    id,
+
+    {
+      method: "DELETE",
+
+      headers: headers()
+    }
+
+  );
+
+
+  if (!response.ok) {
+
+    alert(
+      "Не удалось удалить товар"
+    );
+
+    return;
+
+  }
+
+
+  loadProducts();
+
+}
+
+
+function clearForm() {
+
+  document.getElementById("productId").value = "";
+
+  document.getElementById("name").value = "";
+
+  document.getElementById("description").value = "";
+
+  document.getElementById("price").value = "";
+
+  document.getElementById("category").value = "";
+
+  document.getElementById("stock").value = "";
+
+  document.getElementById("imageFile").value = "";
+
+  document.getElementById("preview").style.display =
+    "none";
+
+  document.getElementById("formTitle").textContent =
+    "Добавить товар";
+
+  document.getElementById("cancelButton").style.display =
+    "none";
+
+}
+
+
+function cancelEdit() {
+
+  clearForm();
 
 }
 
@@ -513,6 +881,13 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+
+}
+
+
+if (accessToken) {
+
+  showAdmin();
 
 }
 
