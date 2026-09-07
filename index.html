@@ -1,1 +1,306 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Миата Гараж</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+    }
+
+    header {
+      padding: 20px;
+      background: #181818;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .cart {
+      background: #fff;
+      color: #111;
+      border: 0;
+      padding: 10px 15px;
+      border-radius: 12px;
+      font-size: 16px;
+    }
+
+    .hero {
+      padding: 35px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #202020, #111);
+    }
+
+    .hero h1 {
+      font-size: 34px;
+      margin: 10px 0;
+    }
+
+    .hero p {
+      color: #aaa;
+    }
+
+    .search {
+      margin: 20px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid #333;
+      background: #1c1c1c;
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .catalog {
+      padding: 0 20px 30px;
+    }
+
+    .catalog h2 {
+      margin-top: 25px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .product {
+      background: #1c1c1c;
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid #292929;
+    }
+
+    .product img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      background: #292929;
+    }
+
+    .product-info {
+      padding: 12px;
+    }
+
+    .product-name {
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .description {
+      color: #999;
+      font-size: 13px;
+      min-height: 32px;
+    }
+
+    .price {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .add {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border: 0;
+      border-radius: 10px;
+      background: white;
+      color: black;
+      font-weight: bold;
+    }
+
+    .empty {
+      text-align: center;
+      color: #777;
+      padding: 30px;
+      grid-column: 1 / -1;
+    }
+
+    @media (min-width: 700px) {
+      .products {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="top">
+    <div class="logo">🏎️ Миата Гараж</div>
+    <button class="cart" onclick="showCart()">
+      🛒 <span id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Миата Гараж</h1>
+  <p>Запчасти, аксессуары и всё для твоей Miata</p>
+</section>
+
+<div class="search">
+  <input
+    type="text"
+    id="search"
+    placeholder="🔎 Найти товар..."
+    oninput="renderProducts()"
+  >
+</div>
+
+<section class="catalog">
+  <h2>Каталог</h2>
+
+  <div class="products" id="products"></div>
+</section>
+
+<script>
+
+const products = [
+  {
+    id: 1,
+    name: "Масляный фильтр",
+    description: "Фильтр для двигателя",
+    price: 1500,
+    image: "https://via.placeholder.com/500"
+  },
+  {
+    id: 2,
+    name: "Воздушный фильтр",
+    description: "Высокопроизводительный фильтр",
+    price: 2500,
+    image: "https://via.placeholder.com/500"
+  },
+  {
+    id: 3,
+    name: "Коврики Miata",
+    description: "Комплект ковриков",
+    price: 4500,
+    image: "https://via.placeholder.com/500"
+  },
+  {
+    id: 4,
+    name: "Наклейка Miata",
+    description: "Фирменная наклейка",
+    price: 500,
+    image: "https://via.placeholder.com/500"
+  }
+];
+
+let cart = [];
+
+function renderProducts() {
+
+  const container = document.getElementById("products");
+
+  const search =
+    document.getElementById("search").value.toLowerCase();
+
+  const filtered = products.filter(product =>
+    product.name.toLowerCase().includes(search)
+  );
+
+  if (filtered.length === 0) {
+    container.innerHTML =
+      '<div class="empty">Товары не найдены</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(product => `
+
+    <div class="product">
+
+      <img src="${product.image}" alt="${product.name}">
+
+      <div class="product-info">
+
+        <div class="product-name">
+          ${product.name}
+        </div>
+
+        <div class="description">
+          ${product.description}
+        </div>
+
+        <div class="price">
+          ${product.price.toLocaleString("ru-RU")} ₽
+        </div>
+
+        <button
+          class="add"
+          onclick="addToCart(${product.id})">
+          В корзину
+        </button>
+
+      </div>
+
+    </div>
+
+  `).join("");
+}
+
+function addToCart(id) {
+
+  const product = products.find(p => p.id === id);
+
+  cart.push(product);
+
+  document.getElementById("cartCount").textContent =
+    cart.length;
+}
+
+function showCart() {
+
+  if (cart.length === 0) {
+    alert("Корзина пока пустая");
+    return;
+  }
+
+  let total = cart.reduce(
+    (sum, product) => sum + product.price,
+    0
+  );
+
+  alert(
+    "В корзине: " +
+    cart.length +
+    " товар(ов)\n\n" +
+    "Сумма: " +
+    total.toLocaleString("ru-RU") +
+    " ₽"
+  );
+}
+
+renderProducts();
+
+</script>
+
+</body>
+</html>
