@@ -1,1 +1,522 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Miata Garage — Админка</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: #1c1c1c;
+      border: 1px solid #303030;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 15px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      margin-top: 7px;
+      margin-bottom: 15px;
+      padding: 13px;
+      border-radius: 10px;
+      border: 1px solid #444;
+      background: #111;
+      color: white;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .primary {
+      width: 100%;
+      background: white;
+      color: black;
+    }
+
+    .danger {
+      background: #333;
+      color: white;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .product {
+      padding: 15px 0;
+      border-bottom: 1px solid #333;
+    }
+
+    .product:last-child {
+      border-bottom: 0;
+    }
+
+    .price {
+      color: #aaa;
+      margin: 5px 0 12px;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      color: #aaa;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- ВХОД -->
+
+  <div id="loginScreen">
+
+    <h1>🔐 Миата Гараж</h1>
+
+    <div class="card">
+
+      <h2>Вход в админку</h2>
+
+      <label>Email</label>
+      <input
+        type="email"
+        id="email"
+        placeholder="admin@example.com"
+      >
+
+      <label>Пароль</label>
+      <input
+        type="password"
+        id="password"
+        placeholder="Пароль"
+      >
+
+      <button class="primary" onclick="login()">
+        Войти
+      </button>
+
+      <p id="loginMessage" class="message"></p>
+
+    </div>
+
+  </div>
+
+
+  <!-- АДМИНКА -->
+
+  <div id="adminScreen" class="hidden">
+
+    <h1>🏎️ Админка</h1>
+
+    <button class="danger" onclick="logout()">
+      Выйти
+    </button>
+
+    <div class="card">
+
+      <h2>➕ Добавить товар</h2>
+
+      <label>Название</label>
+      <input id="name" placeholder="Например: Масляный фильтр">
+
+      <label>Описание</label>
+      <textarea
+        id="description"
+        placeholder="Описание товара"
+      ></textarea>
+
+      <label>Цена, ₽</label>
+      <input
+        id="price"
+        type="number"
+        placeholder="1500"
+      >
+
+      <label>Категория</label>
+      <input
+        id="category"
+        placeholder="Запчасти"
+      >
+
+      <label>Количество</label>
+      <input
+        id="stock"
+        type="number"
+        value="0"
+      >
+
+      <label>Ссылка на фотографию</label>
+      <input
+        id="image_url"
+        placeholder="https://..."
+      >
+
+      <button
+        class="primary"
+        onclick="addProduct()"
+      >
+        Сохранить товар
+      </button>
+
+      <p id="productMessage" class="message"></p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>📦 Товары</h2>
+
+      <div id="products">
+        Загрузка...
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+  "https://qbuethosjrghgdwpanhb.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_l-Jn1GONymTw-fuN1eEgBw_FjtbUyzg";
+
+
+async function supabaseRequest(
+  endpoint,
+  options = {}
+) {
+
+  const response = await fetch(
+    SUPABASE_URL + endpoint,
+    {
+      ...options,
+
+      headers: {
+        "Content-Type": "application/json",
+
+        "apikey": SUPABASE_KEY,
+
+        "Authorization":
+          "Bearer " + SUPABASE_KEY,
+
+        ...(options.headers || {})
+      }
+    }
+  );
+
+  return response;
+}
+
+
+async function login() {
+
+  const email =
+    document.getElementById("email").value;
+
+  const password =
+    document.getElementById("password").value;
+
+  const message =
+    document.getElementById("loginMessage");
+
+  message.textContent = "Выполняется вход...";
+
+  const response =
+    await fetch(
+      SUPABASE_URL +
+      "/auth/v1/token?grant_type=password",
+      {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+
+          "apikey":
+            SUPABASE_KEY
+        },
+
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+
+      }
+    );
+
+  const data =
+    await response.json();
+
+  if (!response.ok) {
+
+    message.textContent =
+      data.error_description ||
+      data.msg ||
+      "Ошибка входа";
+
+    return;
+  }
+
+  localStorage.setItem(
+    "miata_access_token",
+    data.access_token
+  );
+
+  document
+    .getElementById("loginScreen")
+    .classList.add("hidden");
+
+  document
+    .getElementById("adminScreen")
+    .classList.remove("hidden");
+
+  loadProducts();
+}
+
+
+function logout() {
+
+  localStorage.removeItem(
+    "miata_access_token"
+  );
+
+  location.reload();
+}
+
+
+async function addProduct() {
+
+  const token =
+    localStorage.getItem(
+      "miata_access_token"
+    );
+
+  const product = {
+
+    name:
+      document.getElementById("name").value,
+
+    description:
+      document.getElementById("description").value,
+
+    price:
+      Number(
+        document.getElementById("price").value
+      ),
+
+    category:
+      document.getElementById("category").value,
+
+    stock:
+      Number(
+        document.getElementById("stock").value
+      ),
+
+    image_url:
+      document.getElementById("image_url").value,
+
+    is_active: true
+
+  };
+
+
+  const response =
+    await fetch(
+      SUPABASE_URL +
+      "/rest/v1/products",
+      {
+
+        method: "POST",
+
+        headers: {
+
+          "Content-Type":
+            "application/json",
+
+          "apikey":
+            SUPABASE_KEY,
+
+          "Authorization":
+            "Bearer " + token,
+
+          "Prefer":
+            "return=minimal"
+
+        },
+
+        body:
+          JSON.stringify(product)
+
+      }
+    );
+
+
+  const message =
+    document.getElementById("productMessage");
+
+
+  if (!response.ok) {
+
+    const error =
+      await response.text();
+
+    message.textContent =
+      "Ошибка: " + error;
+
+    return;
+  }
+
+
+  message.textContent =
+    "✅ Товар добавлен!";
+
+
+  document.getElementById("name").value = "";
+  document.getElementById("description").value = "";
+  document.getElementById("price").value = "";
+  document.getElementById("category").value = "";
+  document.getElementById("stock").value = "0";
+  document.getElementById("image_url").value = "";
+
+
+  loadProducts();
+
+}
+
+
+async function loadProducts() {
+
+  const token =
+    localStorage.getItem(
+      "miata_access_token"
+    );
+
+  const container =
+    document.getElementById("products");
+
+
+  const response =
+    await fetch(
+      SUPABASE_URL +
+      "/rest/v1/products?select=*&order=id.desc",
+      {
+
+        headers: {
+
+          "apikey":
+            SUPABASE_KEY,
+
+          "Authorization":
+            "Bearer " + token
+
+        }
+
+      }
+    );
+
+
+  if (!response.ok) {
+
+    container.textContent =
+      "Не удалось загрузить товары.";
+
+    return;
+  }
+
+
+  const products =
+    await response.json();
+
+
+  if (products.length === 0) {
+
+    container.textContent =
+      "Товаров пока нет.";
+
+    return;
+  }
+
+
+  container.innerHTML =
+    products.map(product => `
+
+      <div class="product">
+
+        <strong>
+          ${escapeHtml(product.name)}
+        </strong>
+
+        <div class="price">
+          ${Number(product.price).toLocaleString("ru-RU")} ₽
+        </div>
+
+        <div>
+          Остаток:
+          ${product.stock}
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+</script>
+
+</body>
+</html>
