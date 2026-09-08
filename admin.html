@@ -123,7 +123,7 @@ button {
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 720px;
+  min-width: 850px;
 }
 
 th,
@@ -202,10 +202,29 @@ th {
   font-weight: bold;
 }
 
+.profit {
+  color: #7cff9b;
+  font-weight: bold;
+}
+
 .message {
   padding: 10px;
   border-radius: 10px;
   background: #202025;
+  margin-bottom: 12px;
+}
+
+.logout {
+  float: right;
+  margin-bottom: 15px;
+}
+
+.preview {
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #0d0d10;
   margin-bottom: 12px;
 }
 
@@ -225,8 +244,6 @@ th {
 <body>
 
 <div class="container">
-
-  <!-- LOGIN -->
 
   <div id="loginScreen" class="card">
 
@@ -254,10 +271,14 @@ th {
 
   </div>
 
-
-  <!-- ADMIN -->
-
   <div id="adminScreen" class="hidden">
+
+    <button
+      class="secondary logout"
+      onclick="logout()"
+    >
+      Выйти
+    </button>
 
     <h1>Miata Garage</h1>
 
@@ -280,9 +301,6 @@ th {
       </button>
 
     </div>
-
-
-    <!-- PRODUCTS -->
 
     <section id="productsSection">
 
@@ -315,6 +333,8 @@ th {
                 <th>Фото</th>
                 <th>Название</th>
                 <th>Цена</th>
+                <th>Закупка</th>
+                <th>Прибыль</th>
                 <th>Категория</th>
                 <th>Остаток</th>
                 <th>Статус</th>
@@ -331,9 +351,6 @@ th {
       </div>
 
     </section>
-
-
-    <!-- ORDERS -->
 
     <section
       id="ordersSection"
@@ -380,6 +397,7 @@ th {
               <tr>
                 <th>№</th>
                 <th>Клиент</th>
+                <th>Контакт</th>
                 <th>Сумма</th>
                 <th>Дата</th>
                 <th>Статус</th>
@@ -400,8 +418,6 @@ th {
 
 </div>
 
-
-<!-- PRODUCT MODAL -->
 
 <div
   id="productModal"
@@ -431,17 +447,46 @@ th {
       placeholder="Описание"
     ></textarea>
 
+    <label>
+      Цена продажи, ₽
+    </label>
+
     <input
       id="productPrice"
       type="number"
-      step="0.01"
-      placeholder="Цена"
+      step="1"
+      placeholder="Например: 5000"
     >
+
+    <label>
+      Закупочная цена, ₽
+    </label>
+
+    <input
+      id="productCost"
+      type="number"
+      step="1"
+      placeholder="Например: 3000"
+    >
+
+    <div id="profitPreview">
+      Прибыль: 0 ₽
+    </div>
+
+    <br>
+
+    <label>
+      Категория
+    </label>
 
     <input
       id="productCategory"
       placeholder="Категория"
     >
+
+    <label>
+      Остаток
+    </label>
 
     <input
       id="productStock"
@@ -451,7 +496,7 @@ th {
     >
 
     <label>
-      📷 Фотография
+      📷 Фотография с телефона
     </label>
 
     <input
@@ -463,6 +508,11 @@ th {
     <p id="selectedFile">
       Фото не выбрано
     </p>
+
+    <img
+      id="imagePreview"
+      class="preview hidden"
+    >
 
     <button
       class="primary"
@@ -480,8 +530,6 @@ th {
 
 </div>
 
-
-<!-- ORDER MODAL -->
 
 <div
   id="orderModal"
@@ -515,18 +563,17 @@ th {
 const SUPABASE_URL =
   "https://qbuethosjrghgdwpanhb.supabase.co";
 
-/*
-  ВСТАВЬ СЮДА СВОЙ НОВЫЙ
-  PUBLISHABLE KEY
-*/
-
 const SUPABASE_KEY =
   "sb_publishable_l-Jn1GONymTw-fuN1eEgBw_FjtbUyzg";
 
 const BUCKET =
   "product-images";
 
-let accessToken = "";
+let accessToken =
+  localStorage.getItem("miata_access_token") || "";
+
+let refreshToken =
+  localStorage.getItem("miata_refresh_token") || "";
 
 let editingProductId = null;
 
@@ -551,16 +598,177 @@ function headers() {
 
 
 /* =========================
+   SAVE SESSION
+========================= */
+
+function saveSession(data) {
+
+  accessToken =
+    data.access_token || "";
+
+  refreshToken =
+    data.refresh_token || "";
+
+  if (accessToken) {
+
+    localStorage.setItem(
+      "miata_access_token",
+      accessToken
+    );
+
+  }
+
+  if (refreshToken) {
+
+    localStorage.setItem(
+      "miata_refresh_token",
+      refreshToken
+    );
+
+  }
+
+}
+
+
+/* =========================
+   REFRESH SESSION
+========================= */
+
+async function refreshSession() {
+
+  if (!refreshToken) {
+    return false;
+  }
+
+  try {
+
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/auth/v1/token?grant_type=refresh_token",
+        {
+          method: "POST",
+
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+            refresh_token:
+              refreshToken
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if (!response.ok) {
+
+      localStorage.removeItem(
+        "miata_access_token"
+      );
+
+      localStorage.removeItem(
+        "miata_refresh_token"
+      );
+
+      accessToken = "";
+      refreshToken = "";
+
+      return false;
+    }
+
+    saveSession(data);
+
+    return true;
+
+  } catch (error) {
+
+    return false;
+
+  }
+
+}
+
+
+/* =========================
+   CHECK SESSION
+========================= */
+
+async function checkSession() {
+
+  if (!accessToken) {
+    return false;
+  }
+
+  try {
+
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/auth/v1/user",
+        {
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Authorization":
+              "Bearer " + accessToken
+          }
+        }
+      );
+
+    if (response.ok) {
+      return true;
+    }
+
+    return await refreshSession();
+
+  } catch (error) {
+
+    return false;
+
+  }
+
+}
+
+
+/* =========================
+   SHOW ADMIN
+========================= */
+
+async function showAdmin() {
+
+  document
+    .getElementById("loginScreen")
+    .classList.add("hidden");
+
+  document
+    .getElementById("adminScreen")
+    .classList.remove("hidden");
+
+  await loadProducts();
+
+}
+
+
+/* =========================
    LOGIN
 ========================= */
 
 async function login() {
 
   const email =
-    document.getElementById("email").value.trim();
+    document
+      .getElementById("email")
+      .value
+      .trim();
 
   const password =
-    document.getElementById("password").value;
+    document
+      .getElementById("password")
+      .value;
 
   if (!email || !password) {
 
@@ -575,24 +783,30 @@ async function login() {
 
   try {
 
-    const response = await fetch(
-      SUPABASE_URL +
-      "/auth/v1/token?grant_type=password",
-      {
-        method: "POST",
-
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Content-Type":
-            "application/json"
-        },
-
-        body: JSON.stringify({
-          email: email,
-          password: password
-        })
-      }
+    showMessage(
+      "loginMessage",
+      "⏳ Входим..."
     );
+
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/auth/v1/token?grant_type=password",
+        {
+          method: "POST",
+
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+            email: email,
+            password: password
+          })
+        }
+      );
 
     const data =
       await response.json();
@@ -607,18 +821,9 @@ async function login() {
 
     }
 
-    accessToken =
-      data.access_token;
+    saveSession(data);
 
-    document
-      .getElementById("loginScreen")
-      .classList.add("hidden");
-
-    document
-      .getElementById("adminScreen")
-      .classList.remove("hidden");
-
-    loadProducts();
+    await showAdmin();
 
   } catch (error) {
 
@@ -628,6 +833,34 @@ async function login() {
     );
 
   }
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logout() {
+
+  localStorage.removeItem(
+    "miata_access_token"
+  );
+
+  localStorage.removeItem(
+    "miata_refresh_token"
+  );
+
+  accessToken = "";
+  refreshToken = "";
+
+  document
+    .getElementById("adminScreen")
+    .classList.add("hidden");
+
+  document
+    .getElementById("loginScreen")
+    .classList.remove("hidden");
 
 }
 
@@ -687,7 +920,7 @@ async function loadProducts() {
     );
 
   table.innerHTML =
-    "<tr><td colspan='7'>Загрузка...</td></tr>";
+    "<tr><td colspan='9'>Загрузка...</td></tr>";
 
   try {
 
@@ -714,7 +947,7 @@ async function loadProducts() {
     if (!products.length) {
 
       table.innerHTML =
-        "<tr><td colspan='7'>Товаров пока нет.</td></tr>";
+        "<tr><td colspan='9'>Товаров пока нет.</td></tr>";
 
       return;
 
@@ -725,6 +958,15 @@ async function loadProducts() {
 
         const image =
           product.image_url || "";
+
+        const price =
+          Number(product.price || 0);
+
+        const cost =
+          Number(product.cost_price || 0);
+
+        const profit =
+          price - cost;
 
         return `
           <tr>
@@ -747,15 +989,25 @@ async function loadProducts() {
             </td>
 
             <td>
-              ${Number(product.price).toFixed(2)} €
+              ${formatMoney(price)}
             </td>
 
             <td>
-              ${escapeHtml(product.category || "—")}
+              ${formatMoney(cost)}
+            </td>
+
+            <td class="profit">
+              ${formatMoney(profit)}
             </td>
 
             <td>
-              ${product.stock}
+              ${escapeHtml(
+                product.category || "—"
+              )}
+            </td>
+
+            <td>
+              ${product.stock || 0}
             </td>
 
             <td>
@@ -813,7 +1065,7 @@ async function loadProducts() {
 
     table.innerHTML =
       `<tr>
-        <td colspan="7">
+        <td colspan="9">
           ❌ ${escapeHtml(error.message)}
         </td>
       </tr>`;
@@ -869,6 +1121,10 @@ function clearProductForm() {
   ).value = "";
 
   document.getElementById(
+    "productCost"
+  ).value = "";
+
+  document.getElementById(
     "productCategory"
   ).value = "";
 
@@ -884,6 +1140,19 @@ function clearProductForm() {
     "selectedFile"
   ).textContent =
     "Фото не выбрано";
+
+  document.getElementById(
+    "imagePreview"
+  ).classList.add("hidden");
+
+  document.getElementById(
+    "imagePreview"
+  ).src = "";
+
+  document.getElementById(
+    "profitPreview"
+  ).textContent =
+    "Прибыль: 0 ₽";
 
 }
 
@@ -906,8 +1175,70 @@ document
           ? "Выбрано: " + file.name
           : "Фото не выбрано";
 
+      if (file) {
+
+        const url =
+          URL.createObjectURL(file);
+
+        const preview =
+          document.getElementById(
+            "imagePreview"
+          );
+
+        preview.src = url;
+
+        preview.classList.remove(
+          "hidden"
+        );
+
+      }
+
     }
   );
+
+
+document
+  .getElementById("productPrice")
+  .addEventListener(
+    "input",
+    updateProfitPreview
+  );
+
+
+document
+  .getElementById("productCost")
+  .addEventListener(
+    "input",
+    updateProfitPreview
+  );
+
+
+function updateProfitPreview() {
+
+  const price =
+    Number(
+      document.getElementById(
+        "productPrice"
+      ).value || 0
+    );
+
+  const cost =
+    Number(
+      document.getElementById(
+        "productCost"
+      ).value || 0
+    );
+
+  const profit =
+    price - cost;
+
+  document.getElementById(
+    "profitPreview"
+  ).textContent =
+    "Прибыль: " +
+    formatMoney(profit);
+
+}
 
 
 /* =========================
@@ -985,22 +1316,30 @@ async function saveProduct() {
   const name =
     document
       .getElementById("productName")
-      .value.trim();
+      .value
+      .trim();
 
   const description =
     document
       .getElementById("productDescription")
-      .value.trim();
+      .value
+      .trim();
 
   const price =
     document
       .getElementById("productPrice")
       .value;
 
+  const costPrice =
+    document
+      .getElementById("productCost")
+      .value || 0;
+
   const category =
     document
       .getElementById("productCategory")
-      .value.trim();
+      .value
+      .trim();
 
   const stock =
     document
@@ -1029,7 +1368,7 @@ async function saveProduct() {
 
     showMessage(
       "productModalMessage",
-      "Введите цену"
+      "Введите цену продажи"
     );
 
     return;
@@ -1063,6 +1402,9 @@ async function saveProduct() {
       description: description,
 
       price: Number(price),
+
+      cost_price:
+        Number(costPrice),
 
       category: category,
 
@@ -1224,6 +1566,12 @@ async function editProduct(id) {
 
 
     document.getElementById(
+      "productCost"
+    ).value =
+      product.cost_price || "";
+
+
+    document.getElementById(
       "productCategory"
     ).value =
       product.category || "";
@@ -1248,6 +1596,9 @@ async function editProduct(id) {
       : "Фото не выбрано";
 
 
+    updateProfitPreview();
+
+
     document
       .getElementById(
         "productModal"
@@ -1268,7 +1619,7 @@ async function editProduct(id) {
 
 
 /* =========================
-   TOGGLE
+   TOGGLE PRODUCT
 ========================= */
 
 async function toggleProduct(
@@ -1324,7 +1675,7 @@ async function toggleProduct(
 
 
 /* =========================
-   DELETE
+   DELETE PRODUCT
 ========================= */
 
 async function deleteProduct(id) {
@@ -1368,7 +1719,7 @@ async function deleteProduct(id) {
   } catch (error) {
 
     alert(
-      "Ошибка удаления: " +
+      "Ошибка: " +
       error.message
     );
 
@@ -1428,7 +1779,7 @@ async function loadOrders() {
     );
 
   table.innerHTML =
-    "<tr><td colspan='5'>Загрузка...</td></tr>";
+    "<tr><td colspan='6'>Загрузка...</td></tr>";
 
 
   try {
@@ -1494,7 +1845,7 @@ async function loadOrders() {
     if (!filtered.length) {
 
       table.innerHTML =
-        "<tr><td colspan='5'>Заказов пока нет.</td></tr>";
+        "<tr><td colspan='6'>Заказов пока нет.</td></tr>";
 
       return;
 
@@ -1529,10 +1880,16 @@ async function loadOrders() {
             </td>
 
             <td>
+              ${escapeHtml(
+                order.customer_contact || "—"
+              )}
+            </td>
+
+            <td>
               <b>
-                ${Number(
+                ${formatMoney(
                   order.total
-                ).toFixed(2)} €
+                )}
               </b>
             </td>
 
@@ -1556,7 +1913,7 @@ async function loadOrders() {
 
     table.innerHTML =
       `<tr>
-        <td colspan="5">
+        <td colspan="6">
           ❌ ${escapeHtml(
             error.message
           )}
@@ -1654,9 +2011,9 @@ async function openOrder(id) {
 
         <p class="total">
           Сумма:
-          ${Number(
+          ${formatMoney(
             order.total
-          ).toFixed(2)} €
+          )}
         </p>
 
         <hr>
@@ -1665,9 +2022,7 @@ async function openOrder(id) {
           Статус заказа
         </label>
 
-        <select
-          id="orderStatus"
-        >
+        <select id="orderStatus">
 
           <option
             value="new"
@@ -1826,6 +2181,19 @@ async function updateOrderStatus(id) {
    HELPERS
 ========================= */
 
+function formatMoney(value) {
+
+  return Number(value || 0)
+    .toLocaleString(
+      "ru-RU",
+      {
+        maximumFractionDigits: 0
+      }
+    ) + " ₽";
+
+}
+
+
 function statusName(status) {
 
   const names = {
@@ -1881,6 +2249,24 @@ function escapeHtml(text) {
     .replaceAll("'", "&#039;");
 
 }
+
+
+/* =========================
+   AUTO LOGIN AFTER REFRESH
+========================= */
+
+(async function() {
+
+  const sessionExists =
+    await checkSession();
+
+  if (sessionExists) {
+
+    await showAdmin();
+
+  }
+
+})();
 
 </script>
 
