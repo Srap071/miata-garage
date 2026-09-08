@@ -26,7 +26,7 @@ select {
 }
 
 .container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: auto;
   padding: 16px;
 }
@@ -65,6 +65,7 @@ select {
 
 textarea {
   min-height: 100px;
+  resize: vertical;
 }
 
 button {
@@ -123,7 +124,7 @@ button {
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 850px;
+  min-width: 1050px;
 }
 
 th,
@@ -159,51 +160,41 @@ th {
   border-radius: 8px;
   background: #24242a;
   font-size: 13px;
+  white-space: nowrap;
 }
 
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  z-index: 10;
-}
-
-.modal-box {
-  width: 100%;
-  max-width: 550px;
-  max-height: 90vh;
-  overflow-y: auto;
-  background: #151518;
-  border: 1px solid #303038;
-  border-radius: 18px;
-  padding: 18px;
-}
-
-.close {
-  float: right;
-  background: #29292f;
-  color: white;
-}
-
-.order-row {
-  cursor: pointer;
-}
-
-.order-row:hover {
-  background: #1c1c21;
-}
-
-.total {
-  font-size: 20px;
-  font-weight: bold;
+.top-badge {
+  display: inline-block;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: #302914;
+  color: #ffd76a;
+  font-size: 13px;
+  white-space: nowrap;
 }
 
 .profit {
   color: #7cff9b;
+  font-weight: bold;
+}
+
+.loss {
+  color: #ff7777;
+  font-weight: bold;
+}
+
+.old-price {
+  color: #888;
+  text-decoration: line-through;
+}
+
+.discount {
+  color: #ff7777;
+  font-weight: bold;
+}
+
+.total {
+  font-size: 20px;
   font-weight: bold;
 }
 
@@ -228,6 +219,99 @@ th {
   margin-bottom: 12px;
 }
 
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  margin: 8px 0 16px;
+  background: #0d0d10;
+  border: 1px solid #34343b;
+  border-radius: 10px;
+}
+
+.checkbox-row input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+}
+
+.checkbox-row label {
+  cursor: pointer;
+  margin: 0;
+}
+
+.order-products {
+  margin: 12px 0;
+}
+
+.order-product {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #29292e;
+}
+
+.order-product:last-child {
+  border-bottom: 0;
+}
+
+.order-product-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 9px;
+  object-fit: cover;
+  background: #222;
+  flex-shrink: 0;
+}
+
+.order-product-info {
+  flex: 1;
+}
+
+.order-product-name {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.order-product-meta {
+  color: #aaa;
+  font-size: 13px;
+}
+
+.order-summary {
+  background: #0d0d10;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 15px;
+}
+
+.order-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 7px 0;
+}
+
+.order-line.total-line {
+  border-top: 1px solid #34343b;
+  padding-top: 10px;
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.info-line {
+  margin: 9px 0;
+}
+
+.info-label {
+  color: #999;
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+
 @media (max-width: 600px) {
   .container {
     padding: 10px;
@@ -237,6 +321,52 @@ th {
     align-items: stretch;
     flex-direction: column;
   }
+
+  .logout {
+    float: none;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .modal-box {
+    padding: 14px;
+  }
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 10;
+}
+
+.modal-box {
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #151518;
+  border: 1px solid #303038;
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.close {
+  float: right;
+  background: #29292f;
+  color: white;
+}
+
+.order-row {
+  cursor: pointer;
+}
+
+.order-row:hover {
+  background: #1c1c21;
 }
 </style>
 </head>
@@ -244,6 +374,8 @@ th {
 <body>
 
 <div class="container">
+
+  <!-- LOGIN -->
 
   <div id="loginScreen" class="card">
 
@@ -271,6 +403,9 @@ th {
 
   </div>
 
+
+  <!-- ADMIN -->
+
   <div id="adminScreen" class="hidden">
 
     <button
@@ -281,6 +416,8 @@ th {
     </button>
 
     <h1>Miata Garage</h1>
+
+    <!-- MAIN TABS -->
 
     <div class="tabs">
 
@@ -301,6 +438,9 @@ th {
       </button>
 
     </div>
+
+
+    <!-- PRODUCTS -->
 
     <section id="productsSection">
 
@@ -329,17 +469,22 @@ th {
           <table>
 
             <thead>
+
               <tr>
                 <th>Фото</th>
                 <th>Название</th>
                 <th>Цена</th>
+                <th>Старая цена</th>
+                <th>Скидка</th>
                 <th>Закупка</th>
                 <th>Прибыль</th>
                 <th>Категория</th>
                 <th>Остаток</th>
                 <th>Статус</th>
+                <th>Топ продаж</th>
                 <th>Действия</th>
               </tr>
+
             </thead>
 
             <tbody id="productsTable"></tbody>
@@ -352,12 +497,27 @@ th {
 
     </section>
 
+
+    <!-- ORDERS -->
+
     <section
       id="ordersSection"
       class="hidden"
     >
 
-      <h2>Заказы</h2>
+      <div class="toolbar">
+
+        <h2>Заказы</h2>
+
+        <button
+          class="secondary"
+          onclick="loadOrders()"
+        >
+          🔄 Обновить
+        </button>
+
+      </div>
+
 
       <div class="tabs">
 
@@ -366,7 +526,7 @@ th {
           id="ordersNewTab"
           onclick="setOrderFilter('new')"
         >
-          🆕 Активные
+          🕐 В обработке
         </button>
 
         <button
@@ -387,6 +547,7 @@ th {
 
       </div>
 
+
       <div class="card">
 
         <div class="table-wrap">
@@ -394,14 +555,18 @@ th {
           <table>
 
             <thead>
+
               <tr>
                 <th>№</th>
+                <th>Дата</th>
+                <th>Время</th>
                 <th>Клиент</th>
                 <th>Контакт</th>
                 <th>Сумма</th>
-                <th>Дата</th>
+                <th>Оплата</th>
                 <th>Статус</th>
               </tr>
+
             </thead>
 
             <tbody id="ordersTable"></tbody>
@@ -418,6 +583,8 @@ th {
 
 </div>
 
+
+<!-- PRODUCT MODAL -->
 
 <div
   id="productModal"
@@ -437,15 +604,26 @@ th {
       Добавить товар
     </h2>
 
+
+    <label>
+      Название
+    </label>
+
     <input
       id="productName"
-      placeholder="Название"
+      placeholder="Например: Mazda RX-7"
     >
+
+
+    <label>
+      Описание
+    </label>
 
     <textarea
       id="productDescription"
-      placeholder="Описание"
+      placeholder="Описание модели"
     ></textarea>
+
 
     <label>
       Цена продажи, ₽
@@ -458,6 +636,33 @@ th {
       placeholder="Например: 5000"
     >
 
+
+    <label>
+      Старая цена, ₽
+    </label>
+
+    <input
+      id="productOldPrice"
+      type="number"
+      step="1"
+      placeholder="Например: 6000"
+    >
+
+
+    <label>
+      Скидка, %
+    </label>
+
+    <input
+      id="productDiscount"
+      type="number"
+      step="1"
+      min="0"
+      max="100"
+      placeholder="Например: 15"
+    >
+
+
     <label>
       Закупочная цена, ₽
     </label>
@@ -469,11 +674,16 @@ th {
       placeholder="Например: 3000"
     >
 
-    <div id="profitPreview">
+
+    <div
+      id="profitPreview"
+      class="profit"
+    >
       Прибыль: 0 ₽
     </div>
 
     <br>
+
 
     <label>
       Категория
@@ -481,8 +691,9 @@ th {
 
     <input
       id="productCategory"
-      placeholder="Категория"
+      placeholder="Например: Mazda"
     >
+
 
     <label>
       Остаток
@@ -491,9 +702,25 @@ th {
     <input
       id="productStock"
       type="number"
+      min="0"
       placeholder="Остаток"
       value="0"
     >
+
+
+    <div class="checkbox-row">
+
+      <input
+        id="productIsTop"
+        type="checkbox"
+      >
+
+      <label for="productIsTop">
+        ⭐ Показывать в «Топ продаж»
+      </label>
+
+    </div>
+
 
     <label>
       📷 Фотография с телефона
@@ -505,14 +732,17 @@ th {
       accept="image/*"
     >
 
+
     <p id="selectedFile">
       Фото не выбрано
     </p>
+
 
     <img
       id="imagePreview"
       class="preview hidden"
     >
+
 
     <button
       class="primary"
@@ -520,6 +750,7 @@ th {
     >
       💾 Сохранить
     </button>
+
 
     <div
       id="productModalMessage"
@@ -530,6 +761,8 @@ th {
 
 </div>
 
+
+<!-- ORDER MODAL -->
 
 <div
   id="orderModal"
@@ -568,6 +801,7 @@ const SUPABASE_KEY =
 
 const BUCKET =
   "product-images";
+
 
 let accessToken =
   localStorage.getItem("miata_access_token") || "";
@@ -920,7 +1154,7 @@ async function loadProducts() {
     );
 
   table.innerHTML =
-    "<tr><td colspan='9'>Загрузка...</td></tr>";
+    "<tr><td colspan='12'>Загрузка...</td></tr>";
 
   try {
 
@@ -947,11 +1181,12 @@ async function loadProducts() {
     if (!products.length) {
 
       table.innerHTML =
-        "<tr><td colspan='9'>Товаров пока нет.</td></tr>";
+        "<tr><td colspan='12'>Товаров пока нет.</td></tr>";
 
       return;
 
     }
+
 
     table.innerHTML =
       products.map(product => {
@@ -962,13 +1197,26 @@ async function loadProducts() {
         const price =
           Number(product.price || 0);
 
+        const oldPrice =
+          Number(product.old_price || 0);
+
+        const discount =
+          Number(product.discount || 0);
+
         const cost =
           Number(product.cost_price || 0);
 
         const profit =
           price - cost;
 
+        const profitClass =
+          profit >= 0
+          ? "profit"
+          : "loss";
+
+
         return `
+
           <tr>
 
             <td>
@@ -977,28 +1225,58 @@ async function loadProducts() {
                 ? `<img
                     class="product-img"
                     src="${escapeHtml(image)}"
+                    alt=""
                   >`
                 : "—"
               }
             </td>
 
+
             <td>
               <b>
-                ${escapeHtml(product.name)}
+                ${escapeHtml(product.name || "Без названия")}
               </b>
             </td>
 
+
             <td>
-              ${formatMoney(price)}
+              <b>
+                ${formatMoney(price)}
+              </b>
             </td>
+
+
+            <td>
+              ${
+                oldPrice > 0
+                ? `<span class="old-price">
+                    ${formatMoney(oldPrice)}
+                  </span>`
+                : "—"
+              }
+            </td>
+
+
+            <td>
+              ${
+                discount > 0
+                ? `<span class="discount">
+                    −${discount}%
+                  </span>`
+                : "—"
+              }
+            </td>
+
 
             <td>
               ${formatMoney(cost)}
             </td>
 
-            <td class="profit">
+
+            <td class="${profitClass}">
               ${formatMoney(profit)}
             </td>
+
 
             <td>
               ${escapeHtml(
@@ -1006,9 +1284,11 @@ async function loadProducts() {
               )}
             </td>
 
+
             <td>
-              ${product.stock || 0}
+              ${Number(product.stock || 0)}
             </td>
+
 
             <td>
               <span class="status">
@@ -1019,6 +1299,18 @@ async function loadProducts() {
                 }
               </span>
             </td>
+
+
+            <td>
+              ${
+                product.is_top
+                ? `<span class="top-badge">
+                    ⭐ Топ
+                  </span>`
+                : "—"
+              }
+            </td>
+
 
             <td>
 
@@ -1031,11 +1323,12 @@ async function loadProducts() {
                   ✏️
                 </button>
 
+
                 <button
                   class="secondary"
                   onclick="toggleProduct(
                     ${product.id},
-                    ${product.is_active}
+                    ${Boolean(product.is_active)}
                   )"
                 >
                   ${
@@ -1044,6 +1337,7 @@ async function loadProducts() {
                     : "Показать"
                   }
                 </button>
+
 
                 <button
                   class="danger"
@@ -1057,15 +1351,17 @@ async function loadProducts() {
             </td>
 
           </tr>
+
         `;
 
       }).join("");
+
 
   } catch (error) {
 
     table.innerHTML =
       `<tr>
-        <td colspan="9">
+        <td colspan="12">
           ❌ ${escapeHtml(error.message)}
         </td>
       </tr>`;
@@ -1121,6 +1417,14 @@ function clearProductForm() {
   ).value = "";
 
   document.getElementById(
+    "productOldPrice"
+  ).value = "";
+
+  document.getElementById(
+    "productDiscount"
+  ).value = "";
+
+  document.getElementById(
     "productCost"
   ).value = "";
 
@@ -1131,6 +1435,10 @@ function clearProductForm() {
   document.getElementById(
     "productStock"
   ).value = "0";
+
+  document.getElementById(
+    "productIsTop"
+  ).checked = false;
 
   document.getElementById(
     "productImage"
@@ -1154,8 +1462,16 @@ function clearProductForm() {
   ).textContent =
     "Прибыль: 0 ₽";
 
+  document.getElementById(
+    "productModalMessage"
+  ).classList.add("hidden");
+
 }
 
+
+/* =========================
+   IMAGE PREVIEW
+========================= */
 
 document
   .getElementById("productImage")
@@ -1197,6 +1513,10 @@ document
   );
 
 
+/* =========================
+   PROFIT
+========================= */
+
 document
   .getElementById("productPrice")
   .addEventListener(
@@ -1232,11 +1552,20 @@ function updateProfitPreview() {
   const profit =
     price - cost;
 
-  document.getElementById(
-    "profitPreview"
-  ).textContent =
+
+  const element =
+    document.getElementById(
+      "profitPreview"
+    );
+
+  element.textContent =
     "Прибыль: " +
     formatMoney(profit);
+
+  element.className =
+    profit >= 0
+    ? "profit"
+    : "loss";
 
 }
 
@@ -1262,6 +1591,7 @@ async function uploadImage(file) {
     "." +
     extension;
 
+
   const response =
     await fetch(
       SUPABASE_URL +
@@ -1284,8 +1614,10 @@ async function uploadImage(file) {
       }
     );
 
+
   const text =
     await response.text();
+
 
   if (!response.ok) {
 
@@ -1295,6 +1627,7 @@ async function uploadImage(file) {
     );
 
   }
+
 
   return (
     SUPABASE_URL +
@@ -1330,6 +1663,16 @@ async function saveProduct() {
       .getElementById("productPrice")
       .value;
 
+  const oldPrice =
+    document
+      .getElementById("productOldPrice")
+      .value || 0;
+
+  const discount =
+    document
+      .getElementById("productDiscount")
+      .value || 0;
+
   const costPrice =
     document
       .getElementById("productCost")
@@ -1345,6 +1688,11 @@ async function saveProduct() {
     document
       .getElementById("productStock")
       .value || 0;
+
+  const isTop =
+    document
+      .getElementById("productIsTop")
+      .checked;
 
   const file =
     document
@@ -1403,12 +1751,22 @@ async function saveProduct() {
 
       price: Number(price),
 
+      old_price:
+        Number(oldPrice),
+
+      discount:
+        Number(discount),
+
       cost_price:
         Number(costPrice),
 
       category: category,
 
-      stock: Number(stock)
+      stock:
+        Number(stock),
+
+      is_top:
+        isTop
 
     };
 
@@ -1485,7 +1843,7 @@ async function saveProduct() {
 
     closeProductModal();
 
-    loadProducts();
+    await loadProducts();
 
 
   } catch (error) {
@@ -1518,8 +1876,10 @@ async function editProduct(id) {
         }
       );
 
+
     const data =
       await response.json();
+
 
     if (!response.ok) {
 
@@ -1529,8 +1889,10 @@ async function editProduct(id) {
 
     }
 
+
     const product =
       data[0];
+
 
     if (!product) return;
 
@@ -1566,6 +1928,18 @@ async function editProduct(id) {
 
 
     document.getElementById(
+      "productOldPrice"
+    ).value =
+      product.old_price || "";
+
+
+    document.getElementById(
+      "productDiscount"
+    ).value =
+      product.discount || "";
+
+
+    document.getElementById(
       "productCost"
     ).value =
       product.cost_price || "";
@@ -1584,6 +1958,12 @@ async function editProduct(id) {
 
 
     document.getElementById(
+      "productIsTop"
+    ).checked =
+      Boolean(product.is_top);
+
+
+    document.getElementById(
       "productImage"
     ).value = "";
 
@@ -1594,6 +1974,32 @@ async function editProduct(id) {
       product.image_url
       ? "Текущее фото сохранится, если новое не выбрать"
       : "Фото не выбрано";
+
+
+    const preview =
+      document.getElementById(
+        "imagePreview"
+      );
+
+
+    if (product.image_url) {
+
+      preview.src =
+        product.image_url;
+
+      preview.classList.remove(
+        "hidden"
+      );
+
+    } else {
+
+      preview.src = "";
+
+      preview.classList.add(
+        "hidden"
+      );
+
+    }
 
 
     updateProfitPreview();
@@ -1660,7 +2066,8 @@ async function toggleProduct(
     }
 
 
-    loadProducts();
+    await loadProducts();
+
 
   } catch (error) {
 
@@ -1714,7 +2121,8 @@ async function deleteProduct(id) {
     }
 
 
-    loadProducts();
+    await loadProducts();
+
 
   } catch (error) {
 
@@ -1747,6 +2155,7 @@ function setOrderFilter(filter) {
       filter === "new"
     );
 
+
   document
     .getElementById(
       "ordersDeliveryTab"
@@ -1755,6 +2164,7 @@ function setOrderFilter(filter) {
       "active",
       filter === "delivery"
     );
+
 
   document
     .getElementById(
@@ -1771,6 +2181,10 @@ function setOrderFilter(filter) {
 }
 
 
+/* =========================
+   LOAD ORDERS
+========================= */
+
 async function loadOrders() {
 
   const table =
@@ -1778,8 +2192,9 @@ async function loadOrders() {
       "ordersTable"
     );
 
+
   table.innerHTML =
-    "<tr><td colspan='6'>Загрузка...</td></tr>";
+    "<tr><td colspan='8'>Загрузка...</td></tr>";
 
 
   try {
@@ -1815,28 +2230,32 @@ async function loadOrders() {
         ) {
 
           return [
-            "new",
-            "processing"
+            "processing",
+            "new"
           ].includes(
-            order.status
+            order.order_status
           );
 
         }
+
 
         if (
           currentOrderFilter === "delivery"
         ) {
 
-          return order.status ===
-            "delivery";
+          return (
+            order.order_status ===
+            "delivery"
+          );
 
         }
+
 
         return [
           "completed",
           "cancelled"
         ].includes(
-          order.status
+          order.order_status
         );
 
       });
@@ -1845,7 +2264,7 @@ async function loadOrders() {
     if (!filtered.length) {
 
       table.innerHTML =
-        "<tr><td colspan='6'>Заказов пока нет.</td></tr>";
+        "<tr><td colspan='8'>Заказов пока нет.</td></tr>";
 
       return;
 
@@ -1855,35 +2274,71 @@ async function loadOrders() {
     table.innerHTML =
       filtered.map(order => {
 
-        const date =
+        const dateObject =
           new Date(
             order.created_at
-          ).toLocaleString(
+          );
+
+
+        const date =
+          dateObject.toLocaleDateString(
             "ru-RU"
           );
 
 
+        const time =
+          dateObject.toLocaleTimeString(
+            "ru-RU",
+            {
+              hour: "2-digit",
+              minute: "2-digit"
+            }
+          );
+
+
         return `
+
           <tr
             class="order-row"
             onclick="openOrder(${order.id})"
           >
 
             <td>
-              #${order.id}
+              <b>
+                #${escapeHtml(
+                  order.Order_number ??
+                  order.order_number ??
+                  order.id
+                )}
+              </b>
             </td>
+
+
+            <td>
+              ${date}
+            </td>
+
+
+            <td>
+              ${time}
+            </td>
+
 
             <td>
               ${escapeHtml(
-                order.customer_name
+                order.customer_name ||
+                "—"
               )}
             </td>
 
+
             <td>
               ${escapeHtml(
-                order.customer_contact || "—"
+                order.customer_contact ||
+                "—"
               )}
             </td>
+
 
             <td>
               <b>
@@ -1893,17 +2348,22 @@ async function loadOrders() {
               </b>
             </td>
 
+
             <td>
-              ${date}
+              ${paymentStatusName(
+                order.payment_status
+              )}
             </td>
+
 
             <td>
               ${statusName(
-                order.status
+                order.order_status
               )}
             </td>
 
           </tr>
+
         `;
 
       }).join("");
@@ -1913,7 +2373,7 @@ async function loadOrders() {
 
     table.innerHTML =
       `<tr>
-        <td colspan="6">
+        <td colspan="8">
           ❌ ${escapeHtml(
             error.message
           )}
@@ -1964,118 +2424,389 @@ async function openOrder(id) {
     if (!order) return;
 
 
+    const orderNumber =
+      order.Order_number ??
+      order.order_number ??
+      order.id;
+
+
+    const dateObject =
+      new Date(
+        order.created_at
+      );
+
+
+    const date =
+      dateObject.toLocaleDateString(
+        "ru-RU"
+      );
+
+
+    const time =
+      dateObject.toLocaleTimeString(
+        "ru-RU",
+        {
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      );
+
+
+    let items = [];
+
+    try {
+
+      if (Array.isArray(order.items)) {
+
+        items =
+          order.items;
+
+      } else if (
+        typeof order.items === "string"
+      ) {
+
+        items =
+          JSON.parse(
+            order.items
+          );
+
+      }
+
+    } catch (error) {
+
+      items = [];
+
+    }
+
+
+    let productsHtml =
+      "<p>Товары не указаны.</p>";
+
+
+    if (items.length) {
+
+      productsHtml =
+        items.map(item => {
+
+          const itemImage =
+            item.image_url ||
+            item.image ||
+            "";
+
+          const itemName =
+            item.name ||
+            "Товар";
+
+          const quantity =
+            Number(
+              item.quantity || 1
+            );
+
+          const price =
+            Number(
+              item.price || 0
+            );
+
+
+          return `
+
+            <div class="order-product">
+
+              ${
+                itemImage
+                ? `<img
+                    class="order-product-img"
+                    src="${escapeHtml(itemImage)}"
+                    alt=""
+                  >`
+                : `<div
+                    class="order-product-img"
+                  ></div>`
+              }
+
+
+              <div class="order-product-info">
+
+                <div class="order-product-name">
+                  ${escapeHtml(itemName)}
+                </div>
+
+                <div class="order-product-meta">
+                  ${quantity} шт. ×
+                  ${formatMoney(price)}
+                </div>
+
+              </div>
+
+
+              <b>
+                ${formatMoney(
+                  price * quantity
+                )}
+              </b>
+
+            </div>
+
+          `;
+
+        }).join("");
+
+    }
+
+
     document
       .getElementById(
         "orderDetails"
       )
       .innerHTML = `
 
-        <p>
-          <b>Заказ:</b> #${order.id}
-        </p>
+        <div class="info-line">
 
-        <p>
-          <b>Клиент:</b>
+          <div class="info-label">
+            Номер заказа
+          </div>
+
+          <b>
+            #${escapeHtml(orderNumber)}
+          </b>
+
+        </div>
+
+
+        <div class="info-line">
+
+          <div class="info-label">
+            Дата и время
+          </div>
+
+          ${date} в ${time}
+
+        </div>
+
+
+        <div class="info-line">
+
+          <div class="info-label">
+            Клиент
+          </div>
+
           ${escapeHtml(
-            order.customer_name
+            order.customer_name ||
+            "—"
           )}
-        </p>
 
-        <p>
-          <b>Контакт:</b>
+        </div>
+
+
+        <div class="info-line">
+
+          <div class="info-label">
+            Контакт
+          </div>
+
           ${escapeHtml(
-            order.customer_contact || "—"
+            order.customer_contact ||
+            "—"
           )}
-        </p>
 
-        <p>
-          <b>Город:</b>
+        </div>
+
+
+        <div class="info-line">
+
+          <div class="info-label">
+            Город
+          </div>
+
           ${escapeHtml(
-            order.city || "—"
+            order.city ||
+            "—"
           )}
-        </p>
 
-        <p>
-          <b>Доставка:</b>
+        </div>
+
+
+        <div class="info-line">
+
+          <div class="info-label">
+            Способ доставки
+          </div>
+
           ${escapeHtml(
-            order.delivery_method || "—"
+            order.delivery_method ||
+            "—"
           )}
-        </p>
 
-        <p>
-          <b>Комментарий:</b>
+        </div>
+
+
+        <div class="info-line">
+
+          <div class="info-label">
+            Комментарий
+          </div>
+
           ${escapeHtml(
-            order.comment || "—"
+            order.comment ||
+            "—"
           )}
-        </p>
 
-        <p class="total">
-          Сумма:
-          ${formatMoney(
-            order.total
-          )}
-        </p>
+        </div>
+
 
         <hr>
+
+
+        <h3>
+          📦 Товары
+        </h3>
+
+
+        <div class="order-products">
+
+          ${productsHtml}
+
+        </div>
+
+
+        <div class="order-summary">
+
+          <div class="order-line">
+
+            <span>
+              Доставка
+            </span>
+
+            <span>
+              ${formatMoney(
+                order.delivery_cost
+              )}
+            </span>
+
+          </div>
+
+
+          <div class="order-line total-line">
+
+            <span>
+              Итого
+            </span>
+
+            <span>
+              ${formatMoney(
+                order.total
+              )}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <hr>
+
+
+        <label>
+          Статус оплаты
+        </label>
+
+
+        <select id="orderPaymentStatus">
+
+          <option
+            value="unpaid"
+            ${
+              order.payment_status ===
+              "unpaid"
+              ? "selected"
+              : ""
+            }
+          >
+            💳 Не оплачено
+          </option>
+
+
+          <option
+            value="paid"
+            ${
+              order.payment_status ===
+              "paid"
+              ? "selected"
+              : ""
+            }
+          >
+            💳 Оплачено
+          </option>
+
+        </select>
+
 
         <label>
           Статус заказа
         </label>
 
+
         <select id="orderStatus">
 
           <option
-            value="new"
-            ${order.status === "new"
+            value="processing"
+            ${
+              order.order_status ===
+              "processing"
               ? "selected"
-              : ""}
+              : ""
+            }
           >
-            🆕 Новый
+            🕐 В обработке
           </option>
 
-          <option
-            value="processing"
-            ${order.status === "processing"
-              ? "selected"
-              : ""}
-          >
-            ⚙️ Обработка
-          </option>
 
           <option
             value="delivery"
-            ${order.status === "delivery"
+            ${
+              order.order_status ===
+              "delivery"
               ? "selected"
-              : ""}
+              : ""
+            }
           >
             🚚 В доставке
           </option>
 
+
           <option
             value="completed"
-            ${order.status === "completed"
+            ${
+              order.order_status ===
+              "completed"
               ? "selected"
-              : ""}
+              : ""
+            }
           >
-            ✅ Завершён
+            ✅ Получено
           </option>
+
 
           <option
             value="cancelled"
-            ${order.status === "cancelled"
+            ${
+              order.order_status ===
+              "cancelled"
               ? "selected"
-              : ""}
+              : ""
+            }
           >
-            ❌ Отменён
+            ❌ Отменено
           </option>
 
         </select>
 
+
         <button
           class="primary"
-          onclick="updateOrderStatus(${order.id})"
+          onclick="updateOrder(${order.id})"
         >
-          Сохранить статус
+          💾 Сохранить изменения
         </button>
 
       `;
@@ -2102,6 +2833,10 @@ async function openOrder(id) {
 }
 
 
+/* =========================
+   CLOSE ORDER
+========================= */
+
 function closeOrderModal() {
 
   document
@@ -2116,15 +2851,23 @@ function closeOrderModal() {
 
 
 /* =========================
-   UPDATE ORDER STATUS
+   UPDATE ORDER
 ========================= */
 
-async function updateOrderStatus(id) {
+async function updateOrder(id) {
 
-  const status =
+  const orderStatus =
     document
       .getElementById(
         "orderStatus"
+      )
+      .value;
+
+
+  const paymentStatus =
+    document
+      .getElementById(
+        "orderPaymentStatus"
       )
       .value;
 
@@ -2146,16 +2889,26 @@ async function updateOrderStatus(id) {
           },
 
           body: JSON.stringify({
-            status: status
+
+            order_status:
+              orderStatus,
+
+            payment_status:
+              paymentStatus
+
           })
         }
       );
 
 
+    const text =
+      await response.text();
+
+
     if (!response.ok) {
 
       throw new Error(
-        await response.text()
+        text
       );
 
     }
@@ -2163,12 +2916,13 @@ async function updateOrderStatus(id) {
 
     closeOrderModal();
 
-    loadOrders();
+    await loadOrders();
+
 
   } catch (error) {
 
     alert(
-      "Ошибка изменения статуса: " +
+      "Ошибка изменения заказа: " +
       error.message
     );
 
@@ -2199,24 +2953,44 @@ function statusName(status) {
   const names = {
 
     new:
-      "🆕 Новый",
+      "🕐 В обработке",
 
     processing:
-      "⚙️ Обработка",
+      "🕐 В обработке",
 
     delivery:
       "🚚 В доставке",
 
     completed:
-      "✅ Завершён",
+      "✅ Получено",
 
     cancelled:
-      "❌ Отменён"
+      "❌ Отменено"
 
   };
 
+
   return names[status] ||
-    status;
+    "🕐 В обработке";
+
+}
+
+
+function paymentStatusName(status) {
+
+  const names = {
+
+    unpaid:
+      "💳 Не оплачено",
+
+    paid:
+      "💳 Оплачено"
+
+  };
+
+
+  return names[status] ||
+    "💳 Не оплачено";
 
 }
 
@@ -2229,8 +3003,10 @@ function showMessage(
   const element =
     document.getElementById(id);
 
+
   element.textContent =
     text;
+
 
   element.classList.remove(
     "hidden"
@@ -2238,6 +3014,10 @@ function showMessage(
 
 }
 
+
+/* =========================
+   ESCAPE HTML
+========================= */
 
 function escapeHtml(text) {
 
@@ -2252,13 +3032,14 @@ function escapeHtml(text) {
 
 
 /* =========================
-   AUTO LOGIN AFTER REFRESH
+   AUTO LOGIN
 ========================= */
 
 (async function() {
 
   const sessionExists =
     await checkSession();
+
 
   if (sessionExists) {
 
