@@ -2,8 +2,9 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#090909">
+<meta name="telegram-web-app-capable" content="yes">
 
 <title>Miata Garage — коллекционные модели</title>
 
@@ -20,14 +21,23 @@ body {
   margin: 0;
   color: #fff;
   background:
-    linear-gradient(rgba(5,5,6,.88), rgba(5,5,6,.94)),
+    linear-gradient(
+      rgba(5,5,6,.55),
+      rgba(5,5,6,.68)
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(110,0,15,.16),
+      transparent 30%
+    ),
     repeating-linear-gradient(
       135deg,
-      #171717 0px,
-      #171717 2px,
-      #0d0d0d 2px,
-      #0d0d0d 7px
+      #1a1a1a 0px,
+      #1a1a1a 2px,
+      #0c0c0c 2px,
+      #0c0c0c 7px
     );
+  background-attachment: fixed;
   font-family: Arial, Helvetica, sans-serif;
   min-height: 100vh;
 }
@@ -41,6 +51,11 @@ select {
 
 button {
   cursor: pointer;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
 }
 
 .hidden {
@@ -81,6 +96,7 @@ header {
   font-size: 20px;
   font-weight: 900;
   letter-spacing: -1px;
+  white-space: nowrap;
 }
 
 .logo-small span {
@@ -102,7 +118,7 @@ header {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .icon-btn {
@@ -132,7 +148,11 @@ header {
   align-items: center;
   border-bottom: 1px solid #292929;
   background:
-    radial-gradient(circle at 75% 50%, rgba(170,0,20,.18), transparent 35%),
+    radial-gradient(
+      circle at 75% 50%,
+      rgba(170,0,20,.18),
+      transparent 35%
+    ),
     #070708;
 }
 
@@ -144,9 +164,17 @@ header {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  opacity: .92;
-  mask-image: linear-gradient(to right, transparent 0%, black 25%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 25%);
+  opacity: .82;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 25%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 25%
+  );
 }
 
 .hero-overlay {
@@ -174,7 +202,6 @@ header {
   font-size: 13px;
   font-weight: 900;
   letter-spacing: 2px;
-  text-transform: uppercase;
 }
 
 .hero h1 {
@@ -226,7 +253,7 @@ header {
 }
 
 /* =========================
-   NEWS CAROUSEL
+   NEWS / MODELS STRIP
 ========================= */
 
 .news-slider {
@@ -240,16 +267,32 @@ header {
 .news-track {
   display: flex;
   gap: 18px;
-  overflow: hidden;
+  overflow-x: auto;
   scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.news-track::-webkit-scrollbar {
+  display: none;
 }
 
 .news-card {
   flex: 0 0 calc(33.333% - 12px);
-  min-height: 145px;
+  min-height: 170px;
   border: 1px solid #303030;
   border-radius: 14px;
-  background: #343434;
+  background:
+    linear-gradient(
+      rgba(20,20,22,.55),
+      rgba(10,10,11,.85)
+    ),
+    repeating-linear-gradient(
+      135deg,
+      #343434 0px,
+      #343434 2px,
+      #242424 2px,
+      #242424 7px
+    );
   overflow: hidden;
   position: relative;
 }
@@ -258,11 +301,12 @@ header {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,.55),
-    transparent
-  );
+  background:
+    linear-gradient(
+      to top,
+      rgba(0,0,0,.7),
+      transparent 65%
+    );
 }
 
 .news-placeholder {
@@ -296,24 +340,6 @@ header {
   right: 8px;
 }
 
-.dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 15px;
-}
-
-.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #555;
-}
-
-.dot.active {
-  background: #ed001b;
-}
-
 /* =========================
    SECTIONS
 ========================= */
@@ -344,8 +370,14 @@ header {
   margin-top: 7px;
 }
 
+.section-link {
+  color: #ed001b;
+  font-size: 13px;
+  font-weight: 900;
+}
+
 /* =========================
-   PRODUCTS
+   TOP PRODUCTS
 ========================= */
 
 .products-grid {
@@ -356,7 +388,11 @@ header {
 
 .product {
   min-width: 0;
-  background: #111113;
+  background:
+    linear-gradient(
+      rgba(17,17,19,.92),
+      rgba(11,11,13,.96)
+    );
   border: 1px solid #29292e;
   border-radius: 11px;
   overflow: hidden;
@@ -447,55 +483,42 @@ header {
   border-color: #e9001b;
 }
 
-.out {
-  opacity: .45;
-}
-
 /* =========================
-   DELIVERY
+   BENEFITS
 ========================= */
 
-.delivery-box {
-  border: 1px solid #302f34;
-  border-radius: 18px;
-  background: rgba(15,15,17,.8);
-  padding: 35px;
+.benefits-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 35px;
-}
-
-.delivery-title {
-  font-size: 32px;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.delivery-text {
-  color: #999;
-  line-height: 1.7;
-}
-
-.delivery-list {
-  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
 }
 
-.delivery-item {
+.benefit {
   border: 1px solid #29292e;
-  border-radius: 10px;
-  padding: 15px;
-  background: #111114;
+  border-radius: 12px;
+  padding: 20px 15px;
+  background:
+    linear-gradient(
+      rgba(15,15,17,.86),
+      rgba(9,9,11,.92)
+    );
 }
 
-.delivery-item b {
-  display: block;
-  margin-bottom: 4px;
+.benefit-icon {
+  font-size: 25px;
+  margin-bottom: 10px;
 }
 
-.delivery-item span {
-  color: #888;
+.benefit-title {
   font-size: 13px;
+  font-weight: 900;
+}
+
+.benefit-text {
+  color: #777;
+  font-size: 11px;
+  line-height: 1.4;
+  margin-top: 5px;
 }
 
 /* =========================
@@ -504,7 +527,7 @@ header {
 
 footer {
   border-top: 1px solid #292929;
-  background: #080809;
+  background: rgba(8,8,9,.94);
 }
 
 .footer-inner {
@@ -613,7 +636,15 @@ footer {
   border: 1px solid #3a3a3e;
   border-radius: 18px;
   background:
-    linear-gradient(rgba(10,10,11,.94), rgba(10,10,11,.97)),
+    linear-gradient(
+      rgba(10,10,11,.55),
+      rgba(10,10,11,.68)
+    ),
+    radial-gradient(
+      circle at 80% 10%,
+      rgba(100,0,15,.15),
+      transparent 35%
+    ),
     repeating-linear-gradient(
       135deg,
       #222 0px,
@@ -622,6 +653,7 @@ footer {
       #111 7px
     );
   padding: 24px;
+  box-shadow: 0 20px 70px rgba(0,0,0,.65);
 }
 
 .modal-title {
@@ -723,7 +755,7 @@ footer {
 .form-control {
   width: 100%;
   border: 1px solid #34343a;
-  background: #111114;
+  background: rgba(8,8,10,.88);
   color: white;
   padding: 13px;
   border-radius: 9px;
@@ -741,7 +773,7 @@ footer {
 
 .delivery-option {
   border: 1px solid #333;
-  background: #151519;
+  background: rgba(12,12,15,.9);
   color: white;
   padding: 13px;
   border-radius: 9px;
@@ -774,6 +806,18 @@ footer {
   border-radius: 7px;
 }
 
+.checkout-quantity {
+  color: #aaa;
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.checkout-note {
+  color: #777;
+  font-size: 11px;
+  margin: 10px 0 20px;
+}
+
 .success {
   text-align: center;
   padding: 35px 10px;
@@ -785,6 +829,20 @@ footer {
 
 .success h2 {
   margin: 10px 0;
+}
+
+.order-number {
+  margin: 20px 0;
+  padding: 16px;
+  border: 1px solid #3a2529;
+  border-radius: 12px;
+  background: rgba(90,0,15,.16);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.order-number span {
+  color: #ed001b;
 }
 
 /* =========================
@@ -828,6 +886,9 @@ footer {
     width: 60%;
   }
 
+  .benefits-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media (max-width: 700px) {
@@ -848,13 +909,22 @@ footer {
     font-size: 17px;
   }
 
+  .header-actions {
+    gap: 6px;
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+  }
+
   .hero {
     min-height: 520px;
   }
 
   .hero-image {
     width: 100%;
-    opacity: .48;
+    opacity: .45;
     mask-image: none;
     -webkit-mask-image: none;
   }
@@ -864,7 +934,7 @@ footer {
       linear-gradient(
         to bottom,
         rgba(5,5,6,.5),
-        rgba(5,5,6,.92) 75%
+        rgba(5,5,6,.94) 75%
       );
   }
 
@@ -949,9 +1019,13 @@ footer {
     padding: 5px 2px;
   }
 
-  .delivery-box {
-    grid-template-columns: 1fr;
-    padding: 20px;
+  .benefits-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+
+  .benefit {
+    padding: 15px 10px;
   }
 
   .footer-inner {
@@ -970,6 +1044,7 @@ footer {
     left: 0;
     right: 0;
     height: 65px;
+    padding-bottom: env(safe-area-inset-bottom);
     background: rgba(8,8,9,.96);
     border-top: 1px solid #292929;
     z-index: 70;
@@ -997,36 +1072,53 @@ footer {
     height: 56px;
   }
 
+  .modal {
+    align-items: flex-end;
+    padding: 8px;
+  }
+
+  .modal-box {
+    max-height: 94vh;
+    border-radius: 18px;
+    padding: 18px;
+  }
+
+  .section-head {
+    align-items: flex-start;
+  }
+
+  .section-link {
+    white-space: nowrap;
+    margin-top: 5px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- =========================
-     HEADER
-========================= -->
+<!-- Telegram Mini App -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <header>
   <div class="header-inner">
 
-    <div class="logo-small">
+    <a href="index.html" class="logo-small">
       Miata <span>Garage</span>
-    </div>
+    </a>
 
     <nav class="nav">
-      <a href="#home">ГЛАВНАЯ</a>
-      <a href="#catalog">КАТАЛОГ</a>
-      <a href="#delivery">О ДОСТАВКЕ</a>
-      <a href="#news">НОВОСТИ</a>
+      <a href="index.html">ГЛАВНАЯ</a>
+      <a href="catalog.html">КАТАЛОГ</a>
+      <a href="delivery.html">О ДОСТАВКЕ</a>
     </nav>
 
     <div class="header-actions">
 
       <button
         class="icon-btn"
-        onclick="focusSearch()"
-        title="Поиск"
+        onclick="goToCatalog()"
+        title="Каталог"
       >
         🔎
       </button>
@@ -1045,14 +1137,9 @@ footer {
 </header>
 
 
-<!-- =========================
-     HERO
-========================= -->
+<!-- HERO -->
 
-<section
-  class="hero"
-  id="home"
->
+<section class="hero" id="home">
 
   <img
     class="hero-image"
@@ -1102,14 +1189,9 @@ footer {
 </section>
 
 
-<!-- =========================
-     NEWS SLIDER
-========================= -->
+<!-- NEWS -->
 
-<section
-  class="news-slider"
-  id="news"
->
+<section class="news-slider">
 
   <button
     class="slider-arrow slider-left"
@@ -1118,10 +1200,7 @@ footer {
     ‹
   </button>
 
-  <div
-    class="news-track"
-    id="newsTrack"
-  >
+  <div class="news-track" id="newsTrack">
 
     <div class="news-card">
       <div class="news-placeholder">
@@ -1131,13 +1210,19 @@ footer {
 
     <div class="news-card">
       <div class="news-placeholder">
-        🔥 Здесь будет новость
+        🔥 Новые модели уже скоро
       </div>
     </div>
 
     <div class="news-card">
       <div class="news-placeholder">
-        📦 Здесь будет новость
+        📦 Новое поступление
+      </div>
+    </div>
+
+    <div class="news-card">
+      <div class="news-placeholder">
+        ⭐ Редкие модели
       </div>
     </div>
 
@@ -1150,53 +1235,39 @@ footer {
     ›
   </button>
 
-  <div class="dots">
-    <div class="dot active"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-  </div>
-
 </section>
 
 
-<!-- =========================
-     CATALOG
-========================= -->
+<!-- TOP SALES -->
 
-<section
-  class="section"
-  id="catalog"
->
+<section class="section" id="top">
 
   <div class="section-head">
 
     <div>
       <h2 class="section-title">
-        Каталог
+        ⭐ Топ продаж
       </h2>
 
       <div class="section-subtitle">
-        Hot Wheels • Matchbox • INNO64 • Tarmac Works и другие
+        Модели, которые мы рекомендуем
       </div>
     </div>
 
-  </div>
-
-  <div class="search">
-    <input
-      id="searchInput"
-      class="form-control"
-      type="text"
-      placeholder="🔎 Найти модель..."
-      oninput="renderProducts()"
+    <a
+      class="section-link"
+      href="catalog.html"
     >
+      ВЕСЬ КАТАЛОГ →
+    </a>
+
   </div>
 
   <div
     class="products-grid"
     id="productsGrid"
   >
-    <div class="empty">
+    <div style="color:#777;">
       Загрузка товаров...
     </div>
   </div>
@@ -1204,67 +1275,72 @@ footer {
 </section>
 
 
-<!-- =========================
-     DELIVERY
-========================= -->
+<!-- BENEFITS -->
 
-<section
-  class="section"
-  id="delivery"
->
+<section class="section">
 
-  <div class="delivery-box">
-
+  <div class="section-head">
     <div>
+      <h2 class="section-title">
+        Miata Garage
+      </h2>
 
-      <div class="delivery-title">
-        Доставка
+      <div class="section-subtitle">
+        Всё для коллекционеров
       </div>
+    </div>
+  </div>
 
-      <p class="delivery-text">
-        После оформления заявки менеджер связывается
-        с вами, подтверждает заказ, уточняет стоимость
-        доставки и способ оплаты.
-      </p>
+  <div class="benefits-grid">
 
-      <p class="delivery-text">
-        Доступны несколько вариантов доставки по России.
-      </p>
-
+    <div class="benefit">
+      <div class="benefit-icon">🚚</div>
+      <div class="benefit-title">
+        Быстрая доставка
+      </div>
+      <div class="benefit-text">
+        Отправляем заказы по России.
+      </div>
     </div>
 
-    <div class="delivery-list">
-
-      <div class="delivery-item">
-        <b>🟣 Ozon Доставка</b>
-        <span>
-          Ориентировочно от 180 ₽.
-          Точная стоимость зависит от направления.
-        </span>
+    <div class="benefit">
+      <div class="benefit-icon">⭐</div>
+      <div class="benefit-title">
+        Более 150 покупателей
       </div>
-
-      <div class="delivery-item">
-        <b>🔵 Яндекс Доставка</b>
-        <span>
-          Ориентировочно от 319 ₽.
-          Для дальних направлений стоимость уточняется.
-        </span>
+      <div class="benefit-text">
+        Нам доверяют коллекционеры.
       </div>
+    </div>
 
-      <div class="delivery-item">
-        <b>🟢 5Post</b>
-        <span>
-          Стоимость зависит от города и пункта выдачи.
-        </span>
+    <div class="benefit">
+      <div class="benefit-icon">✅</div>
+      <div class="benefit-title">
+        Оригинальные модели
       </div>
-
-      <div class="delivery-item">
-        <b>🟠 Авито Доставка</b>
-        <span>
-          Стоимость определяется при оформлении.
-        </span>
+      <div class="benefit-text">
+        Только настоящие коллекционные модели.
       </div>
+    </div>
 
+    <div class="benefit">
+      <div class="benefit-icon">📦</div>
+      <div class="benefit-title">
+        Надёжная упаковка
+      </div>
+      <div class="benefit-text">
+        Бережно упаковываем каждый заказ.
+      </div>
+    </div>
+
+    <div class="benefit">
+      <div class="benefit-icon">💬</div>
+      <div class="benefit-title">
+        Связь с менеджером
+      </div>
+      <div class="benefit-text">
+        После заказа менеджер свяжется с вами.
+      </div>
     </div>
 
   </div>
@@ -1272,9 +1348,7 @@ footer {
 </section>
 
 
-<!-- =========================
-     FOOTER
-========================= -->
+<!-- FOOTER -->
 
 <footer>
 
@@ -1298,10 +1372,9 @@ footer {
 
       <h3>НАВИГАЦИЯ</h3>
 
-      <a href="#home">Главная</a>
-      <a href="#catalog">Каталог</a>
-      <a href="#delivery">О доставке</a>
-      <a href="#news">Новости</a>
+      <a href="index.html">Главная</a>
+      <a href="catalog.html">Каталог</a>
+      <a href="delivery.html">О доставке</a>
 
     </div>
 
@@ -1312,6 +1385,7 @@ footer {
       <a
         href="https://t.me/srap_model"
         target="_blank"
+        rel="noopener"
       >
         📢 Telegram-канал @srap_model
       </a>
@@ -1319,6 +1393,7 @@ footer {
       <a
         href="https://t.me/lil_peepxx"
         target="_blank"
+        rel="noopener"
       >
         💬 Telegram @lil_peepxx
       </a>
@@ -1334,27 +1409,25 @@ footer {
 </footer>
 
 
-<!-- =========================
-     FLOATING CART
-========================= -->
+<!-- FLOATING CART -->
 
 <button
   class="cart-floating"
   onclick="openCart()"
 >
   🛒
+
   <span
     class="cart-count"
     id="cartCount"
   >
     0
   </span>
+
 </button>
 
 
-<!-- =========================
-     MOBILE NAV
-========================= -->
+<!-- MOBILE NAV -->
 
 <div class="mobile-nav">
 
@@ -1381,14 +1454,9 @@ footer {
 </div>
 
 
-<!-- =========================
-     CART MODAL
-========================= -->
+<!-- CART MODAL -->
 
-<div
-  class="modal hidden"
-  id="cartModal"
->
+<div class="modal hidden" id="cartModal">
 
   <div class="modal-box">
 
@@ -1422,14 +1490,9 @@ footer {
 </div>
 
 
-<!-- =========================
-     CHECKOUT MODAL
-========================= -->
+<!-- CHECKOUT -->
 
-<div
-  class="modal hidden"
-  id="checkoutModal"
->
+<div class="modal hidden" id="checkoutModal">
 
   <div class="modal-box">
 
@@ -1447,6 +1510,10 @@ footer {
     <h3>Ваш заказ</h3>
 
     <div id="checkoutItems"></div>
+
+    <div class="checkout-note">
+      Количество товаров на этом этапе уже нельзя изменить.
+    </div>
 
     <div class="cart-total">
 
@@ -1466,14 +1533,13 @@ footer {
 
     <div class="form-group">
 
-      <label>
-        Имя
-      </label>
+      <label>Имя</label>
 
       <input
         class="form-control"
         id="customerName"
         placeholder="Ваше имя"
+        autocomplete="name"
       >
 
     </div>
@@ -1481,22 +1547,21 @@ footer {
     <div class="form-group">
 
       <label>
-        Telegram / номер телефона
+        Telegram / номер телефона с Telegram
       </label>
 
       <input
         class="form-control"
         id="customerContact"
         placeholder="@username или номер телефона"
+        autocomplete="tel"
       >
 
     </div>
 
     <div class="form-group">
 
-      <label>
-        Город
-      </label>
+      <label>Город</label>
 
       <input
         class="form-control"
@@ -1521,6 +1586,7 @@ footer {
           onclick="selectDelivery('Ozon Доставка')"
         >
           🟣 Ozon Доставка
+
           <div
             class="delivery-price"
             id="ozonPrice"
@@ -1535,6 +1601,7 @@ footer {
           onclick="selectDelivery('Яндекс Доставка')"
         >
           🔵 Яндекс Доставка
+
           <div
             class="delivery-price"
             id="yandexPrice"
@@ -1549,6 +1616,7 @@ footer {
           onclick="selectDelivery('5Post')"
         >
           🟢 5Post
+
           <div
             class="delivery-price"
             id="5postPrice"
@@ -1563,6 +1631,7 @@ footer {
           onclick="selectDelivery('Авито Доставка')"
         >
           🟠 Авито Доставка
+
           <div
             class="delivery-price"
             id="avitoPrice"
@@ -1577,9 +1646,7 @@ footer {
 
     <div class="form-group">
 
-      <label>
-        Комментарий
-      </label>
+      <label>Комментарий</label>
 
       <textarea
         class="form-control"
@@ -1621,14 +1688,9 @@ footer {
 </div>
 
 
-<!-- =========================
-     SUCCESS
-========================= -->
+<!-- SUCCESS -->
 
-<div
-  class="modal hidden"
-  id="successModal"
->
+<div class="modal hidden" id="successModal">
 
   <div class="modal-box">
 
@@ -1639,12 +1701,18 @@ footer {
       </div>
 
       <h2>
-        Заявка принята!
+        Спасибо за заказ!
       </h2>
 
+      <div class="order-number">
+        Ваш номер заказа:
+        <span id="successOrderNumber">
+          №2
+        </span>
+      </div>
+
       <p style="color:#aaa;line-height:1.6;">
-        Менеджер свяжется с вами для подтверждения
-        заказа, уточнения доставки и оплаты.
+        В скором времени с вами свяжется менеджер.
       </p>
 
       <button
@@ -1661,14 +1729,9 @@ footer {
 </div>
 
 
-<!-- =========================
-     PRODUCT DETAILS
-========================= -->
+<!-- PRODUCT DETAILS -->
 
-<div
-  class="modal hidden"
-  id="detailsModal"
->
+<div class="modal hidden" id="detailsModal">
 
   <div class="modal-box">
 
@@ -1698,6 +1761,15 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   "sb_publishable_l-Jn1GONymTw-fuN1eEgBw_FjtbUyzg";
 
+/*
+  Edge Function для Telegram.
+  Название функции должно быть:
+  telegram-order
+*/
+const TELEGRAM_FUNCTION_URL =
+  SUPABASE_URL +
+  "/functions/v1/telegram-order";
+
 
 /* =========================
    DATA
@@ -1712,6 +1784,29 @@ let cart = JSON.parse(
 let selectedDelivery = "";
 
 let selectedDeliveryCost = 0;
+
+
+/* =========================
+   TELEGRAM MINI APP
+========================= */
+
+function initTelegramMiniApp() {
+
+  if (
+    window.Telegram &&
+    window.Telegram.WebApp
+  ) {
+
+    const tg =
+      window.Telegram.WebApp;
+
+    tg.ready();
+
+    tg.expand();
+
+  }
+
+}
 
 
 /* =========================
@@ -1732,7 +1827,7 @@ function supabaseHeaders() {
 
 
 /* =========================
-   LOAD PRODUCTS
+   LOAD TOP PRODUCTS
 ========================= */
 
 async function loadProducts() {
@@ -1741,14 +1836,14 @@ async function loadProducts() {
     document.getElementById("productsGrid");
 
   container.innerHTML =
-    '<div class="empty">Загрузка товаров...</div>';
+    '<div style="color:#777;">Загрузка товаров...</div>';
 
   try {
 
     const response =
       await fetch(
         SUPABASE_URL +
-        "/rest/v1/products?select=*&is_active=eq.true&order=id.desc",
+        "/rest/v1/products?select=*&is_active=eq.true&is_top=eq.true&order=id.desc",
         {
           headers: supabaseHeaders()
         }
@@ -1765,7 +1860,8 @@ async function loadProducts() {
 
     }
 
-    products = data || [];
+    products =
+      data || [];
 
     renderProducts();
 
@@ -1774,10 +1870,8 @@ async function loadProducts() {
     console.error(error);
 
     container.innerHTML = `
-      <div class="empty">
+      <div style="color:#777;">
         Не удалось загрузить товары.
-        <br><br>
-        ${escapeHtml(error.message)}
       </div>
     `;
 
@@ -1795,49 +1889,20 @@ function renderProducts() {
   const container =
     document.getElementById("productsGrid");
 
-  const search =
-    (
-      document
-        .getElementById("searchInput")
-        ?.value || ""
-    )
-    .trim()
-    .toLowerCase();
+  if (!products.length) {
 
-  const filtered =
-    products.filter(product => {
-
-      const name =
-        String(product.name || "")
-          .toLowerCase();
-
-      const description =
-        String(product.description || "")
-          .toLowerCase();
-
-      const category =
-        String(product.category || "")
-          .toLowerCase();
-
-      return (
-        name.includes(search) ||
-        description.includes(search) ||
-        category.includes(search)
-      );
-
-    });
-
-  if (!filtered.length) {
-
-    container.innerHTML =
-      '<div class="empty">Товаров пока нет.</div>';
+    container.innerHTML = `
+      <div style="color:#777;">
+        Топ продаж пока не выбран.
+      </div>
+    `;
 
     return;
 
   }
 
   container.innerHTML =
-    filtered.map(product => {
+    products.map(product => {
 
       const price =
         Number(product.price || 0);
@@ -1872,7 +1937,7 @@ function renderProducts() {
       return `
 
         <article
-          class="product ${stock <= 0 ? "out" : ""}"
+          class="product"
         >
 
           <div class="product-image-wrap">
@@ -2061,7 +2126,9 @@ function addToCart(id) {
 
   if (stock <= 0) {
 
-    alert("Этого товара сейчас нет в наличии.");
+    alert(
+      "Этого товара сейчас нет в наличии."
+    );
 
     return;
 
@@ -2075,8 +2142,7 @@ function addToCart(id) {
   if (existing) {
 
     if (
-      existing.quantity <
-      stock
+      existing.quantity < stock
     ) {
 
       existing.quantity++;
@@ -2347,7 +2413,9 @@ function openCheckout() {
 
   if (!cart.length) {
 
-    alert("Сначала добавьте товары в корзину.");
+    alert(
+      "Сначала добавьте товары в корзину."
+    );
 
     return;
 
@@ -2423,7 +2491,7 @@ function renderCheckout() {
               ${escapeHtml(product.name)}
             </b>
 
-            <div style="color:#888;font-size:12px;">
+            <div class="checkout-quantity">
               ${quantity} × ${formatPrice(price)} ₽
             </div>
 
@@ -2465,46 +2533,17 @@ function selectDelivery(method) {
         button.classList.remove("active")
     );
 
-  if (
-    method ===
-    "Ozon Доставка"
-  ) {
+  const ids = {
+    "Ozon Доставка": "deliveryOzon",
+    "Яндекс Доставка": "deliveryYandex",
+    "5Post": "delivery5post",
+    "Авито Доставка": "deliveryAvito"
+  };
+
+  if (ids[method]) {
 
     document
-      .getElementById("deliveryOzon")
-      .classList.add("active");
-
-  }
-
-  if (
-    method ===
-    "Яндекс Доставка"
-  ) {
-
-    document
-      .getElementById("deliveryYandex")
-      .classList.add("active");
-
-  }
-
-  if (
-    method ===
-    "5Post"
-  ) {
-
-    document
-      .getElementById("delivery5post")
-      .classList.add("active");
-
-  }
-
-  if (
-    method ===
-    "Авито Доставка"
-  ) {
-
-    document
-      .getElementById("deliveryAvito")
+      .getElementById(ids[method])
       .classList.add("active");
 
   }
@@ -2694,25 +2733,12 @@ function calculateDelivery(
 
   }
 
-  if (
-    method ===
-    "5Post"
-  ) {
-
-    result.cost =
-      0;
-
-  }
-
-  if (
-    method ===
-    "Авито Доставка"
-  ) {
-
-    result.cost =
-      0;
-
-  }
+  /*
+    Для 5Post и Авито точная стоимость
+    определяется отдельно.
+    Поэтому пока в итог не добавляем
+    неизвестную сумму.
+  */
 
   return result;
 
@@ -2844,6 +2870,8 @@ async function submitOrder() {
           p => Number(p.id) === Number(item.id)
         );
 
+      if (!product) return null;
+
       return {
 
         id:
@@ -2863,15 +2891,25 @@ async function submitOrder() {
 
       };
 
-    });
+    }).filter(Boolean);
+
+  if (!items.length) {
+
+    showCheckoutError(
+      "Не удалось определить товары заказа."
+    );
+
+    return;
+
+  }
 
   let productsTotal = 0;
 
   items.forEach(item => {
 
     productsTotal +=
-      item.price *
-      item.quantity;
+      Number(item.price) *
+      Number(item.quantity);
 
   });
 
@@ -2890,6 +2928,11 @@ async function submitOrder() {
     "ОТПРАВЛЯЕМ...";
 
   try {
+
+    /*
+      1. Сначала создаём заказ в Supabase.
+      Номер Order_number создаётся базой автоматически.
+    */
 
     const response =
       await fetch(
@@ -2930,8 +2973,11 @@ async function submitOrder() {
             total:
               total,
 
-            status:
-              "new"
+            order_status:
+              "processing",
+
+            payment_status:
+              "unpaid"
 
           })
         }
@@ -2948,17 +2994,116 @@ async function submitOrder() {
 
     }
 
+    /*
+      Получаем созданный заказ.
+      Поддерживаем mixed-case "Order_number".
+    */
+
+    const createdOrder =
+      Array.isArray(data)
+        ? data[0]
+        : data;
+
+    const orderNumber =
+      createdOrder?.Order_number ??
+      createdOrder?.order_number ??
+      "2";
+
+    /*
+      2. Отправляем заказ в Telegram.
+      Если Telegram временно не ответит,
+      сам заказ всё равно останется в Supabase.
+    */
+
+    try {
+
+      await fetch(
+        TELEGRAM_FUNCTION_URL,
+        {
+          method: "POST",
+
+          headers: {
+            ...supabaseHeaders()
+          },
+
+          body: JSON.stringify({
+
+            order_number:
+              orderNumber,
+
+            customer_name:
+              name,
+
+            customer_contact:
+              contact,
+
+            city:
+              city,
+
+            delivery_method:
+              selectedDelivery,
+
+            delivery_cost:
+              Number(selectedDeliveryCost || 0),
+
+            comment:
+              comment,
+
+            items:
+              items,
+
+            total:
+              total,
+
+            order_status:
+              "processing",
+
+            payment_status:
+              "unpaid"
+
+          })
+        }
+      );
+
+    } catch (telegramError) {
+
+      console.error(
+        "Telegram notification error:",
+        telegramError
+      );
+
+    }
+
+    /*
+      3. Очищаем корзину.
+    */
+
     cart = [];
 
     saveCart();
 
     updateCartCount();
 
-    closeModal("checkoutModal");
+    /*
+      4. Показываем номер настоящего заказа.
+    */
+
+    document
+      .getElementById("successOrderNumber")
+      .textContent =
+        "№" + orderNumber;
+
+    closeModal(
+      "checkoutModal"
+    );
 
     document
       .getElementById("successModal")
       .classList.remove("hidden");
+
+    /*
+      Очищаем форму.
+    */
 
     document
       .getElementById("customerName")
@@ -2976,13 +3121,16 @@ async function submitOrder() {
       .getElementById("customerComment")
       .value = "";
 
+    selectedDelivery = "";
+
+    selectedDeliveryCost = 0;
+
   } catch (error) {
 
     console.error(error);
 
     showCheckoutError(
-      "Ошибка отправки заявки: " +
-      error.message
+      "Ошибка отправки заявки. Попробуйте ещё раз."
     );
 
   } finally {
@@ -3038,21 +3186,15 @@ function slideNews(direction) {
 
 function goToCatalog() {
 
-  document
-    .getElementById("catalog")
-    .scrollIntoView({
-      behavior: "smooth"
-    });
+  window.location.href =
+    "catalog.html";
 
 }
 
 function goToDelivery() {
 
-  document
-    .getElementById("delivery")
-    .scrollIntoView({
-      behavior: "smooth"
-    });
+  window.location.href =
+    "delivery.html";
 
 }
 
@@ -3062,20 +3204,6 @@ function goHome() {
     top: 0,
     behavior: "smooth"
   });
-
-}
-
-function focusSearch() {
-
-  goToCatalog();
-
-  setTimeout(() => {
-
-    document
-      .getElementById("searchInput")
-      .focus();
-
-  }, 500);
 
 }
 
@@ -3145,6 +3273,8 @@ function escapeAttribute(text) {
 /* =========================
    START
 ========================= */
+
+initTelegramMiniApp();
 
 updateCartCount();
 
