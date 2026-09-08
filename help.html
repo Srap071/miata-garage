@@ -1,1 +1,1045 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Miata Garage — Помощь</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: #fff;
+    min-height: 100vh;
+
+    background:
+        linear-gradient(rgba(8, 8, 9, .45), rgba(8, 8, 9, .55)),
+        repeating-linear-gradient(
+            135deg,
+            #171717 0px,
+            #171717 2px,
+            #0d0d0d 2px,
+            #0d0d0d 7px
+        );
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(90, 0, 0, .08),
+            transparent 35%,
+            rgba(80, 0, 0, .06)
+        );
+}
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    padding: 14px 5%;
+
+    background: rgba(10, 10, 10, .88);
+    border-bottom: 1px solid rgba(120, 0, 0, .35);
+
+    backdrop-filter: blur(10px);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    font-size: 22px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.logo img {
+    width: 58px;
+    height: 34px;
+    object-fit: contain;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+nav a {
+    color: #ddd;
+    text-decoration: none;
+
+    padding: 9px 13px;
+    border-radius: 9px;
+
+    transition: .2s;
+}
+
+nav a:hover,
+nav a.active {
+    color: #fff;
+    background: rgba(100, 0, 0, .45);
+}
+
+main {
+    width: min(1000px, 92%);
+    margin: 0 auto;
+
+    padding: 45px 0 70px;
+}
+
+.page-title {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.page-title h1 {
+    font-size: clamp(30px, 5vw, 46px);
+    margin-bottom: 10px;
+}
+
+.page-title p {
+    color: #aaa;
+    line-height: 1.5;
+}
+
+.help-grid {
+    display: grid;
+    gap: 18px;
+}
+
+.help-card {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(35, 35, 35, .68),
+            rgba(12, 12, 12, .76)
+        );
+
+    border: 1px solid rgba(110, 110, 110, .18);
+    border-radius: 18px;
+
+    padding: 24px;
+
+    box-shadow: 0 10px 35px rgba(0,0,0,.22);
+}
+
+.help-card:hover {
+    border-color: rgba(130, 0, 0, .45);
+}
+
+.action-button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 20px 22px;
+
+    border: 1px solid rgba(130, 0, 0, .45);
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(85, 0, 0, .36),
+            rgba(18, 18, 18, .82)
+        );
+
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+
+    cursor: pointer;
+    text-align: left;
+
+    transition: .2s;
+}
+
+.action-button:hover {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(110, 0, 0, .48),
+            rgba(25, 25, 25, .9)
+        );
+
+    transform: translateY(-2px);
+}
+
+.action-button span:last-child {
+    font-size: 24px;
+    color: #aaa;
+}
+
+.contact-box {
+    margin-top: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(60, 0, 0, .25),
+            rgba(12, 12, 12, .75)
+        );
+
+    border: 1px solid rgba(120, 0, 0, .35);
+}
+
+.contact-text h2 {
+    font-size: 20px;
+    margin-bottom: 7px;
+}
+
+.contact-text p {
+    color: #aaa;
+    line-height: 1.5;
+}
+
+.telegram-button {
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 13px 20px;
+
+    border-radius: 11px;
+
+    background: #720000;
+    color: #fff;
+
+    text-decoration: none;
+    font-weight: 800;
+
+    transition: .2s;
+}
+
+.telegram-button:hover {
+    background: #970000;
+    transform: translateY(-2px);
+}
+
+
+/* OVERLAY */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 18px;
+
+    background: rgba(0, 0, 0, .72);
+    backdrop-filter: blur(7px);
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+
+/* MODAL */
+
+.modal {
+    width: min(760px, 100%);
+    max-height: 88vh;
+
+    overflow-y: auto;
+
+    position: relative;
+
+    padding: 28px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            rgba(22, 22, 22, .84),
+            rgba(10, 10, 10, .91)
+        ),
+        repeating-linear-gradient(
+            135deg,
+            #171717 0px,
+            #171717 2px,
+            #0d0d0d 2px,
+            #0d0d0d 7px
+        );
+
+    border: 1px solid rgba(130, 0, 0, .5);
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.65);
+}
+
+.close-modal {
+    position: absolute;
+    top: 13px;
+    right: 16px;
+
+    width: 38px;
+    height: 38px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(70, 0, 0, .45);
+
+    color: #fff;
+    font-size: 24px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.close-modal:hover {
+    background: rgba(130, 0, 0, .7);
+}
+
+.modal h2 {
+    padding-right: 45px;
+
+    font-size: clamp(23px, 4vw, 30px);
+    margin-bottom: 8px;
+}
+
+.modal-subtitle {
+    color: #999;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.confirm-text {
+    margin-bottom: 24px;
+
+    padding: 17px;
+
+    border-left: 3px solid #850000;
+    border-radius: 8px;
+
+    background: rgba(70, 0, 0, .18);
+
+    color: #ddd;
+    line-height: 1.6;
+}
+
+.return-section {
+    margin-bottom: 25px;
+}
+
+.return-section:last-child {
+    margin-bottom: 0;
+}
+
+.return-section h3 {
+    margin-bottom: 13px;
+
+    font-size: 19px;
+    color: #fff;
+}
+
+.return-section p {
+    color: #c0c0c0;
+    line-height: 1.65;
+    margin-bottom: 10px;
+}
+
+.return-section ol {
+    padding-left: 24px;
+    color: #c0c0c0;
+}
+
+.return-section li {
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.return-section li::marker {
+    color: #b00000;
+    font-weight: bold;
+}
+
+.warning {
+    margin-top: 22px;
+
+    padding: 17px;
+
+    border: 1px solid rgba(130, 0, 0, .35);
+    border-radius: 12px;
+
+    background: rgba(60, 0, 0, .17);
+
+    color: #ccc;
+    line-height: 1.6;
+}
+
+.stock-warning {
+    margin-top: 25px;
+
+    padding: 18px;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(85, 0, 0, .28),
+            rgba(20, 20, 20, .65)
+        );
+
+    border: 1px solid rgba(130, 0, 0, .42);
+
+    color: #ddd;
+    line-height: 1.65;
+}
+
+
+/* PAYMENT MODAL */
+
+.payment-info {
+    padding: 20px;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(75, 0, 0, .28),
+            rgba(20, 20, 20, .7)
+        );
+
+    border: 1px solid rgba(130, 0, 0, .4);
+
+    color: #ddd;
+    line-height: 1.7;
+}
+
+.payment-info strong {
+    color: #fff;
+}
+
+.payment-status {
+    margin-top: 18px;
+
+    padding: 15px;
+
+    border-radius: 11px;
+
+    background: rgba(255, 255, 255, .04);
+
+    color: #aaa;
+    line-height: 1.6;
+}
+
+footer {
+    text-align: center;
+
+    padding: 25px;
+
+    color: #777;
+
+    border-top: 1px solid rgba(100, 0, 0, .25);
+}
+
+
+@media (max-width: 700px) {
+
+    header {
+        padding: 10px 4%;
+    }
+
+    .logo {
+        font-size: 17px;
+        gap: 7px;
+    }
+
+    .logo img {
+        width: 45px;
+        height: 28px;
+    }
+
+    nav {
+        gap: 2px;
+    }
+
+    nav a {
+        padding: 7px 7px;
+        font-size: 11px;
+    }
+
+    main {
+        width: 94%;
+        padding-top: 30px;
+    }
+
+    .help-card {
+        padding: 18px;
+    }
+
+    .action-button {
+        padding: 17px;
+        font-size: 16px;
+    }
+
+    .contact-box {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .telegram-button {
+        width: 100%;
+    }
+
+    .modal {
+        padding: 22px 18px;
+        max-height: 90vh;
+    }
+
+    .modal h2 {
+        font-size: 23px;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+<header>
+
+    <div class="logo">
+        <img src="miata-logo.png" alt="Miata">
+        <span>Miata Garage</span>
+    </div>
+
+    <nav>
+        <a href="index.html">Главная</a>
+        <a href="catalog.html">Каталог</a>
+        <a href="delivery.html">Доставка</a>
+        <a href="help.html" class="active">Помощь</a>
+    </nav>
+
+</header>
+
+
+<main>
+
+    <section class="page-title">
+
+        <h1>❓ Помощь</h1>
+
+        <p>
+            Здесь собрана важная информация по заказам,
+            оплате, обмену и возврату.
+        </p>
+
+    </section>
+
+
+    <section class="help-grid">
+
+
+        <!-- ОБМЕН И ВОЗВРАТ -->
+
+        <div class="help-card">
+
+            <button class="action-button" id="openReturn">
+
+                <span>🔄 Обмен и возврат</span>
+
+                <span>→</span>
+
+            </button>
+
+        </div>
+
+
+        <!-- ОПЛАТА -->
+
+        <div class="help-card">
+
+            <button class="action-button" id="openPayment">
+
+                <span>💳 Оплата</span>
+
+                <span>→</span>
+
+            </button>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- КОНТАКТ -->
+
+    <section class="contact-box">
+
+        <div class="contact-text">
+
+            <h2>💬 Что-то случилось? Напишите нам!</h2>
+
+            <p>
+                Если у вас возникли вопросы по заказу,
+                оплате, доставке или товару —
+                свяжитесь с менеджером.
+            </p>
+
+        </div>
+
+
+        <a
+            class="telegram-button"
+            href="https://t.me/Lil_peepxx"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            Написать менеджеру
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer>
+    © Miata Garage
+</footer>
+
+
+
+<!-- ========================= -->
+<!-- МОДАЛЬНОЕ ОКНО ВОЗВРАТА -->
+<!-- ========================= -->
+
+<div class="modal-overlay" id="returnModal">
+
+    <div class="modal">
+
+        <button class="close-modal" id="closeReturn">
+            ×
+        </button>
+
+
+        <h2>🔄 Обмен и возврат</h2>
+
+        <p class="modal-subtitle">
+            Условия обмена и возврата товара Miata Garage
+        </p>
+
+
+        <div class="confirm-text">
+
+            При оформлении заявки на покупку вы подтверждаете,
+            что прочитали и приняли условия возврата и обмена товара.
+
+        </div>
+
+
+        <section class="return-section">
+
+            <h3>
+                💯 Случаи, когда возможен 100% возврат
+                денежных средств
+            </h3>
+
+            <p>
+                Полный возврат денежных средств в сумме оплаты
+                за товар возможен в следующих случаях:
+            </p>
+
+
+            <ol>
+
+                <li>
+
+                    <b>Доставка</b>
+
+                    <ol>
+
+                        <li>
+                            Если товар не был отправлен
+                            за 7 дней включительно.
+                        </li>
+
+                        <li>
+                            Если товар был повреждён
+                            на этапе упаковки.
+                            Перед отправкой по запросу покупателю
+                            делаются и присылаются фотографии товара.
+                        </li>
+
+                    </ol>
+
+                </li>
+
+
+                <li>
+
+                    <b>
+                        Оплаченный товар приехал с повреждением,
+                        которое не могла сделать доставка
+                    </b>
+
+                    <ol>
+
+                        <li>
+                            Была повреждена упаковка,
+                            о повреждении которой покупатель не знал.
+                        </li>
+
+                        <li>
+                            Ненадлежащий вид товара,
+                            которого не было на фотографии
+                            или в описании.
+                        </li>
+
+                    </ol>
+
+                </li>
+
+
+                <li>
+
+                    <b>
+                        Путаница товаров —
+                        приехал не тот товар
+                    </b>
+
+                    <ol>
+
+                        <li>
+                            Вам приехал другой товар,
+                            не тот, который вы заказали.
+                        </li>
+
+                    </ol>
+
+                </li>
+
+            </ol>
+
+        </section>
+
+
+        <section class="return-section">
+
+            <h3>⚠️ Остальные случаи</h3>
+
+            <p>
+                В остальных случаях магазин
+                <b>MIATA GARAGE</b> не гарантирует
+                полный возврат средств или возврат средств.
+            </p>
+
+            <p>
+                Доставка до склада оплачивается магазином,
+                если товар был получен и ситуация входит
+                в пункты <b>2</b> и <b>3</b>.
+            </p>
+
+        </section>
+
+
+        <section class="return-section">
+
+            <h3>💰 Возврат по согласованию</h3>
+
+            <p>
+                При согласовании части или полной суммы возврата
+                по причине, которая не входит в пункты
+                <b>1, 2, 3</b>, обратите внимание:
+                доставку до склада оплачивает покупатель.
+            </p>
+
+        </section>
+
+
+        <section class="return-section">
+
+            <h3>📦 Большие недочёты и проблемы с товаром</h3>
+
+            <p>
+                При больших недочётах и проблемах с товаром
+                возможность возврата оплаты обсуждается индивидуально.
+            </p>
+
+            <p>
+                В некоторых случаях возврат может быть согласован
+                без доставки товара на склад.
+            </p>
+
+        </section>
+
+
+        <div class="warning">
+
+            📸 <b>Обратите внимание:</b>
+
+            перед отправкой заказа делаются фотографии
+            товара в пункте выдачи.
+
+            <br><br>
+
+            <b>
+                MIATA GARAGE не несёт ответственность
+                за испорченный товар службой доставки.
+            </b>
+
+        </div>
+
+
+        <div class="stock-warning">
+
+            <b>
+                📦 Если после оплаты товара окажется,
+                что товара нет в наличии:
+            </b>
+
+            <br><br>
+
+            Покупатель имеет право на возврат полной цены
+            товара, которого не оказалось в наличии.
+
+            <br><br>
+
+            Либо возможен полный возврат средств
+            за все оплаченные товары в заказе
+            и отмена заказа.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================= -->
+<!-- МОДАЛЬНОЕ ОКНО ОПЛАТЫ -->
+<!-- ========================= -->
+
+<div class="modal-overlay" id="paymentModal">
+
+    <div class="modal">
+
+        <button class="close-modal" id="closePayment">
+            ×
+        </button>
+
+
+        <h2>💳 Оплата</h2>
+
+        <p class="modal-subtitle">
+            Информация об актуальном способе оплаты
+        </p>
+
+
+        <div class="payment-info">
+
+            <p>
+                <strong>
+                    На данный момент оплата производится
+                    через менеджера.
+                </strong>
+            </p>
+
+            <br>
+
+            <p>
+                После оформления заказа с вами свяжется менеджер
+                и сообщит актуальный способ оплаты,
+                а также дальнейшие действия по заказу.
+            </p>
+
+        </div>
+
+
+        <div class="payment-status">
+
+            ⚠️ <b>Важно:</b>
+
+            данный раздел временный и в дальнейшем
+            информация об оплате может быть изменена.
+
+            <br><br>
+
+            <b>
+                Актуальный способ оплаты вам сообщит менеджер.
+            </b>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+/* TELEGRAM */
+
+if (window.Telegram && Telegram.WebApp) {
+
+    Telegram.WebApp.ready();
+
+    Telegram.WebApp.expand();
+
+}
+
+
+/* ========================= */
+/* ВОЗВРАТ */
+/* ========================= */
+
+const returnModal =
+    document.getElementById("returnModal");
+
+const openReturn =
+    document.getElementById("openReturn");
+
+const closeReturn =
+    document.getElementById("closeReturn");
+
+
+openReturn.addEventListener("click", () => {
+
+    returnModal.classList.add("show");
+
+    document.body.style.overflow = "hidden";
+
+});
+
+
+closeReturn.addEventListener("click", () => {
+
+    returnModal.classList.remove("show");
+
+    document.body.style.overflow = "";
+
+});
+
+
+returnModal.addEventListener("click", (event) => {
+
+    if (event.target === returnModal) {
+
+        returnModal.classList.remove("show");
+
+        document.body.style.overflow = "";
+
+    }
+
+});
+
+
+/* ========================= */
+/* ОПЛАТА */
+/* ========================= */
+
+const paymentModal =
+    document.getElementById("paymentModal");
+
+const openPayment =
+    document.getElementById("openPayment");
+
+const closePayment =
+    document.getElementById("closePayment");
+
+
+openPayment.addEventListener("click", () => {
+
+    paymentModal.classList.add("show");
+
+    document.body.style.overflow = "hidden";
+
+});
+
+
+closePayment.addEventListener("click", () => {
+
+    paymentModal.classList.remove("show");
+
+    document.body.style.overflow = "";
+
+});
+
+
+paymentModal.addEventListener("click", (event) => {
+
+    if (event.target === paymentModal) {
+
+        paymentModal.classList.remove("show");
+
+        document.body.style.overflow = "";
+
+    }
+
+});
+
+
+/* ========================= */
+/* ESC */
+/* ========================= */
+
+document.addEventListener("keydown", (event) => {
+
+    if (event.key === "Escape") {
+
+        returnModal.classList.remove("show");
+
+        paymentModal.classList.remove("show");
+
+        document.body.style.overflow = "";
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
