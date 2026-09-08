@@ -2180,9 +2180,7 @@ function supabaseHeaders() {
 async function loadProducts() {
 
   const container =
-    document.getElementById(
-      "productsGrid"
-    );
+    document.getElementById("productsGrid");
 
   container.innerHTML =
     '<div style="color:#777;">Загрузка товаров...</div>';
@@ -2192,10 +2190,9 @@ async function loadProducts() {
     const response =
       await fetch(
         SUPABASE_URL +
-        "/rest/v1/products?select=*&is_active=eq.true&is_top=eq.true&order=id.desc",
+        "/rest/v1/products?select=*&is_active=eq.true&order=id.desc",
         {
-          headers:
-            supabaseHeaders()
+          headers: supabaseHeaders()
         }
       );
 
@@ -2210,20 +2207,23 @@ async function loadProducts() {
 
     }
 
+    /*
+      Загружаем ВСЕ активные товары.
+      Благодаря этому корзина сможет найти
+      товар, который был добавлен из каталога.
+    */
+
     products =
       data || [];
 
     /*
-      ВАЖНО:
-      После загрузки топа отдельно подгружаем
-      товары, которые уже находятся в корзине.
-      Благодаря этому товар из каталога
-      НЕ ПРОПАДАЕТ после перехода на главную.
+      На главной всё равно показываем
+      только товары из "Топ продаж".
     */
 
-    await loadMissingCartProducts();
-
     renderProducts();
+
+    updateCartCount();
 
   } catch (error) {
 
@@ -2238,7 +2238,6 @@ async function loadProducts() {
   }
 
 }
-
 
 /* =========================
    FIX CART PRODUCTS
