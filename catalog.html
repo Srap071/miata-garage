@@ -1,1562 +1,905 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#090909">
-
-  <title>Каталог — Miata Garage</title>
-
-  <!-- Telegram Mini App -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      min-height: 100vh;
-      color: #f2f2f2;
-      font-family: Arial, Helvetica, sans-serif;
-
-      /* Карбон ~55% + немного темно-красного */
-      background:
-        linear-gradient(
-          rgba(5, 5, 6, 0.45),
-          rgba(5, 5, 6, 0.58)
-        ),
-        linear-gradient(
-          135deg,
-          rgba(70, 8, 15, 0.28),
-          rgba(5, 5, 5, 0.12) 45%,
-          rgba(55, 5, 12, 0.22)
-        ),
-        repeating-linear-gradient(
-          135deg,
-          #191919 0px,
-          #191919 2px,
-          #0c0c0c 2px,
-          #0c0c0c 7px
-        );
-
-      background-attachment: fixed;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        repeating-linear-gradient(
-          45deg,
-          transparent 0 4px,
-          rgba(255,255,255,0.025) 4px 5px
-        );
-      opacity: .55;
-      z-index: -1;
-    }
-
-    button,
-    input,
-    select {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    /* ================= HEADER ================= */
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-
-      background:
-        linear-gradient(
-          rgba(10, 10, 10, 0.88),
-          rgba(35, 5, 9, 0.90)
-        );
-
-      border-bottom: 1px solid rgba(255, 70, 80, .14);
-      backdrop-filter: blur(10px);
-    }
-
-    .header-inner {
-      max-width: 1600px;
-      margin: auto;
-      min-height: 74px;
-
-      padding: 10px 20px;
-
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      min-width: max-content;
-      font-weight: 800;
-      font-size: 20px;
-    }
-
-    .logo img {
-      width: 42px;
-      height: 42px;
-      object-fit: contain;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      margin-left: auto;
-    }
-
-    .nav a {
-      padding: 10px 13px;
-      border-radius: 10px;
-
-      color: #ddd;
-      font-size: 14px;
-
-      transition: .2s;
-    }
-
-    .nav a:hover {
-      background: rgba(255, 45, 60, .12);
-      color: white;
-    }
-
-    .nav a.active {
-      background: rgba(145, 18, 30, .30);
-      color: #fff;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 8px;
-      margin-left: 5px;
-    }
-
-    .icon-btn {
-      width: 42px;
-      height: 42px;
-
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 12px;
-
-      background: rgba(255,255,255,.05);
-      color: white;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 19px;
-    }
-
-    .icon-btn:hover {
-      background: rgba(150, 20, 30, .28);
-    }
-
-    /* ================= PAGE ================= */
-
-    main {
-      max-width: 1600px;
-      margin: auto;
-      padding: 35px 20px 100px;
-    }
-
-    .page-title {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-
-    .page-title h1 {
-      font-size: clamp(28px, 4vw, 48px);
-      margin-bottom: 8px;
-    }
-
-    .page-title p {
-      color: #aaa;
-      font-size: 15px;
-    }
-
-    /* ================= CONTROLS ================= */
-
-    .controls {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 25px;
-
-      padding: 12px;
-
-      background:
-        linear-gradient(
-          rgba(20,20,20,.72),
-          rgba(45,7,12,.72)
-        );
-
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 15px;
-    }
-
-    .search-box {
-      flex: 1;
-      position: relative;
-    }
-
-    .search-box input,
-    .controls select {
-      width: 100%;
-      height: 46px;
-
-      padding: 0 14px;
-
-      border: 1px solid rgba(255,255,255,.09);
-      border-radius: 10px;
-
-      background: rgba(0,0,0,.40);
-      color: white;
-
-      outline: none;
-    }
-
-    .search-box input:focus,
-    .controls select:focus {
-      border-color: rgba(210, 30, 45, .55);
-    }
-
-    .controls select {
-      max-width: 220px;
-    }
-
-    .controls select option {
-      background: #151515;
-      color: white;
-    }
-
-    /* ================= GRID ================= */
-
-    .catalog-grid {
-      display: grid;
-
-      /*
-        Телефон: 4 карточки
-        Компьютер: 8 карточек
-      */
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-
-      gap: 12px;
-    }
-
-    .product-card {
-      min-width: 0;
-      overflow: hidden;
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(30,30,30,.88),
-          rgba(18,18,18,.92)
-        );
-
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 13px;
-
-      transition:
-        transform .2s,
-        border-color .2s,
-        box-shadow .2s;
-    }
-
-    .product-card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(200, 30, 45, .38);
-      box-shadow: 0 12px 35px rgba(0,0,0,.35);
-    }
-
-    .product-image {
-      position: relative;
-      aspect-ratio: 1 / 1;
-
-      background: #222;
-      overflow: hidden;
-    }
-
-    .product-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .discount {
-      position: absolute;
-      top: 7px;
-      left: 7px;
-
-      padding: 4px 7px;
-      border-radius: 7px;
-
-      background: #9d1825;
-      color: white;
-
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .out-of-stock {
-      position: absolute;
-      inset: 0;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      background: rgba(0,0,0,.58);
-
-      color: #ddd;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .product-info {
-      padding: 10px;
-    }
-
-    .product-name {
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.25;
-
-      min-height: 35px;
-
-      margin-bottom: 5px;
-    }
-
-    .product-description {
-      color: #999;
-      font-size: 11px;
-      line-height: 1.35;
-
-      height: 30px;
-      overflow: hidden;
-
-      margin-bottom: 8px;
-    }
-
-    .prices {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 5px;
-
-      margin-bottom: 9px;
-    }
-
-    .current-price {
-      font-size: 16px;
-      font-weight: 800;
-    }
-
-    .old-price {
-      color: #777;
-      font-size: 11px;
-      text-decoration: line-through;
-    }
-
-    .product-buttons {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 6px;
-    }
-
-    .product-buttons button {
-      min-height: 35px;
-
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,.08);
-
-      color: white;
-      background: rgba(255,255,255,.055);
-
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .product-buttons .cart-btn {
-      background: #841723;
-      border-color: #a01c2b;
-    }
-
-    .product-buttons button:hover {
-      filter: brightness(1.12);
-    }
-
-    .product-buttons button:disabled {
-      cursor: not-allowed;
-      opacity: .4;
-    }
-
-    /* ================= EMPTY ================= */
-
-    .empty {
-      grid-column: 1 / -1;
-
-      text-align: center;
-      padding: 60px 20px;
-
-      color: #999;
-    }
-
-    .empty-icon {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
-
-    /* ================= CART ================= */
-
-    .cart-button {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-
-      z-index: 100;
-
-      width: 62px;
-      height: 62px;
-
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 50%;
-
-      background:
-        linear-gradient(
-          145deg,
-          #9d1825,
-          #5c0d15
-        );
-
-      color: white;
-
-      font-size: 25px;
-
-      box-shadow: 0 8px 30px rgba(0,0,0,.5);
-    }
-
-    .cart-count {
-      position: absolute;
-      right: -2px;
-      top: -2px;
-
-      min-width: 22px;
-      height: 22px;
-
-      padding: 0 5px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      border-radius: 20px;
-
-      background: white;
-      color: #851722;
-
-      font-size: 11px;
-      font-weight: 800;
-    }
-
-    /* ================= MODAL ================= */
-
-    .modal {
-      position: fixed;
-      inset: 0;
-
-      z-index: 200;
-
-      display: none;
-      align-items: center;
-      justify-content: center;
-
-      padding: 15px;
-
-      background:
-        linear-gradient(
-          rgba(0,0,0,.72),
-          rgba(28,4,8,.78)
-        );
-
-      backdrop-filter: blur(5px);
-    }
-
-    .modal.open {
-      display: flex;
-    }
-
-    .modal-box {
-      width: min(700px, 100%);
-      max-height: 90vh;
-      overflow-y: auto;
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(25,25,25,.97),
-          rgba(39,7,11,.97)
-        );
-
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 18px;
-
-      padding: 20px;
-
-      box-shadow: 0 25px 80px rgba(0,0,0,.65);
-    }
-
-    .modal-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      margin-bottom: 18px;
-    }
-
-    .modal-head h2 {
-      font-size: 21px;
-    }
-
-    .close-btn {
-      width: 36px;
-      height: 36px;
-
-      border: 0;
-      border-radius: 9px;
-
-      background: rgba(255,255,255,.07);
-      color: white;
-
-      font-size: 20px;
-    }
-
-    /* ================= CART ITEMS ================= */
-
-    .cart-items {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .cart-item {
-      display: grid;
-      grid-template-columns: 64px 1fr auto;
-      gap: 10px;
-
-      align-items: center;
-
-      padding: 8px;
-
-      border-radius: 10px;
-      background: rgba(255,255,255,.04);
-    }
-
-    .cart-item img {
-      width: 64px;
-      height: 64px;
-
-      object-fit: cover;
-      border-radius: 8px;
-
-      background: #222;
-    }
-
-    .cart-item-name {
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .cart-item-price {
-      color: #bbb;
-      font-size: 12px;
-      margin-top: 4px;
-    }
-
-    .quantity {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      margin-top: 7px;
-    }
-
-    .quantity button {
-      width: 25px;
-      height: 25px;
-
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 6px;
-
-      background: rgba(255,255,255,.07);
-      color: white;
-    }
-
-    .quantity span {
-      min-width: 22px;
-      text-align: center;
-      font-size: 12px;
-    }
-
-    .remove-btn {
-      border: 0;
-      background: transparent;
-      color: #d76a73;
-      font-size: 16px;
-    }
-
-    .cart-total {
-      display: flex;
-      justify-content: space-between;
-
-      padding-top: 15px;
-      margin-top: 15px;
-
-      border-top: 1px solid rgba(255,255,255,.09);
-
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-    .checkout-btn {
-      width: 100%;
-      min-height: 46px;
-
-      margin-top: 15px;
-
-      border: 0;
-      border-radius: 10px;
-
-      background: #921b27;
-      color: white;
-
-      font-weight: 800;
-    }
-
-    /* ================= PRODUCT DETAILS ================= */
-
-    .details-image {
-      width: 100%;
-      max-height: 430px;
-
-      object-fit: contain;
-
-      background: #171717;
-      border-radius: 12px;
-
-      margin-bottom: 15px;
-    }
-
-    .details-description {
-      color: #bbb;
-      line-height: 1.5;
-      font-size: 14px;
-
-      margin-bottom: 15px;
-    }
-
-    /* ================= FOOTER ================= */
-
-    footer {
-      border-top: 1px solid rgba(255,255,255,.07);
-
-      padding: 25px 20px;
-
-      text-align: center;
-
-      color: #777;
-      font-size: 12px;
-    }
-
-    /* ================= RESPONSIVE ================= */
-
-    @media (min-width: 1400px) {
-      .catalog-grid {
-        grid-template-columns: repeat(8, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 700px) {
-      .header-inner {
-        min-height: 62px;
-        padding: 8px 10px;
-        gap: 8px;
-      }
-
-      .logo span {
-        display: none;
-      }
-
-      .logo img {
-        width: 38px;
-        height: 38px;
-      }
-
-      .nav {
-        gap: 2px;
-      }
-
-      .nav a {
-        padding: 8px 7px;
-        font-size: 11px;
-      }
-
-      .header-actions {
-        display: none;
-      }
-
-      main {
-        padding: 25px 7px 100px;
-      }
-
-      .page-title {
-        margin-bottom: 18px;
-      }
-
-      .page-title h1 {
-        font-size: 28px;
-      }
-
-      .page-title p {
-        font-size: 12px;
-      }
-
-      .controls {
-        padding: 7px;
-        gap: 6px;
-      }
-
-      .controls select {
-        max-width: 110px;
-      }
-
-      .search-box input,
-      .controls select {
-        height: 38px;
-        padding: 0 8px;
-        font-size: 11px;
-      }
-
-      .catalog-grid {
-        gap: 5px;
-      }
-
-      .product-card {
-        border-radius: 8px;
-      }
-
-      .product-info {
-        padding: 6px;
-      }
-
-      .product-name {
-        font-size: 10px;
-        min-height: 26px;
-      }
-
-      .product-description {
-        font-size: 8px;
-        height: 22px;
-        margin-bottom: 5px;
-      }
-
-      .current-price {
-        font-size: 11px;
-      }
-
-      .old-price {
-        font-size: 8px;
-      }
-
-      .discount {
-        top: 4px;
-        left: 4px;
-        font-size: 8px;
-        padding: 3px 4px;
-      }
-
-      .product-buttons button {
-        min-height: 28px;
-        font-size: 8px;
-        padding: 2px;
-      }
-
-      .cart-button {
-        right: 12px;
-        bottom: 12px;
-        width: 55px;
-        height: 55px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090909">
+<title>Каталог — Miata Garage</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+min-height:100vh;color:#f2f2f2;font-family:Arial,Helvetica,sans-serif;
+background:
+linear-gradient(rgba(5,5,6,.45),rgba(5,5,6,.58)),
+linear-gradient(135deg,rgba(70,8,15,.28),rgba(5,5,5,.12) 45%,rgba(55,5,12,.22)),
+repeating-linear-gradient(135deg,#191919 0,#191919 2px,#0c0c0c 2px,#0c0c0c 7px);
+background-attachment:fixed
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+header{
+position:sticky;top:0;z-index:50;
+background:linear-gradient(rgba(10,10,10,.88),rgba(35,5,9,.9));
+border-bottom:1px solid rgba(255,70,80,.14);
+backdrop-filter:blur(10px)
+}
+.header-inner{
+max-width:1600px;margin:auto;min-height:74px;padding:10px 20px;
+display:flex;align-items:center;gap:20px
+}
+.logo{display:flex;align-items:center;gap:10px;min-width:max-content;font-weight:800;font-size:20px}
+.logo img{width:42px;height:42px;object-fit:contain}
+.nav{display:flex;align-items:center;gap:7px;margin-left:auto}
+.nav a{padding:10px 13px;border-radius:10px;color:#ddd;font-size:14px}
+.nav a:hover,.nav a.active{background:rgba(145,18,30,.3);color:#fff}
+.header-actions{display:flex;gap:8px;margin-left:5px}
+.icon-btn{
+width:42px;height:42px;border:1px solid rgba(255,255,255,.08);
+border-radius:12px;background:rgba(255,255,255,.05);color:#fff
+}
+
+main{max-width:1600px;margin:auto;padding:35px 20px 100px}
+.page-title{text-align:center;margin-bottom:28px}
+.page-title h1{font-size:clamp(28px,4vw,48px);margin-bottom:8px}
+.page-title p{color:#aaa;font-size:15px}
+
+.controls{
+display:flex;gap:10px;margin-bottom:25px;padding:12px;
+background:linear-gradient(rgba(20,20,20,.72),rgba(45,7,12,.72));
+border:1px solid rgba(255,255,255,.08);border-radius:15px
+}
+.search-box{flex:1}
+.search-box input,.controls select{
+width:100%;height:46px;padding:0 14px;
+border:1px solid rgba(255,255,255,.09);border-radius:10px;
+background:rgba(0,0,0,.4);color:#fff;outline:0
+}
+.controls select{max-width:220px}
+.controls select option{background:#151515;color:#fff}
+
+.catalog-grid{
+display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px
+}
+.product-card{
+min-width:0;overflow:hidden;
+background:linear-gradient(145deg,rgba(30,30,30,.88),rgba(18,18,18,.92));
+border:1px solid rgba(255,255,255,.08);border-radius:13px;
+transition:.2s
+}
+.product-card:hover{
+transform:translateY(-3px);border-color:rgba(200,30,45,.38);
+box-shadow:0 12px 35px rgba(0,0,0,.35)
+}
+.product-image{position:relative;aspect-ratio:1/1;background:#222;overflow:hidden}
+.product-image img{width:100%;height:100%;object-fit:cover;display:block}
+.discount{
+position:absolute;top:7px;left:7px;padding:4px 7px;border-radius:7px;
+background:#9d1825;color:#fff;font-size:11px;font-weight:700
+}
+.out-of-stock{
+position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+background:rgba(0,0,0,.58);color:#ddd;font-size:13px;font-weight:700
+}
+.product-info{padding:10px}
+.product-name{font-size:14px;font-weight:700;line-height:1.25;min-height:35px;margin-bottom:5px}
+.product-description{color:#999;font-size:11px;line-height:1.35;height:30px;overflow:hidden;margin-bottom:8px}
+.prices{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:9px}
+.current-price{font-size:16px;font-weight:800}
+.old-price{color:#777;font-size:11px;text-decoration:line-through}
+.product-buttons{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.product-buttons button{
+min-height:35px;border-radius:8px;border:1px solid rgba(255,255,255,.08);
+color:#fff;background:rgba(255,255,255,.055);font-size:11px;font-weight:700
+}
+.product-buttons .cart-btn{background:#841723;border-color:#a01c2b}
+.product-buttons button:disabled{opacity:.4;cursor:not-allowed}
+
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:#999}
+.empty-icon{font-size:40px;margin-bottom:10px}
+
+.cart-button{
+position:fixed;right:20px;bottom:20px;z-index:100;
+width:62px;height:62px;border:1px solid rgba(255,255,255,.12);
+border-radius:50%;background:linear-gradient(145deg,#9d1825,#5c0d15);
+color:#fff;font-size:25px;box-shadow:0 8px 30px rgba(0,0,0,.5)
+}
+.cart-count{
+position:absolute;right:-2px;top:-2px;min-width:22px;height:22px;padding:0 5px;
+display:flex;align-items:center;justify-content:center;border-radius:20px;
+background:#fff;color:#851722;font-size:11px;font-weight:800
+}
+
+.modal{
+position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;
+padding:15px;background:linear-gradient(rgba(0,0,0,.72),rgba(28,4,8,.78));
+backdrop-filter:blur(5px)
+}
+.modal.open{display:flex}
+.modal-box{
+width:min(700px,100%);max-height:90vh;overflow-y:auto;
+background:linear-gradient(145deg,rgba(25,25,25,.97),rgba(39,7,11,.97));
+border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:20px;
+box-shadow:0 25px 80px rgba(0,0,0,.65)
+}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.modal-head h2{font-size:21px}
+.close-btn{
+width:36px;height:36px;border:0;border-radius:9px;background:rgba(255,255,255,.07);
+color:#fff;font-size:20px
+}
+
+.cart-items{display:flex;flex-direction:column;gap:10px}
+.cart-item{
+display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;
+padding:8px;border-radius:10px;background:rgba(255,255,255,.04)
+}
+.cart-item img{
+width:64px;height:64px;object-fit:cover;border-radius:8px;background:#222
+}
+.cart-item-name{font-size:13px;font-weight:700}
+.cart-item-price{color:#bbb;font-size:12px;margin-top:4px}
+.quantity{display:flex;align-items:center;gap:5px;margin-top:7px}
+.quantity button{
+width:25px;height:25px;border:1px solid rgba(255,255,255,.1);
+border-radius:6px;background:rgba(255,255,255,.07);color:#fff
+}
+.quantity span{min-width:22px;text-align:center;font-size:12px}
+.remove-btn{border:0;background:transparent;color:#d76a73;font-size:16px}
+.cart-total{
+display:flex;justify-content:space-between;padding-top:15px;margin-top:15px;
+border-top:1px solid rgba(255,255,255,.09);font-size:18px;font-weight:800
+}
+.checkout-btn{
+width:100%;min-height:46px;margin-top:15px;border:0;border-radius:10px;
+background:#921b27;color:#fff;font-weight:800
+}
+.checkout-btn:disabled{opacity:.45;cursor:not-allowed}
+
+.details-image{
+width:100%;max-height:430px;object-fit:contain;background:#171717;
+border-radius:12px;margin-bottom:15px
+}
+.details-description{color:#bbb;line-height:1.5;font-size:14px;margin-bottom:15px}
+
+footer{
+border-top:1px solid rgba(255,255,255,.07);padding:25px 20px;text-align:center;
+color:#777;font-size:12px
+}
+
+@media(min-width:1400px){
+.catalog-grid{grid-template-columns:repeat(8,minmax(0,1fr))}
+}
+@media(max-width:700px){
+.header-inner{min-height:62px;padding:8px 10px;gap:8px}
+.logo span{display:none}.logo img{width:38px;height:38px}
+.nav{gap:2px}.nav a{padding:8px 7px;font-size:11px}
+.header-actions{display:none}
+main{padding:25px 7px 100px}
+.page-title{margin-bottom:18px}.page-title h1{font-size:28px}.page-title p{font-size:12px}
+.controls{padding:7px;gap:6px}.controls select{max-width:110px}
+.search-box input,.controls select{height:38px;padding:0 8px;font-size:11px}
+.catalog-grid{gap:5px}
+.product-card{border-radius:8px}.product-info{padding:6px}
+.product-name{font-size:10px;min-height:26px}
+.product-description{font-size:8px;height:22px;margin-bottom:5px}
+.current-price{font-size:11px}.old-price{font-size:8px}
+.discount{top:4px;left:4px;font-size:8px;padding:3px 4px}
+.product-buttons{grid-template-columns:1fr}
+.product-buttons button{min-height:28px;font-size:8px;padding:2px}
+.cart-button{right:12px;bottom:12px;width:55px;height:55px}
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <div class="header-inner">
+<div class="header-inner">
+<a class="logo" href="index.html">
+<img src="miata-logo.png" alt="Miata Garage">
+<span>Miata Garage</span>
+</a>
 
-    <a class="logo" href="index.html">
-      <img src="miata-logo.png" alt="Miata Garage">
-      <span>Miata Garage</span>
-    </a>
+<nav class="nav">
+<a href="index.html">Главная</a>
+<a href="catalog.html" class="active">Каталог</a>
+<a href="delivery.html">Доставка</a>
+<a href="help.html">Помощь</a>
+</nav>
 
-    <nav class="nav">
-      <a href="index.html">Главная</a>
-      <a href="catalog.html" class="active">Каталог</a>
-      <a href="delivery.html">Доставка</a>
-      <a href="help.html">Помощь</a>
-    </nav>
-
-    <div class="header-actions">
-      <button class="icon-btn" onclick="openCart()" title="Корзина">🛒</button>
-    </div>
-
-  </div>
+<div class="header-actions">
+<button class="icon-btn" onclick="openCart()">🛒</button>
+</div>
+</div>
 </header>
 
 <main>
 
-  <section class="page-title">
-    <h1>🛒 Каталог моделей</h1>
-    <p>Выберите модель и добавьте её в корзину</p>
-  </section>
+<section class="page-title">
+<h1>🛒 Каталог моделей</h1>
+<p>Выберите модель и добавьте её в корзину</p>
+</section>
 
-  <section class="controls">
+<section class="controls">
+<div class="search-box">
+<input id="searchInput" type="search" placeholder="Поиск модели..." oninput="applyFilters()">
+</div>
 
-    <div class="search-box">
-      <input
-        id="searchInput"
-        type="search"
-        placeholder="Поиск модели..."
-        oninput="applyFilters()"
-      >
-    </div>
+<select id="categoryFilter" onchange="applyFilters()">
+<option value="">Все категории</option>
+</select>
+</section>
 
-    <select id="categoryFilter" onchange="applyFilters()">
-      <option value="">Все категории</option>
-    </select>
-
-  </section>
-
-  <section id="catalogGrid" class="catalog-grid">
-    <div class="empty">
-      <div class="empty-icon">⏳</div>
-      Загружаем каталог...
-    </div>
-  </section>
+<section id="catalogGrid" class="catalog-grid">
+<div class="empty">
+<div class="empty-icon">⏳</div>
+Загружаем каталог...
+</div>
+</section>
 
 </main>
 
 <footer>
-  © Miata Garage — магазин коллекционных моделей
+© 2026 Miata Garage — магазин коллекционных моделей
 </footer>
 
-<!-- CART BUTTON -->
-
-<button class="cart-button" onclick="openCart()" title="Корзина">
-  🛒
-  <span id="cartCount" class="cart-count">0</span>
+<button class="cart-button" onclick="openCart()">
+🛒
+<span id="cartCount" class="cart-count">0</span>
 </button>
 
-<!-- CART MODAL -->
+<!-- КОРЗИНА -->
+<div id="cartModal" class="modal" onclick="backgroundClose(event,'cartModal')">
+<div class="modal-box">
 
-<div id="cartModal" class="modal" onclick="closeOnBackground(event, 'cartModal')">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-      <h2>Ваш заказ</h2>
-      <button class="close-btn" onclick="closeModal('cartModal')">×</button>
-    </div>
-
-    <div id="cartItems" class="cart-items"></div>
-
-    <div class="cart-total">
-      <span>Итого:</span>
-      <span id="cartTotal">0 ₽</span>
-    </div>
-
-    <button class="checkout-btn" onclick="goToCheckout()">
-      Перейти к оформлению доставки
-    </button>
-
-  </div>
-
+<div class="modal-head">
+<h2>Ваш заказ</h2>
+<button class="close-btn" onclick="closeModal('cartModal')">×</button>
 </div>
 
-<!-- PRODUCT DETAILS -->
+<div id="cartItems" class="cart-items"></div>
 
-<div id="detailsModal" class="modal" onclick="closeOnBackground(event, 'detailsModal')">
+<div class="cart-total">
+<span>Итого:</span>
+<span id="cartTotal">0 ₽</span>
+</div>
 
-  <div class="modal-box">
+<button id="checkoutButton" class="checkout-btn" onclick="goToCheckout()">
+Перейти к оформлению доставки
+</button>
 
-    <div class="modal-head">
-      <h2 id="detailsTitle">Модель</h2>
-      <button class="close-btn" onclick="closeModal('detailsModal')">×</button>
-    </div>
+</div>
+</div>
 
-    <img id="detailsImage" class="details-image" src="" alt="">
+<!-- ПОДРОБНОСТИ -->
+<div id="detailsModal" class="modal" onclick="backgroundClose(event,'detailsModal')">
+<div class="modal-box">
 
-    <div id="detailsDescription" class="details-description"></div>
+<div class="modal-head">
+<h2 id="detailsTitle">Модель</h2>
+<button class="close-btn" onclick="closeModal('detailsModal')">×</button>
+</div>
 
-    <div class="prices">
-      <span id="detailsPrice" class="current-price"></span>
-      <span id="detailsOldPrice" class="old-price"></span>
-    </div>
+<img id="detailsImage" class="details-image" src="" alt="">
 
-    <button
-      id="detailsCartButton"
-      class="checkout-btn"
-      onclick="addDetailsToCart()"
-    >
-      В корзину
-    </button>
+<div id="detailsDescription" class="details-description"></div>
 
-  </div>
+<div class="prices">
+<span id="detailsPrice" class="current-price"></span>
+<span id="detailsOldPrice" class="old-price"></span>
+</div>
 
+<button id="detailsCartButton" class="checkout-btn" onclick="addDetailsToCart()">
+В корзину
+</button>
+
+</div>
 </div>
 
 <script>
-  /* ============================================================
-     TELEGRAM MINI APP
-  ============================================================ */
+/* ===============================
+   НАСТРОЙКИ
+================================ */
 
-  if (window.Telegram?.WebApp) {
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
-  }
+const SUPABASE_URL="https://qbuethosjrghgdwpanhb.supabase.co";
+const SUPABASE_KEY="sb_publishable_l-Jn1GONymTw-fuN1eEgBw_FjtbUyzg";
+
+/*
+  ВАЖНО:
+  Этот ключ должен совпадать с index.html.
+*/
+const CART_KEY="miata_garage_cart";
 
-  /* ============================================================
-     SUPABASE
-  ============================================================ */
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-  const SUPABASE_URL = "https://qbuethosjrghgdwpanhb.supabase.co";
+let products=[];
+let cart=loadCart();
+let filteredProducts=[];
+let detailsProduct=null;
 
-  const SUPABASE_KEY =
-    "sb_publishable_l-Jn1GONymTw-fuN1eEgBw_FjtbUyzg";
+/* ===============================
+   TELEGRAM
+================================ */
 
-  const supabaseClient = supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+if(window.Telegram&&window.Telegram.WebApp){
+Telegram.WebApp.ready();
+Telegram.WebApp.expand();
+}
 
-  /* ============================================================
-     DATA
-  ============================================================ */
+/* ===============================
+   CART STORAGE
+================================ */
 
-  let products = [];
-  let filteredProducts = [];
+function loadCart(){
+try{
+const saved=localStorage.getItem(CART_KEY);
+if(!saved)return[];
 
-  let cart = JSON.parse(
-    localStorage.getItem("miataGarageCart") || "[]"
-  );
+const data=JSON.parse(saved);
+if(!Array.isArray(data))return[];
 
-  let selectedDetailsProduct = null;
+return data.map(x=>({
+id:Number(x.id),
+quantity:Math.max(1,Number(x.quantity||1))
+})).filter(x=>Number.isFinite(x.id)&&x.id>0);
 
-  /* ============================================================
-     INIT
-  ============================================================ */
+}catch(e){
+console.error("Ошибка загрузки корзины",e);
+return[];
+}
+}
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    updateCartCount();
-    await loadProducts();
-  });
+function saveCart(){
+localStorage.setItem(CART_KEY,JSON.stringify(cart));
+}
 
-  /* ============================================================
-     LOAD PRODUCTS
-  ============================================================ */
+/* ===============================
+   START
+================================ */
 
-  async function loadProducts() {
+document.addEventListener("DOMContentLoaded",()=>{
+updateCartCount();
+loadProducts();
+});
 
-    const grid = document.getElementById("catalogGrid");
+/* ===============================
+   PRODUCTS
+================================ */
 
-    try {
+async function loadProducts(){
 
-      const { data, error } = await supabaseClient
-        .from("products")
-        .select("*")
-        .eq("is_active", true)
-        .order("id", { ascending: false });
+const grid=document.getElementById("catalogGrid");
 
-      if (error) {
-        console.error(error);
+try{
+
+const {data,error}=await db
+.from("products")
+.select("*")
+.eq("is_active",true)
+.order("id",{ascending:false});
 
-        grid.innerHTML = `
-          <div class="empty">
-            <div class="empty-icon">⚠️</div>
-            Не удалось загрузить каталог
-          </div>
-        `;
+if(error)throw error;
+
+products=data||[];
+filteredProducts=[...products];
+
+normalizeCart();
+fillCategories();
+renderProducts();
+updateCartCount();
 
-        return;
-      }
+}catch(error){
 
-      products = data || [];
-      filteredProducts = [...products];
+console.error(error);
+
+grid.innerHTML=`
+<div class="empty">
+<div class="empty-icon">⚠️</div>
+Не удалось загрузить каталог
+</div>`;
+}
+}
 
-      fillCategories();
-      renderProducts();
+/* ===============================
+   CATEGORIES
+================================ */
 
-    } catch (error) {
+function fillCategories(){
 
-      console.error(error);
+const select=document.getElementById("categoryFilter");
 
-      grid.innerHTML = `
-        <div class="empty">
-          <div class="empty-icon">⚠️</div>
-          Ошибка загрузки каталога
-        </div>
-      `;
-    }
-  }
+const categories=[...new Set(
+products.map(p=>p.category).filter(Boolean)
+)].sort();
 
-  /* ============================================================
-     CATEGORIES
-  ============================================================ */
+select.innerHTML='<option value="">Все категории</option>';
 
-  function fillCategories() {
+categories.forEach(category=>{
+const option=document.createElement("option");
+option.value=category;
+option.textContent=category;
+select.appendChild(option);
+});
+}
 
-    const select = document.getElementById("categoryFilter");
+/* ===============================
+   FILTERS
+================================ */
 
-    const categories = [
-      ...new Set(
-        products
-          .map(product => product.category)
-          .filter(Boolean)
-      )
-    ].sort();
+function applyFilters(){
 
-    select.innerHTML = `
-      <option value="">Все категории</option>
-    `;
+const search=document
+.getElementById("searchInput")
+.value
+.trim()
+.toLowerCase();
 
-    categories.forEach(category => {
+const category=document
+.getElementById("categoryFilter")
+.value;
 
-      const option = document.createElement("option");
+filteredProducts=products.filter(p=>{
 
-      option.value = category;
-      option.textContent = category;
+const text=[
+p.name,
+p.description,
+p.category
+].filter(Boolean).join(" ").toLowerCase();
 
-      select.appendChild(option);
-    });
-  }
+return(
+(!search||text.includes(search))&&
+(!category||p.category===category)
+);
+});
 
-  /* ============================================================
-     FILTERS
-  ============================================================ */
+renderProducts();
+}
 
-  function applyFilters() {
+/* ===============================
+   RENDER
+================================ */
 
-    const search =
-      document
-        .getElementById("searchInput")
-        .value
-        .trim()
-        .toLowerCase();
+function renderProducts(){
 
-    const category =
-      document
-        .getElementById("categoryFilter")
-        .value;
+const grid=document.getElementById("catalogGrid");
 
-    filteredProducts = products.filter(product => {
+if(!filteredProducts.length){
+grid.innerHTML=`
+<div class="empty">
+<div class="empty-icon">🔎</div>
+По вашему запросу ничего не найдено
+</div>`;
+return;
+}
 
-      const searchableText = [
-        product.name,
-        product.description,
-        product.category
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
+grid.innerHTML=filteredProducts.map(product=>{
 
-      const matchesSearch =
-        !search ||
-        searchableText.includes(search);
+const image=product.image_url||"miata-logo.png";
+const price=Number(product.price||0);
+const oldPrice=Number(product.old_price||0);
+const stock=Number(product.stock||0);
+const discount=Number(product.discount||0);
 
-      const matchesCategory =
-        !category ||
-        product.category === category;
+return`
+<article class="product-card">
 
-      return matchesSearch && matchesCategory;
-    });
+<div class="product-image">
 
-    renderProducts();
-  }
+<img
+src="${attr(image)}"
+alt="${attr(product.name||"Модель")}"
+loading="lazy"
+onerror="this.src='miata-logo.png'"
+>
 
-  /* ============================================================
-     RENDER PRODUCTS
-  ============================================================ */
+${discount>0?`<span class="discount">-${discount}%</span>`:""}
 
-  function renderProducts() {
+${stock<=0?`<div class="out-of-stock">Нет в наличии</div>`:""}
 
-    const grid = document.getElementById("catalogGrid");
+</div>
 
-    if (!filteredProducts.length) {
+<div class="product-info">
 
-      grid.innerHTML = `
-        <div class="empty">
-          <div class="empty-icon">🔎</div>
-          По вашему запросу ничего не найдено
-        </div>
-      `;
+<div class="product-name">
+${html(product.name||"Без названия")}
+</div>
 
-      return;
-    }
+<div class="product-description">
+${html(product.description||"Коллекционная модель")}
+</div>
 
-    grid.innerHTML = filteredProducts
-      .map(product => {
+<div class="prices">
 
-        const image =
-          product.image ||
-          "https://via.placeholder.com/600x600?text=Miata+Garage";
+<span class="current-price">
+${money(price)} ₽
+</span>
 
-        const stock =
-          Number(product.stock ?? 0);
+${oldPrice>price?
+`<span class="old-price">${money(oldPrice)} ₽</span>`:""}
 
-        const price =
-          Number(product.price ?? 0);
+</div>
 
-        const oldPrice =
-          Number(product.old_price ?? 0);
+<div class="product-buttons">
 
-        const discount =
-          Number(product.discount ?? 0);
+<button onclick="openDetails(${product.id})">
+Подробнее
+</button>
 
-        return `
-          <article class="product-card">
+<button
+class="cart-btn"
+onclick="addToCart(${product.id})"
+${stock<=0?"disabled":""}
+>
+${stock>0?"В корзину":"Нет в наличии"}
+</button>
 
-            <div class="product-image">
+</div>
 
-              <img
-                src="${escapeAttribute(image)}"
-                alt="${escapeAttribute(product.name || "Модель")}"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/600x600?text=No+Photo'"
-              >
+</div>
+</article>
+`;
 
-              ${
-                discount > 0
-                  ? `<span class="discount">-${discount}%</span>`
-                  : ""
-              }
+}).join("");
+}
 
-              ${
-                stock <= 0
-                  ? `<div class="out-of-stock">Нет в наличии</div>`
-                  : ""
-              }
+/* ===============================
+   DETAILS
+================================ */
 
-            </div>
+function openDetails(id){
 
-            <div class="product-info">
+const product=getProduct(id);
+if(!product)return;
 
-              <div class="product-name">
-                ${escapeHtml(product.name || "Без названия")}
-              </div>
+detailsProduct=product;
 
-              <div class="product-description">
-                ${escapeHtml(product.description || "Коллекционная модель")}
-              </div>
+document.getElementById("detailsTitle").textContent=
+product.name||"Модель";
 
-              <div class="prices">
+document.getElementById("detailsImage").src=
+product.image_url||"miata-logo.png";
 
-                <span class="current-price">
-                  ${formatPrice(price)} ₽
-                </span>
+document.getElementById("detailsDescription").textContent=
+product.description||"Описание модели пока не добавлено.";
 
-                ${
-                  oldPrice > price
-                    ? `<span class="old-price">${formatPrice(oldPrice)} ₽</span>`
-                    : ""
-                }
+document.getElementById("detailsPrice").textContent=
+money(product.price)+" ₽";
 
-              </div>
+const old=document.getElementById("detailsOldPrice");
+const oldPrice=Number(product.old_price||0);
+const price=Number(product.price||0);
 
-              <div class="product-buttons">
+if(oldPrice>price){
+old.textContent=money(oldPrice)+" ₽";
+old.style.display="inline";
+}else{
+old.style.display="none";
+}
 
-                <button onclick="openDetails(${product.id})">
-                  Подробнее
-                </button>
+const btn=document.getElementById("detailsCartButton");
+const stock=Number(product.stock||0);
 
-                <button
-                  class="cart-btn"
-                  onclick="addToCart(${product.id})"
-                  ${stock <= 0 ? "disabled" : ""}
-                >
-                  ${
-                    stock > 0
-                      ? "В корзину"
-                      : "Нет в наличии"
-                  }
-                </button>
+btn.disabled=stock<=0;
+btn.textContent=stock>0?"В корзину":"Нет в наличии";
 
-              </div>
+openModal("detailsModal");
+}
 
-            </div>
+function addDetailsToCart(){
+if(!detailsProduct)return;
+addToCart(detailsProduct.id);
+closeModal("detailsModal");
+}
 
-          </article>
-        `;
-      })
-      .join("");
-  }
+/* ===============================
+   ADD TO CART
+================================ */
 
-  /* ============================================================
-     DETAILS
-  ============================================================ */
+function addToCart(id){
 
-  function openDetails(productId) {
+const product=getProduct(id);
 
-    const product =
-      products.find(p => p.id === productId);
+if(!product)return;
 
-    if (!product) return;
+const stock=Number(product.stock||0);
 
-    selectedDetailsProduct = product;
+if(stock<=0){
+alert("Этого товара сейчас нет в наличии.");
+return;
+}
 
-    document.getElementById("detailsTitle").textContent =
-      product.name || "Модель";
+const existing=cart.find(
+item=>Number(item.id)===Number(id)
+);
 
-    document.getElementById("detailsImage").src =
-      product.image ||
-      "https://via.placeholder.com/600x600?text=Miata+Garage";
+if(existing){
 
-    document.getElementById("detailsDescription").textContent =
-      product.description ||
-      "Описание модели пока не добавлено.";
+if(Number(existing.quantity)>=stock){
+alert("Больше этого товара нет в наличии.");
+return;
+}
 
-    document.getElementById("detailsPrice").textContent =
-      `${formatPrice(product.price)} ₽`;
+existing.quantity++;
 
-    const oldPrice =
-      Number(product.old_price ?? 0);
+}else{
 
-    const oldPriceElement =
-      document.getElementById("detailsOldPrice");
+cart.push({
+id:Number(id),
+quantity:1
+});
 
-    if (oldPrice > Number(product.price ?? 0)) {
+}
 
-      oldPriceElement.textContent =
-        `${formatPrice(oldPrice)} ₽`;
+saveCart();
+updateCartCount();
 
-      oldPriceElement.style.display = "inline";
+/*
+  Небольшое визуальное подтверждение.
+*/
+const button=document.getElementById("cartCount");
+button.animate(
+[
+{transform:"scale(1)"},
+{transform:"scale(1.3)"},
+{transform:"scale(1)"}
+],
+{duration:250}
+);
+}
 
-    } else {
+/* ===============================
+   CART
+================================ */
 
-      oldPriceElement.style.display = "none";
-    }
+function updateCartCount(){
 
-    const button =
-      document.getElementById("detailsCartButton");
+const count=cart.reduce(
+(sum,item)=>sum+Number(item.quantity||0),0
+);
 
-    button.disabled =
-      Number(product.stock ?? 0) <= 0;
+document.getElementById("cartCount").textContent=count;
+}
 
-    button.textContent =
-      Number(product.stock ?? 0) > 0
-        ? "В корзину"
-        : "Нет в наличии";
+function openCart(){
 
-    openModal("detailsModal");
-  }
+normalizeCart();
+renderCart();
+openModal("cartModal");
+}
 
-  function addDetailsToCart() {
+function renderCart(){
 
-    if (!selectedDetailsProduct) return;
+const container=document.getElementById("cartItems");
+const checkout=document.getElementById("checkoutButton");
 
-    addToCart(selectedDetailsProduct.id);
+if(!cart.length){
 
-    closeModal("detailsModal");
-  }
+container.innerHTML=`
+<div class="empty">
+<div class="empty-icon">🛒</div>
+Корзина пока пустая
+</div>`;
 
-  /* ============================================================
-     CART
-  ============================================================ */
+document.getElementById("cartTotal").textContent="0 ₽";
+checkout.disabled=true;
+return;
+}
 
-  function addToCart(productId) {
+checkout.disabled=false;
 
-    const product =
-      products.find(p => p.id === productId);
+let total=0;
 
-    if (!product) return;
+container.innerHTML=cart.map(item=>{
 
-    if (Number(product.stock ?? 0) <= 0) {
-      return;
-    }
+const product=getProduct(item.id);
 
-    const existing =
-      cart.find(item => item.id === productId);
+if(!product)return"";
 
-    if (existing) {
+const quantity=Number(item.quantity||1);
+const price=Number(product.price||0);
 
-      if (
-        existing.quantity <
-        Number(product.stock ?? 0)
-      ) {
-        existing.quantity++;
-      }
+total+=price*quantity;
 
-    } else {
+return`
+<div class="cart-item">
 
-      cart.push({
-        id: product.id,
-        name: product.name,
-        price: Number(product.price ?? 0),
-        image: product.image || "",
-        quantity: 1,
-        stock: Number(product.stock ?? 0)
-      });
-    }
+<img
+src="${attr(product.image_url||"miata-logo.png")}"
+alt=""
+onerror="this.src='miata-logo.png'"
+>
 
-    saveCart();
-    updateCartCount();
-  }
+<div>
 
-  function removeFromCart(productId) {
+<div class="cart-item-name">
+${html(product.name)}
+</div>
 
-    cart =
-      cart.filter(item => item.id !== productId);
+<div class="cart-item-price">
+${money(price)} ₽ × ${quantity}
+</div>
 
-    saveCart();
-    renderCart();
-    updateCartCount();
-  }
+<div class="quantity">
 
-  function changeQuantity(productId, change) {
+<button onclick="changeQuantity(${product.id},-1)">
+−
+</button>
 
-    const item =
-      cart.find(item => item.id === productId);
+<span>${quantity}</span>
 
-    if (!item) return;
+<button onclick="changeQuantity(${product.id},1)">
++
+</button>
 
-    const product =
-      products.find(p => p.id === productId);
+</div>
 
-    const maxStock =
-      Number(product?.stock ?? item.stock ?? 999999);
+</div>
 
-    item.quantity += change;
+<button
+class="remove-btn"
+onclick="removeFromCart(${product.id})"
+>
+🗑
+</button>
 
-    if (item.quantity <= 0) {
-      removeFromCart(productId);
-      return;
-    }
+</div>
+`;
 
-    if (item.quantity > maxStock) {
-      item.quantity = maxStock;
-    }
+}).join("");
 
-    saveCart();
-    renderCart();
-    updateCartCount();
-  }
+document.getElementById("cartTotal").textContent=
+money(total)+" ₽";
+}
 
-  function saveCart() {
+/* ===============================
+   QUANTITY
+================================ */
 
-    localStorage.setItem(
-      "miataGarageCart",
-      JSON.stringify(cart)
-    );
-  }
+function changeQuantity(id,change){
 
-  function updateCartCount() {
+const item=cart.find(
+x=>Number(x.id)===Number(id)
+);
 
-    const count =
-      cart.reduce(
-        (sum, item) => sum + Number(item.quantity || 0),
-        0
-      );
+const product=getProduct(id);
 
-    document.getElementById("cartCount").textContent =
-      count;
-  }
+if(!item||!product)return;
 
-  /* ============================================================
-     CART MODAL
-  ============================================================ */
+const stock=Number(product.stock||0);
 
-  function openCart() {
+let quantity=Number(item.quantity||1)+change;
 
-    renderCart();
-    openModal("cartModal");
-  }
+if(quantity<=0){
+removeFromCart(id);
+return;
+}
 
-  function renderCart() {
+if(quantity>stock){
+quantity=stock;
+alert("Нельзя добавить больше товара, чем есть в наличии.");
+}
 
-    const container =
-      document.getElementById("cartItems");
+item.quantity=quantity;
 
-    if (!cart.length) {
+saveCart();
+updateCartCount();
+renderCart();
+}
 
-      container.innerHTML = `
-        <div class="empty">
-          <div class="empty-icon">🛒</div>
-          Корзина пока пустая
-        </div>
-      `;
+function removeFromCart(id){
 
-      document.getElementById("cartTotal").textContent =
-        "0 ₽";
+cart=cart.filter(
+item=>Number(item.id)!==Number(id)
+);
 
-      return;
-    }
+saveCart();
+updateCartCount();
+renderCart();
+}
 
-    let total = 0;
+/* ===============================
+   NORMALIZE CART
+================================ */
 
-    container.innerHTML =
-      cart.map(item => {
+function normalizeCart(){
 
-        const itemTotal =
-          Number(item.price) *
-          Number(item.quantity);
+cart=cart.filter(item=>{
 
-        total += itemTotal;
+const product=getProduct(item.id);
 
-        return `
-          <div class="cart-item">
+if(!product)return false;
 
-            <img
-              src="${escapeAttribute(
-                item.image ||
-                "https://via.placeholder.com/100x100?text=Photo"
-              )}"
-              alt=""
-            >
+const stock=Number(product.stock||0);
 
-            <div>
+if(stock<=0)return false;
 
-              <div class="cart-item-name">
-                ${escapeHtml(item.name)}
-              </div>
+item.quantity=Math.min(
+Math.max(1,Number(item.quantity||1)),
+stock
+);
 
-              <div class="cart-item-price">
-                ${formatPrice(item.price)} ₽ × ${item.quantity}
-              </div>
+return true;
+});
 
-              <div class="quantity">
+saveCart();
+}
 
-                <button
-                  onclick="changeQuantity(${item.id}, -1)"
-                >
-                  −
-                </button>
+/* ===============================
+   CHECKOUT
+================================ */
 
-                <span>${item.quantity}</span>
+/*
+  ВАЖНО:
+  index.html использует ту же корзину.
+  Поэтому здесь мы НЕ создаём новую корзину
+  и НЕ передаём товары через URL.
 
-                <button
-                  onclick="changeQuantity(${item.id}, 1)"
-                >
-                  +
-                </button>
+  Сохраняем корзину и отправляем пользователя
+  на главную страницу.
+*/
 
-              </div>
+function goToCheckout(){
 
-            </div>
+if(!cart.length){
+alert("Сначала добавьте товары в корзину.");
+return;
+}
 
-            <button
-              class="remove-btn"
-              onclick="removeFromCart(${item.id})"
-              title="Удалить"
-            >
-              🗑
-            </button>
+saveCart();
 
-          </div>
-        `;
-      }).join("");
+window.location.href="index.html#checkout";
+}
 
-    document.getElementById("cartTotal").textContent =
-      `${formatPrice(total)} ₽`;
-  }
+/* ===============================
+   MODALS
+================================ */
 
-  /* ============================================================
-     CHECKOUT
-  ============================================================ */
+function openModal(id){
+document.getElementById(id).classList.add("open");
+document.body.style.overflow="hidden";
+}
 
-  function goToCheckout() {
+function closeModal(id){
+document.getElementById(id).classList.remove("open");
+document.body.style.overflow="";
+}
 
-    if (!cart.length) return;
+function backgroundClose(event,id){
+if(event.target.id===id)closeModal(id);
+}
 
-    /*
-      Пока каталог использует общую корзину.
+/* ===============================
+   HELPERS
+================================ */
 
-      Оформление заказа будет подключено
-      к общей checkout-странице/экрану.
-    */
+function getProduct(id){
+return products.find(
+p=>Number(p.id)===Number(id)
+);
+}
 
-    window.location.href = "index.html#checkout";
-  }
+function money(value){
+return Number(value||0).toLocaleString("ru-RU");
+}
 
-  /* ============================================================
-     MODALS
-  ============================================================ */
+function html(value){
+return String(value??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+}
 
-  function openModal(id) {
-    document.getElementById(id).classList.add("open");
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeModal(id) {
-    document.getElementById(id).classList.remove("open");
-    document.body.style.overflow = "";
-  }
-
-  function closeOnBackground(event, id) {
-
-    if (event.target.id === id) {
-      closeModal(id);
-    }
-  }
-
-  /* ============================================================
-     HELPERS
-  ============================================================ */
-
-  function formatPrice(value) {
-
-    return Number(value || 0)
-      .toLocaleString("ru-RU");
-  }
-
-  function escapeHtml(value) {
-
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-
-  function escapeAttribute(value) {
-    return escapeHtml(value);
-  }
+function attr(value){
+return html(value);
+}
 </script>
 
 </body>
