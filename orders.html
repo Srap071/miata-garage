@@ -1,1 +1,1800 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+>
 
+<title>Мои заказы — Miata Garage</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+* {
+box-sizing: border-box;
+-webkit-tap-highlight-color: transparent;
+}
+
+body {
+margin: 0;
+padding: 0;
+background: #0f0f0f;
+color: #ffffff;
+font-family: Arial, sans-serif;
+min-height: 100vh;
+}
+
+.page {
+width: 100%;
+max-width: 700px;
+margin: 0 auto;
+padding: 20px 16px 120px;
+}
+
+.header {
+margin-bottom: 22px;
+}
+
+.back {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+padding: 10px 16px;
+border-radius: 12px;
+border: 1px solid #333;
+background: #191919;
+color: #fff;
+text-decoration: none;
+font-size: 14px;
+margin-bottom: 18px;
+}
+
+h1 {
+margin: 0;
+font-size: 28px;
+line-height: 1.2;
+}
+
+.subtitle {
+margin-top: 8px;
+color: #8e8e8e;
+font-size: 14px;
+}
+
+.loading,
+.empty,
+.error {
+padding: 24px 18px;
+border-radius: 16px;
+background: #181818;
+border: 1px solid #292929;
+text-align: center;
+color: #aaa;
+}
+
+.error {
+color: #ff7777;
+}
+
+.orders {
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+
+.order-card {
+background: #181818;
+border: 1px solid #292929;
+border-radius: 17px;
+padding: 17px;
+}
+
+.order-top {
+display: flex;
+align-items: flex-start;
+justify-content: space-between;
+gap: 12px;
+}
+
+.order-number {
+font-size: 18px;
+font-weight: 700;
+}
+
+.order-date {
+margin-top: 6px;
+color: #888;
+font-size: 13px;
+}
+
+.status {
+flex-shrink: 0;
+padding: 7px 10px;
+border-radius: 10px;
+background: #242424;
+color: #fff;
+font-size: 12px;
+font-weight: 600;
+}
+
+.status.created {
+color: #9fc5ff;
+}
+
+.status.processing {
+color: #ffd36a;
+}
+
+.status.shipping {
+color: #8ee6ff;
+}
+
+.status.completed {
+color: #86e7a4;
+}
+
+.status.cancelled {
+color: #ff8585;
+}
+
+.order-bottom {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 12px;
+margin-top: 16px;
+}
+
+.total {
+font-size: 16px;
+font-weight: 700;
+}
+
+.details-btn {
+border: 0;
+border-radius: 11px;
+padding: 10px 15px;
+background: #ffffff;
+color: #111;
+font-size: 13px;
+font-weight: 700;
+cursor: pointer;
+}
+
+.details-btn:active {
+transform: scale(0.97);
+}
+
+.modal-bg {
+display: none;
+position: fixed;
+inset: 0;
+z-index: 1000;
+background: rgba(0, 0, 0, 0.72);
+padding: 20px;
+overflow-y: auto;
+}
+
+.modal-bg.active {
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.modal {
+width: 100%;
+max-width: 520px;
+max-height: 90vh;
+overflow-y: auto;
+background: #171717;
+border: 1px solid #303030;
+border-radius: 20px;
+padding: 20px;
+}
+
+.modal-title {
+font-size: 21px;
+font-weight: 700;
+margin-bottom: 18px;
+}
+
+.info-row {
+padding: 12px 0;
+border-bottom: 1px solid #292929;
+}
+
+.info-label {
+color: #888;
+font-size: 12px;
+margin-bottom: 5px;
+}
+
+.info-value {
+color: #fff;
+font-size: 14px;
+}
+
+.items {
+margin-top: 15px;
+}
+
+.item {
+display: flex;
+justify-content: space-between;
+gap: 12px;
+padding: 10px 0;
+border-bottom: 1px solid #252525;
+font-size: 14px;
+}
+
+.item-name {
+flex: 1;
+}
+
+.item-price {
+white-space: nowrap;
+}
+
+.summary {
+margin-top: 16px;
+padding: 15px;
+border-radius: 13px;
+background: #202020;
+}
+
+.summary-row {
+display: flex;
+justify-content: space-between;
+gap: 12px;
+margin-bottom: 8px;
+color: #aaa;
+font-size: 13px;
+}
+
+.summary-row:last-child {
+margin-bottom: 0;
+}
+
+.summary-total {
+margin-top: 10px;
+padding-top: 10px;
+border-top: 1px solid #333;
+color: #fff;
+font-size: 17px;
+font-weight: 700;
+}
+
+.delivery-note {
+margin-top: 12px;
+color: #8d8d8d;
+font-size: 12px;
+line-height: 1.45;
+}
+
+.cancel-btn {
+width: 100%;
+margin-top: 18px;
+padding: 12px;
+border: 1px solid #5a2929;
+border-radius: 12px;
+background: #241515;
+color: #ff8585;
+font-weight: 700;
+cursor: pointer;
+}
+
+.close-btn {
+width: 100%;
+margin-top: 10px;
+padding: 12px;
+border: 1px solid #333;
+border-radius: 12px;
+background: #242424;
+color: #fff;
+font-weight: 700;
+cursor: pointer;
+}
+
+.cancel-form {
+margin-top: 15px;
+}
+
+.cancel-option {
+display: block;
+margin-bottom: 9px;
+padding: 12px;
+border-radius: 11px;
+background: #222;
+border: 1px solid #303030;
+cursor: pointer;
+}
+
+.cancel-option input {
+margin-right: 8px;
+}
+
+textarea {
+display: none;
+width: 100%;
+min-height: 90px;
+resize: vertical;
+margin-top: 10px;
+padding: 12px;
+border-radius: 11px;
+border: 1px solid #333;
+background: #101010;
+color: #fff;
+outline: none;
+}
+
+textarea.visible {
+display: block;
+}
+
+.cancel-warning {
+display: none;
+margin-top: 15px;
+padding: 14px;
+border-radius: 12px;
+background: #211818;
+border: 1px solid #432626;
+color: #ddd;
+line-height: 1.45;
+font-size: 13px;
+}
+
+.manager-btn {
+display: block;
+width: 100%;
+margin-top: 12px;
+padding: 12px;
+border-radius: 12px;
+background: #fff;
+color: #111;
+text-decoration: none;
+text-align: center;
+font-weight: 700;
+}
+
+.cancel-actions {
+display: flex;
+gap: 10px;
+margin-top: 12px;
+}
+
+.cancel-actions button {
+flex: 1;
+padding: 12px;
+border-radius: 12px;
+cursor: pointer;
+font-weight: 700;
+}
+
+.dont-cancel {
+background: #242424;
+border: 1px solid #333;
+color: #fff;
+}
+
+.confirm-cancel {
+background: #b52d2d;
+border: 1px solid #b52d2d;
+color: #fff;
+}
+
+.cancel-result {
+display: none;
+margin-top: 15px;
+padding: 14px;
+border-radius: 12px;
+background: #202020;
+color: #ddd;
+text-align: center;
+}
+
+@media (max-width: 500px) {
+.page {
+padding-left: 13px;
+padding-right: 13px;
+}
+
+h1 {
+font-size: 25px;
+}
+
+.order-top {
+flex-direction: column;
+}
+
+.status {
+align-self: flex-start;
+}
+}
+</style>
+</head>
+
+<body>
+
+<main class="page">
+
+<div class="header">
+<a href="index.html" class="back">← Назад</a>
+
+<h1>Мои заказы</h1>
+
+<div class="subtitle">
+Здесь отображаются только ваши заказы
+</div>
+</div>
+
+<div id="loading" class="loading">
+Загружаем заказы...
+</div>
+
+<div id="error" class="error" style="display:none;"></div>
+
+<div id="empty" class="empty" style="display:none;">
+У вас пока нет заказов.
+</div>
+
+<div id="orders" class="orders"></div>
+
+</main>
+
+
+<!-- ОКНО ПОДРОБНОСТЕЙ -->
+
+<div id="detailsModal" class="modal-bg">
+
+<div class="modal">
+
+<div class="modal-title">
+Заказ <span id="modalOrderNumber"></span>
+</div>
+
+<div class="info-row">
+<div class="info-label">Дата заказа</div>
+<div id="modalDate" class="info-value">—</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Статус</div>
+<div id="modalStatus" class="info-value">—</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Ожидание</div>
+<div id="modalWaiting" class="info-value">
+Информация уточняется менеджером
+</div>
+</div>
+
+<div class="items">
+<div class="info-label">Состав заказа</div>
+<div id="modalItems"></div>
+</div>
+
+<div class="summary">
+
+<div class="summary-row">
+<span>Товары</span>
+<span id="modalProductTotal">0 ₽</span>
+</div>
+
+<div class="summary-row">
+<span>Скидка</span>
+<span id="modalDiscount">0 ₽</span>
+</div>
+
+<div class="summary-row summary-total">
+<span>Итого</span>
+<span id="modalTotal">0 ₽</span>
+</div>
+
+</div>
+
+<div class="delivery-note">
+Точная стоимость доставки будет понятна при оформлении и согласовании заказа с менеджером.
+</div>
+
+<button
+id="cancelOrderButton"
+class="cancel-btn"
+type="button"
+>
+Отменить заказ
+</button>
+
+<button
+id="closeDetails"
+class="close-btn"
+type="button"
+>
+Закрыть
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ОКНО ОТМЕНЫ -->
+
+<div id="cancelModal" class="modal-bg">
+
+<div class="modal">
+
+<div class="modal-title">
+Отмена заказа
+</div>
+
+<div>
+Почему вы хотите отменить заказ?
+</div>
+
+<div class="cancel-form">
+
+<label class="cancel-option">
+<input
+type="radio"
+name="cancelReason"
+value="Долго ждать"
+>
+Долго ждать
+</label>
+
+<label class="cancel-option">
+<input
+type="radio"
+name="cancelReason"
+value="Передумал насчёт моделей"
+>
+Передумал насчёт моделей
+</label>
+
+<label class="cancel-option">
+<input
+type="radio"
+name="cancelReason"
+value="Хочу перезаказать"
+>
+Хочу перезаказать
+</label>
+
+<label class="cancel-option">
+<input
+type="radio"
+name="cancelReason"
+value="Другая причина"
+id="otherReason"
+>
+Другая причина
+</label>
+
+<textarea
+id="otherReasonText"
+placeholder="Напишите причину..."
+></textarea>
+
+<div
+id="cancelWarning"
+class="cancel-warning"
+>
+Если что-то не так с заказом или вы хотите уточнить детали, напишите нам.
+
+<a
+href="https://t.me/Lil_peepxx"
+target="_blank"
+class="manager-btn"
+>
+Написать менеджеру @Lil_peepxx
+</a>
+</div>
+
+<div class="cancel-actions">
+
+<button
+id="dontCancel"
+class="dont-cancel"
+type="button"
+>
+Не отменять
+</button>
+
+<button
+id="confirmCancel"
+class="confirm-cancel"
+type="button"
+>
+Отменить
+</button>
+
+</div>
+
+<div
+id="cancelResult"
+class="cancel-result"
+></div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/*
+* =========================================
+* TELEGRAM MINI APP
+* =========================================
+*/
+
+const tg = window.Telegram?.WebApp;
+
+if (tg) {
+tg.ready();
+tg.expand();
+}
+
+
+/*
+* =========================================
+* SUPABASE FUNCTION
+* =========================================
+*/
+
+const CUSTOMER_ORDERS_URL =
+"https://qbuethosjrghgdwpanhb.supabase.co/functions/v1/customer-orders";
+
+
+/*
+* =========================================
+* ЭЛЕМЕНТЫ
+* =========================================
+*/
+
+const loading =
+document.getElementById("loading");
+
+const errorBox =
+document.getElementById("error");
+
+const emptyBox =
+document.getElementById("empty");
+
+const ordersContainer =
+document.getElementById("orders");
+
+const detailsModal =
+document.getElementById("detailsModal");
+
+const cancelModal =
+document.getElementById("cancelModal");
+
+
+let currentOrder = null;
+
+
+/*
+* =========================================
+* TELEGRAM USER ID
+* =========================================
+*/
+
+function getTelegramUserId() {
+
+if (
+tg &&
+tg.initDataUnsafe &&
+tg.initDataUnsafe.user &&
+tg.initDataUnsafe.user.id
+) {
+return String(
+tg.initDataUnsafe.user.id
+);
+}
+
+return null;
+}
+
+
+/*
+* =========================================
+* ФОРМАТИРОВАНИЕ ДАТЫ
+* =========================================
+*/
+
+function formatDate(value) {
+
+if (!value) {
+return "—";
+}
+
+const date =
+new Date(value);
+
+if (
+Number.isNaN(
+date.getTime()
+)
+) {
+return String(value);
+}
+
+return date.toLocaleString(
+"ru-RU",
+{
+day: "2-digit",
+month: "2-digit",
+year: "numeric",
+hour: "2-digit",
+minute: "2-digit"
+}
+);
+}
+
+
+/*
+* =========================================
+* ДЕНЬГИ
+* =========================================
+*/
+
+function money(value) {
+
+return Number(
+value || 0
+).toLocaleString(
+"ru-RU"
+) + " ₽";
+
+}
+
+
+/*
+* =========================================
+* СТАТУС
+* =========================================
+*/
+
+function statusClass(status) {
+
+const value =
+String(
+status || ""
+).toLowerCase();
+
+if (
+value.includes("выполн")
+) {
+return "completed";
+}
+
+if (
+value.includes("пути")
+) {
+return "shipping";
+}
+
+if (
+value.includes("отмен")
+) {
+return "cancelled";
+}
+
+if (
+value.includes("создан")
+) {
+return "created";
+}
+
+return "processing";
+}
+
+
+/*
+* =========================================
+* ПОКАЗ ОШИБКИ
+* =========================================
+*/
+
+function showError(message) {
+
+loading.style.display =
+"none";
+
+errorBox.style.display =
+"block";
+
+errorBox.textContent =
+message;
+
+}
+
+
+/*
+* =========================================
+* ЗАГРУЗКА ЗАКАЗОВ
+* =========================================
+*/
+
+async function loadOrders() {
+
+const telegramUserId =
+getTelegramUserId();
+
+
+if (!telegramUserId) {
+
+showError(
+"Не удалось определить ваш Telegram ID. Откройте магазин через Telegram."
+);
+
+return;
+}
+
+
+try {
+
+const response =
+await fetch(
+CUSTOMER_ORDERS_URL,
+{
+method: "POST",
+
+headers: {
+"Content-Type":
+"application/json"
+},
+
+body: JSON.stringify({
+telegram_user_id:
+telegramUserId
+})
+}
+);
+
+
+const data =
+await response.json();
+
+
+if (
+!response.ok ||
+data.success === false
+) {
+
+throw new Error(
+data.error ||
+"Не удалось загрузить заказы"
+);
+
+}
+
+
+const orders =
+Array.isArray(
+data.orders
+)
+? data.orders
+: [];
+
+
+loading.style.display =
+"none";
+
+
+if (!orders.length) {
+
+emptyBox.style.display =
+"block";
+
+return;
+
+}
+
+
+renderOrders(orders);
+
+
+} catch (error) {
+
+console.error(
+"loadOrders error:",
+error
+);
+
+showError(
+error.message ||
+"Ошибка загрузки заказов"
+);
+
+}
+
+}
+
+
+/*
+* =========================================
+* ОТОБРАЖЕНИЕ ЗАКАЗОВ
+* =========================================
+*/
+
+function renderOrders(orders) {
+
+ordersContainer.innerHTML =
+"";
+
+
+orders.forEach(
+(order) => {
+
+const card =
+document.createElement(
+"div"
+);
+
+card.className =
+"order-card";
+
+
+const orderNumber =
+order.order_number ??
+order.id ??
+"—";
+
+
+const status =
+order.order_status ??
+"В обработке";
+
+
+const total =
+order.total ??
+order.products_total_after_discount ??
+0;
+
+
+card.innerHTML = `
+
+<div class="order-top">
+
+<div>
+
+<div class="order-number">
+Заказ #${escapeHtml(orderNumber)}
+</div>
+
+<div class="order-date">
+${escapeHtml(
+formatDate(
+order.created_at
+)
+)}
+</div>
+
+</div>
+
+<div class="status ${statusClass(status)}">
+${escapeHtml(status)}
+</div>
+
+</div>
+
+
+<div class="order-bottom">
+
+<div class="total">
+${escapeHtml(
+money(total)
+)}
+</div>
+
+<button
+class="details-btn"
+type="button"
+>
+Подробнее
+</button>
+
+</div>
+
+`;
+
+
+card
+.querySelector(
+".details-btn"
+)
+.addEventListener(
+"click",
+() => {
+
+openDetails(
+order
+);
+
+}
+);
+
+
+ordersContainer.appendChild(
+card
+);
+
+}
+);
+
+}
+
+
+/*
+* =========================================
+* ОКНО ПОДРОБНОСТЕЙ
+* =========================================
+*/
+
+function openDetails(order) {
+
+currentOrder =
+order;
+
+
+const orderNumber =
+order.order_number ??
+order.id ??
+"—";
+
+
+const status =
+order.order_status ??
+"В обработке";
+
+
+document.getElementById(
+"modalOrderNumber"
+).textContent =
+"#" + orderNumber;
+
+
+document.getElementById(
+"modalDate"
+).textContent =
+formatDate(
+order.created_at
+);
+
+
+document.getElementById(
+"modalStatus"
+).textContent =
+status;
+
+
+/*
+* Состав заказа
+*/
+
+const itemsBox =
+document.getElementById(
+"modalItems"
+);
+
+
+itemsBox.innerHTML =
+"";
+
+
+const items =
+Array.isArray(
+order.items
+)
+? order.items
+: [];
+
+
+if (!items.length) {
+
+itemsBox.innerHTML =
+`<div class="item">
+<span class="item-name">
+Информация о товарах отсутствует
+</span>
+</div>`;
+
+} else {
+
+items.forEach(
+(item) => {
+
+const row =
+document.createElement(
+"div"
+);
+
+row.className =
+"item";
+
+
+const name =
+item.name ??
+"Товар";
+
+
+const quantity =
+item.quantity ??
+1;
+
+
+const itemTotal =
+item.total ??
+(
+Number(
+item.price || 0
+) *
+Number(
+quantity
+)
+);
+
+
+row.innerHTML = `
+
+<span class="item-name">
+${escapeHtml(name)}
+× ${escapeHtml(quantity)}
+</span>
+
+<span class="item-price">
+${escapeHtml(
+money(itemTotal)
+)}
+</span>
+
+`;
+
+
+itemsBox.appendChild(
+row
+);
+
+}
+);
+
+}
+
+
+const productTotal =
+order.product_total ??
+0;
+
+
+const discountAmount =
+order.discount_amount ??
+0;
+
+
+const total =
+order.products_total_after_discount ??
+order.total ??
+0;
+
+
+document.getElementById(
+"modalProductTotal"
+).textContent =
+money(productTotal);
+
+
+document.getElementById(
+"modalDiscount"
+).textContent =
+discountAmount > 0
+? "-" + money(
+discountAmount
+)
+: "0 ₽";
+
+
+document.getElementById(
+"modalTotal"
+).textContent =
+money(total);
+
+
+/*
+* Пока товар не отправлен,
+* показываем общий текст.
+*/
+
+const waiting =
+document.getElementById(
+"modalWaiting"
+);
+
+
+if (
+String(status)
+.toLowerCase()
+.includes("пути")
+) {
+
+waiting.textContent =
+"Заказ уже находится в пути.";
+
+} else if (
+String(status)
+.toLowerCase()
+.includes("выполн")
+) {
+
+waiting.textContent =
+"Заказ выполнен.";
+
+} else if (
+String(status)
+.toLowerCase()
+.includes("отмен")
+) {
+
+waiting.textContent =
+"Заказ отменён.";
+
+} else {
+
+waiting.textContent =
+"Ориентировочное время отправки уточняется менеджером.";
+
+}
+
+
+/*
+* Отмена доступна только
+* для активных заказов.
+*/
+
+const cancelButton =
+document.getElementById(
+"cancelOrderButton"
+);
+
+
+if (
+String(status)
+.toLowerCase()
+.includes("отмен") ||
+String(status)
+.toLowerCase()
+.includes("выполн")
+) {
+
+cancelButton.style.display =
+"none";
+
+} else {
+
+cancelButton.style.display =
+"block";
+
+}
+
+
+detailsModal.classList.add(
+"active"
+);
+
+}
+
+
+/*
+* =========================================
+* ЗАКРЫТЬ ПОДРОБНОСТИ
+* =========================================
+*/
+
+document.getElementById(
+"closeDetails"
+).addEventListener(
+"click",
+() => {
+
+detailsModal.classList.remove(
+"active"
+);
+
+}
+);
+
+
+/*
+* =========================================
+* НАЧАТЬ ОТМЕНУ
+* =========================================
+*/
+
+document.getElementById(
+"cancelOrderButton"
+).addEventListener(
+"click",
+() => {
+
+if (!currentOrder) {
+return;
+}
+
+
+resetCancelForm();
+
+
+detailsModal.classList.remove(
+"active"
+);
+
+
+cancelModal.classList.add(
+"active"
+);
+
+}
+);
+
+
+/*
+* =========================================
+* RADIO "ДРУГАЯ ПРИЧИНА"
+* =========================================
+*/
+
+document
+.querySelectorAll(
+'input[name="cancelReason"]'
+)
+.forEach(
+(radio) => {
+
+radio.addEventListener(
+"change",
+() => {
+
+const textarea =
+document.getElementById(
+"otherReasonText"
+);
+
+
+if (
+document.getElementById(
+"otherReason"
+).checked
+) {
+
+textarea.classList.add(
+"visible"
+);
+
+} else {
+
+textarea.classList.remove(
+"visible"
+);
+
+}
+
+}
+);
+
+}
+);
+
+
+/*
+* =========================================
+* ПОКАЗ ПРЕДУПРЕЖДЕНИЯ
+* =========================================
+*/
+
+document
+.querySelectorAll(
+'input[name="cancelReason"]'
+)
+.forEach(
+(radio) => {
+
+radio.addEventListener(
+"change",
+() => {
+
+document.getElementById(
+"cancelWarning"
+).style.display =
+"block";
+
+}
+);
+
+}
+);
+
+
+/*
+* =========================================
+* НЕ ОТМЕНЯТЬ
+* =========================================
+*/
+
+document.getElementById(
+"dontCancel"
+).addEventListener(
+"click",
+() => {
+
+cancelModal.classList.remove(
+"active"
+);
+
+
+if (currentOrder) {
+
+detailsModal.classList.add(
+"active"
+);
+
+}
+
+}
+);
+
+
+/*
+* =========================================
+* СБРОС ФОРМЫ
+* =========================================
+*/
+
+function resetCancelForm() {
+
+document
+.querySelectorAll(
+'input[name="cancelReason"]'
+)
+.forEach(
+(radio) => {
+
+radio.checked =
+false;
+
+}
+);
+
+
+document.getElementById(
+"otherReasonText"
+).value =
+"";
+
+
+document.getElementById(
+"otherReasonText"
+).classList.remove(
+"visible"
+);
+
+
+document.getElementById(
+"cancelWarning"
+).style.display =
+"none";
+
+
+document.getElementById(
+"cancelResult"
+).style.display =
+"none";
+
+}
+
+
+/*
+* =========================================
+* ПОДТВЕРЖДЕНИЕ ОТМЕНЫ
+* =========================================
+*/
+
+document.getElementById(
+"confirmCancel"
+).addEventListener(
+"click",
+async () => {
+
+if (!currentOrder) {
+return;
+}
+
+
+const selected =
+document.querySelector(
+'input[name="cancelReason"]:checked'
+);
+
+
+if (!selected) {
+
+alert(
+"Выберите причину отмены."
+);
+
+return;
+
+}
+
+
+let reason =
+selected.value;
+
+
+if (
+reason ===
+"Другая причина"
+) {
+
+const customReason =
+document.getElementById(
+"otherReasonText"
+).value.trim();
+
+
+if (!customReason) {
+
+alert(
+"Напишите причину отмены."
+);
+
+return;
+
+}
+
+
+reason =
+customReason;
+
+}
+
+
+const telegramUserId =
+getTelegramUserId();
+
+
+if (!telegramUserId) {
+
+alert(
+"Не удалось определить Telegram ID."
+);
+
+return;
+
+}
+
+
+const button =
+document.getElementById(
+"confirmCancel"
+);
+
+
+button.disabled =
+true;
+
+button.textContent =
+"Отменяем...";
+
+
+try {
+
+/*
+* ВАЖНО:
+*
+* Эта часть отправляет запрос
+* в customer-orders.
+*
+* Если твоя функция customer-orders
+* ещё не поддерживает действие
+* cancel — она вернёт ошибку.
+*/
+
+const response =
+await fetch(
+CUSTOMER_ORDERS_URL,
+{
+method: "POST",
+
+headers: {
+"Content-Type":
+"application/json"
+},
+
+body: JSON.stringify({
+
+action:
+"cancel",
+
+telegram_user_id:
+telegramUserId,
+
+order_id:
+currentOrder.id,
+
+cancel_reason:
+reason
+
+})
+
+}
+);
+
+
+const data =
+await response.json();
+
+
+if (
+!response.ok ||
+data.success === false
+) {
+
+throw new Error(
+data.error ||
+"Не удалось отменить заказ."
+);
+
+}
+
+
+document.getElementById(
+"cancelResult"
+).style.display =
+"block";
+
+
+document.getElementById(
+"cancelResult"
+).textContent =
+"❌ Заказ отменён.";
+
+
+setTimeout(
+() => {
+
+cancelModal.classList.remove(
+"active"
+);
+
+
+loadOrders();
+
+},
+1200
+);
+
+
+} catch (error) {
+
+console.error(
+"cancel order error:",
+error
+);
+
+
+alert(
+error.message ||
+"Не удалось отменить заказ."
+);
+
+} finally {
+
+button.disabled =
+false;
+
+button.textContent =
+"Отменить";
+
+}
+
+}
+);
+
+
+/*
+* =========================================
+* ЗАКРЫТИЕ ПО КЛИКУ ВНЕ ОКНА
+* =========================================
+*/
+
+detailsModal.addEventListener(
+"click",
+(event) => {
+
+if (
+event.target ===
+detailsModal
+) {
+
+detailsModal.classList.remove(
+"active"
+);
+
+}
+
+}
+);
+
+
+cancelModal.addEventListener(
+"click",
+(event) => {
+
+if (
+event.target ===
+cancelModal
+) {
+
+cancelModal.classList.remove(
+"active"
+);
+
+}
+
+}
+);
+
+
+/*
+* =========================================
+* ЗАЩИТА HTML
+* =========================================
+*/
+
+function escapeHtml(value) {
+
+return String(
+value ?? ""
+)
+.replace(
+/&/g,
+"&amp;"
+)
+.replace(
+/</g,
+"&lt;"
+)
+.replace(
+/>/g,
+"&gt;"
+)
+.replace(
+/"/g,
+"&quot;"
+)
+.replace(
+/'/g,
+"&#039;"
+);
+
+}
+
+
+/*
+* =========================================
+* СТАРТ
+* =========================================
+*/
+
+loadOrders();
+
+</script>
+
+</body>
+</html>
