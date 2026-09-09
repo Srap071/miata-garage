@@ -4482,7 +4482,9 @@ async function submitOrder() {
                     ) / 100
                   : 0)
               : Number(appliedPromo?.value || 0),
-          discount_amount: promoDiscount
+          discount_amount: promoDiscount,
+          telegram_user_id:
+            window.Telegram?.WebApp?.initDataUnsafe?.user?.id || null 
         })
       }
     );
