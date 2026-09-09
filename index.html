@@ -321,7 +321,7 @@ header {
 .news-slider {
   max-width: 1450px;
   margin: auto;
-  padding: 35px 50px;
+  padding: 35px 35px;
   position: relative;
   border-bottom: 1px solid #292929;
 }
@@ -344,17 +344,11 @@ header {
   border: 1px solid #303030;
   border-radius: 17px;
   background:
-    linear-gradient(
-      rgba(20,20,22,.55),
-      rgba(10,10,11,.88)
-    ),
-    repeating-linear-gradient(
-      135deg,
-      #343434 0px,
-      #343434 2px,
-      #242424 2px,
-      #242424 7px
-    );
+    radial-gradient(circle at 88% 18%, rgba(235,0,27,.28), transparent 24%),
+    radial-gradient(circle at 12% 100%, rgba(110,0,15,.22), transparent 30%),
+    linear-gradient(115deg, rgba(120,0,15,.18), transparent 38%),
+    repeating-linear-gradient(135deg, rgba(255,255,255,.035) 0 2px, transparent 2px 8px),
+    linear-gradient(145deg, #202023 0%, #0c0c0f 55%, #21080d 100%);
   overflow: hidden;
   position: relative;
 }
@@ -432,6 +426,7 @@ header {
 }
 
 .slider-arrow {
+  display: none !important;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -472,7 +467,7 @@ header {
 
 .section-title {
   margin: 0;
-  font-size: 38px;
+  font-size: clamp(34px, 4vw, 46px);
   text-transform: uppercase;
   letter-spacing: -1px;
 }
@@ -494,7 +489,7 @@ header {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -682,20 +677,51 @@ footer {
   color: white;
 }
 
-.telegram-button {
-  display: flex !important;
+.footer-nav-button {
+  display: inline-flex !important;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
   width: fit-content;
+  min-width: 108px;
   border: 1px solid #333;
   border-radius: 9px;
-  padding: 9px 12px;
+  padding: 8px 12px !important;
+  margin: 7px 0 !important;
   background: #121214;
   color: #ddd !important;
+  font-size: 12px !important;
+  font-weight: 900;
+  transition: .2s;
+}
+
+.footer-nav-button:hover {
+  border-color: #e9001b;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+
+.telegram-button {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  min-width: 108px;
+  border: 1px solid #333;
+  border-radius: 9px;
+  padding: 8px 12px;
+  margin: 7px 0 !important;
+  background: #121214;
+  color: #ddd !important;
+  font-size: 12px !important;
+  font-weight: 900;
+  transition: .2s;
 }
 
 .telegram-button:hover {
   border-color: #e9001b;
+  color: #fff !important;
+  transform: translateY(-1px);
 }
 
 .copyright {
@@ -894,6 +920,94 @@ footer {
   border-color: #e9001b;
 }
 
+.promo-form {
+  margin: 18px 0 10px;
+  padding: 16px;
+  border: 1px solid rgba(233,0,27,.30);
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(233,0,27,.18), transparent 34%),
+    linear-gradient(135deg, rgba(45,5,10,.78), rgba(12,12,14,.92)),
+    repeating-linear-gradient(135deg, #1b1b1d 0 2px, #0d0d0f 2px 7px);
+  box-shadow: inset 0 0 25px rgba(140,0,20,.08), 0 8px 25px rgba(0,0,0,.22);
+}
+
+.promo-form label {
+  display: block;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  margin-bottom: 9px;
+}
+
+.promo-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.promo-input {
+  margin: 0;
+  min-width: 0;
+  height: 44px;
+  border: 1px solid #b21c2d !important;
+  background: rgba(5,5,7,.82) !important;
+  box-shadow: 0 0 0 1px rgba(178,28,45,.08), inset 0 0 12px rgba(0,0,0,.35);
+}
+
+.promo-input:focus {
+  border-color: #ed001b !important;
+  box-shadow: 0 0 0 2px rgba(237,0,27,.12), 0 0 16px rgba(150,0,20,.18);
+}
+
+.promo-apply {
+  height: 44px;
+  min-width: 116px;
+  border: 1px solid #ed001b;
+  border-radius: 9px;
+  padding: 0 15px;
+  background: linear-gradient(145deg, #a51b2d, #720f1b);
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0 6px 16px rgba(100,0,15,.25);
+}
+
+.promo-apply:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+.promo-message {
+  min-height: 16px;
+  margin-top: 8px;
+  color: #777;
+  font-size: 11px;
+}
+
+.promo-message.success {
+  color: #74d88a;
+}
+
+.promo-message.error {
+  color: #ff5364;
+}
+
+.promo-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  color: #c9c9c9;
+  font-size: 13px;
+}
+
+.promo-summary span:last-child {
+  color: #ed001b;
+  font-weight: 900;
+}
+
 .delivery-options {
   display: grid;
   gap: 8px;
@@ -1003,7 +1117,7 @@ footer {
 @media (max-width: 1100px) {
 
   .products-grid {
-    grid-template-columns: repeat(6, minmax(0,1fr));
+    grid-template-columns: repeat(3, minmax(0,1fr));
   }
 
   .hero-content {
@@ -1122,7 +1236,7 @@ footer {
   }
 
   .news-slider {
-    padding: 20px 25px;
+    padding: 20px 10px;
   }
 
   .news-card {
@@ -1151,12 +1265,12 @@ footer {
   }
 
   .section-title {
-    font-size: 27px;
+    font-size: 32px;
   }
 
   .products-grid {
-    grid-template-columns: repeat(4, minmax(0,1fr));
-    gap: 5px;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 7px;
   }
 
   .product {
@@ -1208,6 +1322,13 @@ footer {
   .footer-inner {
     grid-template-columns: 1fr;
     padding: 35px 20px 100px;
+  }
+
+  .footer-nav-button,
+  .telegram-button {
+    min-width: 118px;
+    padding: 8px 11px !important;
+    font-size: 11px !important;
   }
 
   .copyright {
@@ -1266,6 +1387,15 @@ footer {
 
   .section-head {
     align-items: flex-start;
+  }
+
+  .promo-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .promo-apply {
+    min-width: 96px;
+    min-height: 38px;
   }
 
   .section-link {
@@ -1345,7 +1475,7 @@ footer {
 
   <img
     class="hero-image"
-    src="miata-garage.jpg"
+    src="miata-main.png"
     onerror="this.onerror=null;this.src='miata-logo.png';"
     alt="Miata Garage"
   >
@@ -1355,7 +1485,7 @@ footer {
   <div class="hero-content">
 
     <div class="hero-kicker">
-      MIATA GARAGE
+      • DIECAST 1:64
     </div>
 
     <h1>
@@ -1363,23 +1493,9 @@ footer {
       <span>GARAGE</span>
     </h1>
 
-    <div class="hero-text">
-      Коллекционные diecast-модели автомобилей.
+      <div class="hero-info-text">
       Оригинальные модели, аккуратная упаковка
       и отправка по России.
-    </div>
-
-    <div class="hero-info-card">
-
-      <div class="hero-info-title">
-        Коллекционные diecast-модели автомобилей
-      </div>
-
-      <div class="hero-info-text">
-        Оригинальные модели, аккуратная упаковка
-        и отправка по России.
-      </div>
-
     </div>
 
     <div class="hero-buttons">
@@ -1405,13 +1521,6 @@ footer {
 </section>
 
 <section class="news-slider">
-
-  <button
-    class="slider-arrow slider-left"
-    onclick="slideNews(-1)"
-  >
-    ‹
-  </button>
 
   <div class="news-track" id="newsTrack">
 
@@ -1444,13 +1553,6 @@ footer {
     </div>
 
   </div>
-
-  <button
-    class="slider-arrow slider-right"
-    onclick="slideNews(1)"
-  >
-    ›
-  </button>
 
 </section>
 
@@ -1605,19 +1707,19 @@ footer {
         НАВИГАЦИЯ
       </h3>
 
-      <a href="index.html">
+      <a class="footer-nav-button" href="index.html">
         Главная
       </a>
 
-      <a href="catalog.html">
+      <a class="footer-nav-button" href="catalog.html">
         Каталог
       </a>
 
-      <a href="delivery.html">
+      <a class="footer-nav-button" href="delivery.html">
         О доставке
       </a>
 
-      <a href="help.html">
+      <a class="footer-nav-button" href="help.html">
         Помощь
       </a>
 
@@ -1783,6 +1885,38 @@ footer {
       </span>
 
     </div>
+
+    <div class="promo-form">
+
+      <label for="promoCode">Промокод</label>
+
+      <div class="promo-row">
+        <input
+          class="form-control promo-input"
+          id="promoCode"
+          placeholder="Введите промокод"
+          autocomplete="off"
+          maxlength="40"
+        >
+
+        <button
+          type="button"
+          class="promo-apply"
+          onclick="applyPromoCode()"
+        >
+          ПРИМЕНИТЬ
+        </button>
+      </div>
+
+      <div id="promoMessage" class="promo-message"></div>
+    </div>
+
+    <div id="promoSummary" class="promo-summary hidden">
+      <span>Скидка по промокоду</span>
+      <span id="promoDiscountText">−0 ₽</span>
+    </div>
+
+
 
     <h3>
       Данные получателя
@@ -2046,6 +2180,8 @@ let cart = loadCart();
 let selectedDelivery = "";
 
 let selectedDeliveryCost = 0;
+
+let appliedPromo = null;
 
 let cartLoading = false;
 
@@ -3672,6 +3808,168 @@ function renderCheckout() {
 
 
 /* =========================
+   PROMO CODE
+========================= */
+
+async function applyPromoCode() {
+
+  const input = document.getElementById("promoCode");
+  const message = document.getElementById("promoMessage");
+
+  if (!input || !message) return;
+
+  const code = input.value.trim().toUpperCase();
+
+  appliedPromo = null;
+  message.className = "promo-message";
+
+  if (!code) {
+    message.textContent = "Введите промокод.";
+    updateCheckoutTotal();
+    return;
+  }
+
+  message.textContent = "Проверяем промокод...";
+
+  try {
+
+    const response = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/promo_codes?code=eq." + encodeURIComponent(code) +
+      "&is_active=eq.true&select=*",
+      {
+        method: "GET",
+        headers: supabaseHeaders()
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(JSON.stringify(data));
+    }
+
+    const promo = Array.isArray(data) ? data[0] : null;
+
+    if (!promo) {
+      message.textContent = "Промокод не найден или отключён.";
+      message.className = "promo-message error";
+      updateCheckoutTotal();
+      return;
+    }
+
+    if (promo.expiries_at && new Date(promo.expiries_at).getTime() < Date.now()) {
+      message.textContent = "Срок действия промокода истёк.";
+      message.className = "promo-message error";
+      updateCheckoutTotal();
+      return;
+    }
+
+    if (
+      promo.max_uses !== null &&
+      promo.max_uses !== undefined &&
+      Number(promo.used_count || 0) >= Number(promo.max_uses)
+    ) {
+      message.textContent = "Лимит использований промокода исчерпан.";
+      message.className = "promo-message error";
+      updateCheckoutTotal();
+      return;
+    }
+
+    const type = String(promo.discount_type || "").toLowerCase();
+    const value = Number(promo.discount_value || 0);
+
+    if (!value || !["percent", "percentage", "fixed"].includes(type)) {
+      message.textContent = "У промокода некорректная скидка.";
+      message.className = "promo-message error";
+      updateCheckoutTotal();
+      return;
+    }
+
+    appliedPromo = {
+      id: promo.id,
+      code: promo.code,
+      type: type,
+      value: value
+    };
+
+    const label =
+      type === "fixed"
+        ? `${formatPrice(value)} ₽`
+        : `${value}%`;
+
+    message.textContent = `Промокод применён: −${label}`;
+    message.className = "promo-message success";
+
+    updateCheckoutTotal();
+
+  } catch (error) {
+
+    console.error("Promo code error:", error);
+
+    message.textContent = "Не удалось проверить промокод.";
+    message.className = "promo-message error";
+
+    updateCheckoutTotal();
+  }
+}
+
+function getProductsTotal() {
+
+  return cart.reduce((sum, item) => {
+
+    const product = getProductById(item.id);
+
+    if (!product) return sum;
+
+    return sum +
+      Number(product.price || 0) *
+      Number(item.quantity || 1);
+
+  }, 0);
+}
+
+function getPromoDiscount() {
+
+  if (!appliedPromo) return 0;
+
+  const productsTotal = getProductsTotal();
+
+  if (appliedPromo.type === "percent" || appliedPromo.type === "percentage") {
+    return Math.min(
+      productsTotal,
+      Math.round(productsTotal * appliedPromo.value / 100)
+    );
+  }
+
+  if (appliedPromo.type === "fixed") {
+    return Math.min(productsTotal, appliedPromo.value);
+  }
+
+  return 0;
+}
+
+function resetPromoUI() {
+
+  const input = document.getElementById("promoCode");
+  const message = document.getElementById("promoMessage");
+  const summary = document.getElementById("promoSummary");
+
+  if (input) input.value = "";
+
+  if (message) {
+    message.textContent = "";
+    message.className = "promo-message";
+  }
+
+  if (summary) {
+    summary.classList.add("hidden");
+  }
+
+  appliedPromo = null;
+}
+
+/* =========================
    DELIVERY
 ========================= */
 
@@ -3958,44 +4256,51 @@ function calculateDelivery(
 
 function updateCheckoutTotal() {
 
-  let total = 0;
-
-  cart.forEach(
-    item => {
-
-      const product =
-        getProductById(
-          item.id
-        );
-
-      if (!product) {
-        return;
-      }
-
-      total +=
-        Number(
-          product.price || 0
-        ) *
-        Number(
-          item.quantity || 1
-        );
-
-    }
+  const productsTotal = getProductsTotal();
+  const promoDiscount = Math.min(
+    getPromoDiscount(),
+    productsTotal
   );
 
-  total +=
-    Number(
-      selectedDeliveryCost || 0
-    );
+  const deliveryCost =
+    Number(selectedDeliveryCost || 0);
 
-  document
-    .getElementById(
-      "checkoutTotal"
-    )
-    .textContent =
-      formatPrice(total) +
-      " ₽";
+  const total =
+    Math.max(0, productsTotal - promoDiscount) +
+    deliveryCost;
 
+  const productsElement =
+    document.getElementById("checkoutProductsTotal");
+
+  if (productsElement) {
+    productsElement.textContent =
+      formatPrice(productsTotal) + " ₽";
+  }
+
+  const summary =
+    document.getElementById("promoSummary");
+
+  const discountText =
+    document.getElementById("promoDiscountText");
+
+  if (summary && discountText) {
+
+    if (promoDiscount > 0 && appliedPromo) {
+      summary.classList.remove("hidden");
+      discountText.textContent =
+        `−${formatPrice(promoDiscount)} ₽ (${appliedPromo.type === "fixed" ? "фикс." : appliedPromo.value + "%"})`;
+    } else {
+      summary.classList.add("hidden");
+    }
+  }
+
+  const totalElement =
+    document.getElementById("checkoutTotal");
+
+  if (totalElement) {
+    totalElement.textContent =
+      formatPrice(total) + " ₽";
+  }
 }
 
 
@@ -4004,463 +4309,237 @@ function updateCheckoutTotal() {
 ========================= */
 
 async function submitOrder() {
-
   /*
-    Ещё раз проверяем остатки
-    непосредственно перед созданием заказа.
+    Перед отправкой ещё раз проверяем актуальные остатки.
   */
 
-  const stockValid =
-    await refreshCartStock();
+  const stockValid = await refreshCartStock();
 
   if (!stockValid) {
-
     showCheckoutError(
       "Не удалось проверить наличие товаров. Попробуйте ещё раз."
     );
-
     return;
-
   }
 
   if (!cart.length) {
-
     showCheckoutError(
       "Корзина пуста или выбранные товары закончились."
     );
-
     return;
-
   }
 
-  const name =
-    document
-      .getElementById(
-        "customerName"
-      )
-      .value
-      .trim();
+  const name = document
+    .getElementById("customerName")
+    .value
+    .trim();
 
-  const contact =
-    document
-      .getElementById(
-        "customerContact"
-      )
-      .value
-      .trim();
+  const contact = document
+    .getElementById("customerContact")
+    .value
+    .trim();
 
-  const city =
-    document
-      .getElementById(
-        "customerCity"
-      )
-      .value
-      .trim();
+  const city = document
+    .getElementById("customerCity")
+    .value
+    .trim();
 
-  const comment =
-    document
-      .getElementById(
-        "customerComment"
-      )
-      .value
-      .trim();
+  const comment = document
+    .getElementById("customerComment")
+    .value
+    .trim();
 
   const errorElement =
-    document.getElementById(
-      "checkoutError"
-    );
+    document.getElementById("checkoutError");
 
-  errorElement.classList.add(
-    "hidden"
-  );
+  errorElement.classList.add("hidden");
 
   if (!name) {
-
-    showCheckoutError(
-      "Введите имя."
-    );
-
+    showCheckoutError("Введите имя.");
     return;
-
   }
 
   if (!contact) {
-
     showCheckoutError(
       "Введите Telegram или номер телефона."
     );
-
     return;
-
   }
 
   if (!city) {
-
-    showCheckoutError(
-      "Введите город."
-    );
-
+    showCheckoutError("Введите город.");
     return;
-
   }
 
   if (!selectedDelivery) {
-
-    showCheckoutError(
-      "Выберите способ доставки."
-    );
-
+    showCheckoutError("Выберите способ доставки.");
     return;
-
   }
 
-  const items =
-    cart
-      .map(
-        item => {
+  const items = cart
+    .map(item => {
+      const product = getProductById(item.id);
 
-          const product =
-            getProductById(
-              item.id
-            );
+      if (!product) {
+        return null;
+      }
 
-          if (!product) {
-            return null;
-          }
+      const stock = Number(product.stock || 0);
+      const quantity = Number(item.quantity || 1);
 
-          const stock =
-            Number(
-              product.stock || 0
-            );
+      if (
+        stock <= 0 ||
+        quantity <= 0 ||
+        quantity > stock
+      ) {
+        return null;
+      }
 
-          const quantity =
-            Number(
-              item.quantity || 1
-            );
-
-          if (
-            stock <= 0 ||
-            quantity <= 0 ||
-            quantity > stock
-          ) {
-
-            return null;
-
-          }
-
-          return {
-
-            id:
-              Number(
-                product.id
-              ),
-
-            name:
-              product.name,
-
-            price:
-              Number(
-                product.price || 0
-              ),
-
-            quantity:
-              quantity,
-
-            image_url:
-              product.image_url ||
-              null
-
-          };
-
-        }
-      )
-      .filter(Boolean);
+      return {
+        product_id: Number(product.id),
+        id: Number(product.id),
+        name: product.name,
+        price: Number(product.price || 0),
+        quantity: quantity,
+        image_url: product.image_url || null
+      };
+    })
+    .filter(Boolean);
 
   if (!items.length) {
-
     showCheckoutError(
       "Не удалось определить товары заказа."
     );
-
     return;
-
   }
 
-  let productsTotal =
-    0;
+  const productsTotal = items.reduce(
+    (sum, item) =>
+      sum +
+      Number(item.price || 0) *
+      Number(item.quantity || 1),
+    0
+  );
 
-  items.forEach(
-    item => {
+  const promoDiscount = Math.min(
+    getPromoDiscount(),
+    productsTotal
+  );
 
-      productsTotal +=
-        Number(
-          item.price
-        ) *
-        Number(
-          item.quantity
-        );
-
-    }
+  const deliveryCost = Number(
+    selectedDeliveryCost || 0
   );
 
   const total =
-    productsTotal +
-    Number(
-      selectedDeliveryCost || 0
-    );
+    Math.max(0, productsTotal - promoDiscount) +
+    deliveryCost;
 
-  const button =
-    document.getElementById(
-      "submitOrderButton"
-    );
+  const button = document.getElementById(
+    "submitOrderButton"
+  );
 
-  button.disabled =
-    true;
-
-  button.textContent =
-    "ОТПРАВЛЯЕМ...";
+  button.disabled = true;
+  button.textContent = "ОТПРАВЛЯЕМ...";
 
   try {
+    /*
+      ВАЖНО:
+      Заказ отправляется только в Edge Function.
+      Она сама создаёт запись в orders,
+      проверяет товары/остатки/промокод
+      и отправляет уведомление в Telegram.
 
-    const response =
-      await fetch(
-        SUPABASE_URL +
-        "/rest/v1/orders",
-        {
+      Поэтому браузер больше НЕ пишет напрямую
+      в /rest/v1/orders — это исключает двойные заказы.
+    */
 
-          method:
-            "POST",
+    const response = await fetch(
+      TELEGRAM_FUNCTION_URL,
+      {
+        method: "POST",
+        headers: {
+          ...supabaseHeaders(),
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          customer_name: name,
+          customer_contact: contact,
+          city: city,
+          delivery_method: selectedDelivery,
+          delivery_cost: deliveryCost,
+          comment: comment,
+          promo_code: appliedPromo?.code || null,
+          items: items,
+          total: total,
+          product_total: productsTotal,
+          products_total_after_discount:
+            Math.max(0, productsTotal - promoDiscount),
+          discount_percent:
+            appliedPromo?.type === "fixed"
+              ? (productsTotal > 0
+                  ? Math.round(
+                      (promoDiscount / productsTotal) * 10000
+                    ) / 100
+                  : 0)
+              : Number(appliedPromo?.value || 0),
+          discount_amount: promoDiscount
+        })
+      }
+    );
 
-          headers: {
+    const data = await response.json();
 
-            ...supabaseHeaders(),
-
-            "Prefer":
-              "return=representation"
-
-          },
-
-          body:
-            JSON.stringify({
-
-              customer_name:
-                name,
-
-              customer_contact:
-                contact,
-
-              city:
-                city,
-
-              delivery_method:
-                selectedDelivery,
-
-              delivery_cost:
-                Number(
-                  selectedDeliveryCost || 0
-                ),
-
-              comment:
-                comment,
-
-              items:
-                items,
-
-              total:
-                total,
-
-              order_status:
-                "processing",
-
-              payment_status:
-                "unpaid"
-
-            })
-
-        }
-      );
-
-    const data =
-      await response.json();
-
-    if (!response.ok) {
-
+    if (!response.ok || !data?.success) {
       throw new Error(
-        JSON.stringify(
-          data
-        )
+        data?.error ||
+        "Не удалось отправить заказ"
       );
-
     }
-
-    const createdOrder =
-      Array.isArray(data)
-        ? data[0]
-        : data;
 
     const orderNumber =
-      createdOrder?.Order_number ??
-      createdOrder?.order_number ??
-      "2";
+      data?.order_number ??
+      data?.order_id ??
+      "—";
 
-    /*
-      TELEGRAM
-    */
-
-    try {
-
-      await fetch(
-        TELEGRAM_FUNCTION_URL,
-        {
-
-          method:
-            "POST",
-
-          headers:
-            supabaseHeaders(),
-
-          body:
-            JSON.stringify({
-
-              order_number:
-                orderNumber,
-
-              customer_name:
-                name,
-
-              customer_contact:
-                contact,
-
-              city:
-                city,
-
-              delivery_method:
-                selectedDelivery,
-
-              delivery_cost:
-                Number(
-                  selectedDeliveryCost || 0
-                ),
-
-              comment:
-                comment,
-
-              items:
-                items,
-
-              total:
-                total,
-
-              order_status:
-                "processing",
-
-              payment_status:
-                "unpaid"
-
-            })
-
-        }
-      );
-
-    } catch (
-      telegramError
-    ) {
-
-      console.error(
-        "Telegram notification error:",
-        telegramError
-      );
-
-    }
-
-    /*
-      ОЧИСТКА КОРЗИНЫ
-    */
-
+    /* Очищаем корзину после успешного создания заказа. */
     cart = [];
-
     saveCart();
-
     updateCartCount();
 
-    /*
-      НОМЕР ЗАКАЗА
-    */
+    document.getElementById(
+      "successOrderNumber"
+    ).textContent = "№" + orderNumber;
+
+    closeModal("checkoutModal");
 
     document
-      .getElementById(
-        "successOrderNumber"
-      )
-      .textContent =
-        "№" +
-        orderNumber;
+      .getElementById("successModal")
+      .classList.remove("hidden");
 
-    closeModal(
-      "checkoutModal"
-    );
+    /* Очищаем форму. */
+    document.getElementById("customerName").value = "";
+    document.getElementById("customerContact").value = "";
+    document.getElementById("customerCity").value = "";
+    document.getElementById("customerComment").value = "";
 
-    document
-      .getElementById(
-        "successModal"
-      )
-      .classList.remove(
-        "hidden"
-      );
-
-    /*
-      ОЧИСТКА ФОРМЫ
-    */
-
-    document
-      .getElementById(
-        "customerName"
-      )
-      .value = "";
-
-    document
-      .getElementById(
-        "customerContact"
-      )
-      .value = "";
-
-    document
-      .getElementById(
-        "customerCity"
-      )
-      .value = "";
-
-    document
-      .getElementById(
-        "customerComment"
-      )
-      .value = "";
-
-    selectedDelivery =
-      "";
-
-    selectedDeliveryCost =
-      0;
+    selectedDelivery = "";
+    selectedDeliveryCost = 0;
+    appliedPromo = null;
+    resetPromoUI();
 
   } catch (error) {
-
-    console.error(error);
+    console.error("Order submit error:", error);
 
     showCheckoutError(
-      "Ошибка отправки заявки. Попробуйте ещё раз."
+      error instanceof Error && error.message
+        ? error.message
+        : "Ошибка отправки заявки. Попробуйте ещё раз."
     );
-
   } finally {
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      "ОФОРМИТЬ ЗАЯВКУ";
-
+    button.disabled = false;
+    button.textContent = "ОФОРМИТЬ ЗАЯВКУ";
   }
-
 }
-
 
 /* =========================
    SUCCESS
