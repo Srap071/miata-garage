@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -677,51 +678,61 @@ footer {
   color: white;
 }
 
-.footer-nav-button {
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  min-width: 108px;
-  border: 1px solid #333;
-  border-radius: 9px;
-  padding: 8px 12px !important;
-  margin: 7px 0 !important;
-  background: #121214;
-  color: #ddd !important;
-  font-size: 12px !important;
-  font-weight: 900;
-  transition: .2s;
-}
-
-.footer-nav-button:hover {
-  border-color: #e9001b;
-  color: #fff !important;
-  transform: translateY(-1px);
-}
-
+.footer-red-button,
 .telegram-button {
-  display: inline-flex !important;
+  display: flex !important;
   align-items: center;
-  justify-content: center;
   gap: 8px;
   width: fit-content;
-  min-width: 108px;
-  border: 1px solid #333;
+  min-height: 40px;
+  margin: 9px 0 !important;
+  padding: 9px 13px;
+  border: 1px solid #ed001b !important;
   border-radius: 9px;
-  padding: 8px 12px;
-  margin: 7px 0 !important;
-  background: #121214;
-  color: #ddd !important;
+  background: linear-gradient(145deg, #a51b2d, #720f1b) !important;
+  color: #fff !important;
   font-size: 12px !important;
   font-weight: 900;
-  transition: .2s;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(100,0,15,.20);
+  transition: .2s ease;
 }
 
+.footer-red-button:hover,
 .telegram-button:hover {
-  border-color: #e9001b;
-  color: #fff !important;
+  filter: brightness(1.12);
   transform: translateY(-1px);
+}
+
+.promo-channel-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 20px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid #ed001b;
+  border-radius: 9px;
+  background: linear-gradient(145deg, #a51b2d, #720f1b);
+  color: #fff !important;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .6px;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(100,0,15,.25);
+  transition: .2s ease;
+}
+
+.promo-channel-button:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+.promo-channel-button span {
+  color: #fff;
+  opacity: .85;
+  font-weight: 700;
 }
 
 .copyright {
@@ -1324,13 +1335,6 @@ footer {
     padding: 35px 20px 100px;
   }
 
-  .footer-nav-button,
-  .telegram-button {
-    min-width: 118px;
-    padding: 8px 11px !important;
-    font-size: 11px !important;
-  }
-
   .copyright {
     padding: 15px 20px 90px;
   }
@@ -1475,7 +1479,7 @@ footer {
 
   <img
     class="hero-image"
-    src="miata-garage.jpg"
+    src="miata-main.png"
     onerror="this.onerror=null;this.src='miata-logo.png';"
     alt="Miata Garage"
   >
@@ -1538,15 +1542,21 @@ footer {
 
         <div class="promo-text">
           В честь открытия Telegram-магазина
-          дарим скидку 10% на любой заказ.
-          Успейте воспользоваться промокодом
-          до 17 сентября.
+          мы рады приветствовать вас в Miata Garage.
+          Следите за нашим Telegram-каналом —
+          там регулярно появляются промокоды на скидку
+          и другие выгодные предложения.
         </div>
 
-        <div class="promo-code">
-          ПРОМОКОД:
-          <span>MIATA10</span>
-        </div>
+        <a
+          class="promo-channel-button"
+          href="https://t.me/srap_model"
+          target="_blank"
+          rel="noopener"
+        >
+          ✈️ ПЕРЕЙТИ В TELEGRAM-КАНАЛ
+          <span>@Srap_model</span>
+        </a>
 
       </div>
 
@@ -1707,20 +1717,32 @@ footer {
         НАВИГАЦИЯ
       </h3>
 
-      <a class="footer-nav-button" href="index.html">
-        Главная
+      <a
+        class="footer-red-button"
+        href="index.html"
+      >
+        🏠 Главная
       </a>
 
-      <a class="footer-nav-button" href="catalog.html">
-        Каталог
+      <a
+        class="footer-red-button"
+        href="catalog.html"
+      >
+        ▦ Каталог
       </a>
 
-      <a class="footer-nav-button" href="delivery.html">
-        О доставке
+      <a
+        class="footer-red-button"
+        href="delivery.html"
+      >
+        🚚 О доставке
       </a>
 
-      <a class="footer-nav-button" href="help.html">
-        Помощь
+      <a
+        class="footer-red-button"
+        href="help.html"
+      >
+        ❓ Помощь
       </a>
 
     </div>
@@ -1737,7 +1759,7 @@ footer {
         target="_blank"
         rel="noopener"
       >
-        ✈️ Telegram-канал
+        ✈️ Telegram-канал @Srap_model
       </a>
 
       <a
@@ -1746,7 +1768,7 @@ footer {
         target="_blank"
         rel="noopener"
       >
-        ✈️ Telegram-менеджер
+        👤 Telegram-менеджер
       </a>
 
     </div>
@@ -2166,7 +2188,7 @@ const SUPABASE_KEY =
 
 const TELEGRAM_FUNCTION_URL =
   SUPABASE_URL +
-  "/functions/v1/rapid-function";
+  "/functions/v1/telegram-order";
 
 
 /* =========================
@@ -3835,8 +3857,9 @@ async function applyPromoCode() {
 
     const response = await fetch(
       SUPABASE_URL +
-      "/rest/v1/promo_codes?code=eq." + encodeURIComponent(code) +
-      "&is_active=eq.true&select=*",
+      "/rest/v1/promo_codes?code=ilike." +
+      encodeURIComponent(code) +
+      "&select=*",
       {
         method: "GET",
         headers: supabaseHeaders()
@@ -3852,7 +3875,14 @@ async function applyPromoCode() {
     const promo = Array.isArray(data) ? data[0] : null;
 
     if (!promo) {
-      message.textContent = "Промокод не найден или отключён.";
+      message.textContent = "Промокод не найден.";
+      message.className = "promo-message error";
+      updateCheckoutTotal();
+      return;
+    }
+
+    if (promo.is_active !== true) {
+      message.textContent = "Промокод отключён.";
       message.className = "promo-message error";
       updateCheckoutTotal();
       return;
@@ -3913,6 +3943,7 @@ async function applyPromoCode() {
     updateCheckoutTotal();
   }
 }
+
 
 function getProductsTotal() {
 
@@ -4309,116 +4340,203 @@ function updateCheckoutTotal() {
 ========================= */
 
 async function submitOrder() {
+
   /*
-    Перед отправкой ещё раз проверяем актуальные остатки.
+    Ещё раз проверяем остатки
+    непосредственно перед созданием заказа.
   */
 
-  const stockValid = await refreshCartStock();
+  const stockValid =
+    await refreshCartStock();
 
   if (!stockValid) {
+
     showCheckoutError(
       "Не удалось проверить наличие товаров. Попробуйте ещё раз."
     );
+
     return;
+
   }
 
   if (!cart.length) {
+
     showCheckoutError(
       "Корзина пуста или выбранные товары закончились."
     );
+
     return;
+
   }
 
-  const name = document
-    .getElementById("customerName")
-    .value
-    .trim();
+  const name =
+    document
+      .getElementById(
+        "customerName"
+      )
+      .value
+      .trim();
 
-  const contact = document
-    .getElementById("customerContact")
-    .value
-    .trim();
+  const contact =
+    document
+      .getElementById(
+        "customerContact"
+      )
+      .value
+      .trim();
 
-  const city = document
-    .getElementById("customerCity")
-    .value
-    .trim();
+  const city =
+    document
+      .getElementById(
+        "customerCity"
+      )
+      .value
+      .trim();
 
-  const comment = document
-    .getElementById("customerComment")
-    .value
-    .trim();
+  const comment =
+    document
+      .getElementById(
+        "customerComment"
+      )
+      .value
+      .trim();
 
   const errorElement =
-    document.getElementById("checkoutError");
+    document.getElementById(
+      "checkoutError"
+    );
 
-  errorElement.classList.add("hidden");
+  errorElement.classList.add(
+    "hidden"
+  );
 
   if (!name) {
-    showCheckoutError("Введите имя.");
+
+    showCheckoutError(
+      "Введите имя."
+    );
+
     return;
+
   }
 
   if (!contact) {
+
     showCheckoutError(
       "Введите Telegram или номер телефона."
     );
+
     return;
+
   }
 
   if (!city) {
-    showCheckoutError("Введите город.");
+
+    showCheckoutError(
+      "Введите город."
+    );
+
     return;
+
   }
 
   if (!selectedDelivery) {
-    showCheckoutError("Выберите способ доставки.");
+
+    showCheckoutError(
+      "Выберите способ доставки."
+    );
+
     return;
+
   }
 
-  const items = cart
-    .map(item => {
-      const product = getProductById(item.id);
+  const items =
+    cart
+      .map(
+        item => {
 
-      if (!product) {
-        return null;
-      }
+          const product =
+            getProductById(
+              item.id
+            );
 
-      const stock = Number(product.stock || 0);
-      const quantity = Number(item.quantity || 1);
+          if (!product) {
+            return null;
+          }
 
-      if (
-        stock <= 0 ||
-        quantity <= 0 ||
-        quantity > stock
-      ) {
-        return null;
-      }
+          const stock =
+            Number(
+              product.stock || 0
+            );
 
-      return {
-        product_id: Number(product.id),
-        id: Number(product.id),
-        name: product.name,
-        price: Number(product.price || 0),
-        quantity: quantity,
-        image_url: product.image_url || null
-      };
-    })
-    .filter(Boolean);
+          const quantity =
+            Number(
+              item.quantity || 1
+            );
+
+          if (
+            stock <= 0 ||
+            quantity <= 0 ||
+            quantity > stock
+          ) {
+
+            return null;
+
+          }
+
+          return {
+
+            id:
+              Number(
+                product.id
+              ),
+
+            name:
+              product.name,
+
+            price:
+              Number(
+                product.price || 0
+              ),
+
+            quantity:
+              quantity,
+
+            image_url:
+              product.image_url ||
+              null
+
+          };
+
+        }
+      )
+      .filter(Boolean);
 
   if (!items.length) {
+
     showCheckoutError(
       "Не удалось определить товары заказа."
     );
+
     return;
+
   }
 
-  const productsTotal = items.reduce(
-    (sum, item) =>
-      sum +
-      Number(item.price || 0) *
-      Number(item.quantity || 1),
-    0
+  let productsTotal =
+    0;
+
+  items.forEach(
+    item => {
+
+      productsTotal +=
+        Number(
+          item.price
+        ) *
+        Number(
+          item.quantity
+        );
+
+    }
   );
 
   const promoDiscount = Math.min(
@@ -4426,122 +4544,291 @@ async function submitOrder() {
     productsTotal
   );
 
-  const deliveryCost = Number(
-    selectedDeliveryCost || 0
-  );
-
   const total =
     Math.max(0, productsTotal - promoDiscount) +
-    deliveryCost;
+    Number(selectedDeliveryCost || 0);
 
-  const button = document.getElementById(
-    "submitOrderButton"
-  );
-
-  button.disabled = true;
-  button.textContent = "ОТПРАВЛЯЕМ...";
-
-  try {
-    /*
-      ВАЖНО:
-      Заказ отправляется только в Edge Function.
-      Она сама создаёт запись в orders,
-      проверяет товары/остатки/промокод
-      и отправляет уведомление в Telegram.
-
-      Поэтому браузер больше НЕ пишет напрямую
-      в /rest/v1/orders — это исключает двойные заказы.
-    */
-
-    const response = await fetch(
-      TELEGRAM_FUNCTION_URL,
-      {
-        method: "POST",
-        headers: {
-          ...supabaseHeaders(),
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          customer_name: name,
-          customer_contact: contact,
-          city: city,
-          delivery_method: selectedDelivery,
-          delivery_cost: deliveryCost,
-          comment: comment,
-          promo_code: appliedPromo?.code || null,
-          items: items,
-          total: total,
-          product_total: productsTotal,
-          products_total_after_discount:
-            Math.max(0, productsTotal - promoDiscount),
-          discount_percent:
-            appliedPromo?.type === "fixed"
-              ? (productsTotal > 0
-                  ? Math.round(
-                      (promoDiscount / productsTotal) * 10000
-                    ) / 100
-                  : 0)
-              : Number(appliedPromo?.value || 0),
-          discount_amount: promoDiscount,
-          telegram_user_id:
-            window.Telegram?.WebApp?.initDataUnsafe?.user?.id || null 
-        })
-      }
+  const button =
+    document.getElementById(
+      "submitOrderButton"
     );
 
-    const data = await response.json();
+  button.disabled =
+    true;
 
-    if (!response.ok || !data?.success) {
-      throw new Error(
-        data?.error ||
-        "Не удалось отправить заказ"
+  button.textContent =
+    "ОТПРАВЛЯЕМ...";
+
+  try {
+
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/orders",
+        {
+
+          method:
+            "POST",
+
+          headers: {
+
+            ...supabaseHeaders(),
+
+            "Prefer":
+              "return=representation"
+
+          },
+
+          body:
+            JSON.stringify({
+
+              customer_name:
+                name,
+
+              customer_contact:
+                contact,
+
+              city:
+                city,
+
+              delivery_method:
+                selectedDelivery,
+
+              delivery_cost:
+                Number(
+                  selectedDeliveryCost || 0
+                ),
+
+              comment:
+                appliedPromo
+                  ? `${comment}${comment ? "\n" : ""}Промокод: ${appliedPromo.code} (скидка ${appliedPromo.type === "fixed" ? formatPrice(appliedPromo.value) + " ₽" : appliedPromo.value + "%"}, −${formatPrice(promoDiscount)} ₽)`
+                  : comment,
+
+              items:
+                items,
+
+              total:
+                total,
+
+              order_status:
+                "processing",
+
+              payment_status:
+                "unpaid"
+
+            })
+
+        }
       );
+
+    const data =
+      await response.json();
+
+    if (!response.ok) {
+
+      throw new Error(
+        JSON.stringify(
+          data
+        )
+      );
+
     }
 
-    const orderNumber =
-      data?.order_number ??
-      data?.order_id ??
-      "—";
+    const createdOrder =
+      Array.isArray(data)
+        ? data[0]
+        : data;
 
-    /* Очищаем корзину после успешного создания заказа. */
+    const orderNumber =
+      createdOrder?.Order_number ??
+      createdOrder?.order_number ??
+      "2";
+
+    /*
+      TELEGRAM
+    */
+
+    try {
+
+      const telegramResponse =
+        await fetch(
+        TELEGRAM_FUNCTION_URL,
+        {
+
+          method:
+            "POST",
+
+          headers:
+            supabaseHeaders(),
+
+          body:
+            JSON.stringify({
+
+              order_number:
+                orderNumber,
+
+              customer_name:
+                name,
+
+              customer_contact:
+                contact,
+
+              city:
+                city,
+
+              delivery_method:
+                selectedDelivery,
+
+              delivery_cost:
+                Number(
+                  selectedDeliveryCost || 0
+                ),
+
+              comment:
+                comment,
+
+              promo_code:
+                appliedPromo?.code || null,
+
+              promo_percent:
+                appliedPromo?.type === "fixed"
+                  ? 0
+                  : appliedPromo?.value || 0,
+
+              promo_discount:
+                promoDiscount,
+
+              items:
+                items,
+
+              total:
+                total,
+
+              order_status:
+                "processing",
+
+              payment_status:
+                "unpaid"
+
+            })
+
+        }
+      );
+
+      if (!telegramResponse.ok) {
+
+        const telegramBody =
+          await telegramResponse.text();
+
+        throw new Error(
+          `Telegram ${telegramResponse.status}: ${telegramBody}`
+        );
+
+      }
+
+    } catch (
+      telegramError
+    ) {
+
+      console.error(
+        "Telegram notification error:",
+        telegramError
+      );
+
+    }
+
+    /*
+      ОЧИСТКА КОРЗИНЫ
+    */
+
     cart = [];
+
     saveCart();
+
     updateCartCount();
 
-    document.getElementById(
-      "successOrderNumber"
-    ).textContent = "№" + orderNumber;
-
-    closeModal("checkoutModal");
+    /*
+      НОМЕР ЗАКАЗА
+    */
 
     document
-      .getElementById("successModal")
-      .classList.remove("hidden");
+      .getElementById(
+        "successOrderNumber"
+      )
+      .textContent =
+        "№" +
+        orderNumber;
 
-    /* Очищаем форму. */
-    document.getElementById("customerName").value = "";
-    document.getElementById("customerContact").value = "";
-    document.getElementById("customerCity").value = "";
-    document.getElementById("customerComment").value = "";
+    closeModal(
+      "checkoutModal"
+    );
 
-    selectedDelivery = "";
-    selectedDeliveryCost = 0;
+    document
+      .getElementById(
+        "successModal"
+      )
+      .classList.remove(
+        "hidden"
+      );
+
+    /*
+      ОЧИСТКА ФОРМЫ
+    */
+
+    document
+      .getElementById(
+        "customerName"
+      )
+      .value = "";
+
+    document
+      .getElementById(
+        "customerContact"
+      )
+      .value = "";
+
+    document
+      .getElementById(
+        "customerCity"
+      )
+      .value = "";
+
+    document
+      .getElementById(
+        "customerComment"
+      )
+      .value = "";
+
+    selectedDelivery =
+      "";
+
+    selectedDeliveryCost =
+      0;
+
     appliedPromo = null;
+
     resetPromoUI();
 
   } catch (error) {
-    console.error("Order submit error:", error);
+
+    console.error(error);
 
     showCheckoutError(
-      error instanceof Error && error.message
-        ? error.message
-        : "Ошибка отправки заявки. Попробуйте ещё раз."
+      "Ошибка отправки заявки. Попробуйте ещё раз."
     );
+
   } finally {
-    button.disabled = false;
-    button.textContent = "ОФОРМИТЬ ЗАЯВКУ";
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "ОФОРМИТЬ ЗАЯВКУ";
+
   }
+
 }
+
 
 /* =========================
    SUCCESS
