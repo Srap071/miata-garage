@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+
 <meta
 name="viewport"
 content="width=device-width, initial-scale=1.0, viewport-fit=cover"
@@ -12,26 +13,81 @@ content="width=device-width, initial-scale=1.0, viewport-fit=cover"
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
+
+/* =========================================================
+   ОСНОВА
+========================================================= */
+
 * {
 box-sizing: border-box;
 -webkit-tap-highlight-color: transparent;
 }
 
+html,
 body {
 margin: 0;
 padding: 0;
-background: #0f0f0f;
-color: #ffffff;
-font-family: Arial, sans-serif;
-min-height: 100vh;
+min-height: 100%;
 }
+
+body {
+background-color: #0b0b0b;
+color: #fff;
+font-family: Arial, sans-serif;
+}
+
+/* =========================================================
+   КАРБОН
+========================================================= */
+
+body::before {
+content: "";
+position: fixed;
+inset: 0;
+z-index: -2;
+
+background-color: #101010;
+
+background-image:
+linear-gradient(
+45deg,
+rgba(255,255,255,0.025) 25%,
+transparent 25%,
+transparent 75%,
+rgba(255,255,255,0.025) 75%
+),
+linear-gradient(
+45deg,
+rgba(255,255,255,0.025) 25%,
+transparent 25%,
+transparent 75%,
+rgba(255,255,255,0.025) 75%
+);
+
+background-position:
+0 0,
+6px 6px;
+
+background-size:
+12px 12px;
+
+pointer-events: none;
+}
+
+/* =========================================================
+   СТРАНИЦА
+========================================================= */
 
 .page {
 width: 100%;
-max-width: 700px;
+max-width: 720px;
 margin: 0 auto;
-padding: 20px 16px 120px;
+padding: 18px 14px 120px;
 }
+
+/* =========================================================
+   HEADER
+========================================================= */
 
 .header {
 margin-bottom: 22px;
@@ -41,36 +97,70 @@ margin-bottom: 22px;
 display: inline-flex;
 align-items: center;
 justify-content: center;
-padding: 10px 16px;
-border-radius: 12px;
-border: 1px solid #333;
-background: #191919;
+
+padding: 11px 17px;
+
+border-radius: 13px;
+
+border: 1px solid #5d1717;
+
+background: #b51f1f;
+
 color: #fff;
+
 text-decoration: none;
+
 font-size: 14px;
+font-weight: 700;
+
 margin-bottom: 18px;
+
+box-shadow:
+0 4px 14px rgba(0,0,0,0.35);
+}
+
+.back:active {
+transform: scale(0.97);
 }
 
 h1 {
 margin: 0;
-font-size: 28px;
+
+font-size: 29px;
 line-height: 1.2;
+font-weight: 800;
 }
 
 .subtitle {
 margin-top: 8px;
-color: #8e8e8e;
+
+color: #929292;
+
 font-size: 14px;
 }
+
+/* =========================================================
+   ЗАГРУЗКА / ОШИБКА / EMPTY
+========================================================= */
 
 .loading,
 .empty,
 .error {
-padding: 24px 18px;
-border-radius: 16px;
-background: #181818;
-border: 1px solid #292929;
+padding: 26px 18px;
+
+border-radius: 17px;
+
+background:
+linear-gradient(
+145deg,
+rgba(32,32,32,0.96),
+rgba(19,19,19,0.96)
+);
+
+border: 1px solid #303030;
+
 text-align: center;
+
 color: #aaa;
 }
 
@@ -78,330 +168,827 @@ color: #aaa;
 color: #ff7777;
 }
 
+/* =========================================================
+   ЗАКАЗЫ
+========================================================= */
+
 .orders {
 display: flex;
 flex-direction: column;
-gap: 12px;
+gap: 14px;
 }
 
+/* =========================================================
+   КАРТОЧКА ЗАКАЗА
+========================================================= */
+
 .order-card {
-background: #181818;
-border: 1px solid #292929;
-border-radius: 17px;
-padding: 17px;
+
+position: relative;
+
+background:
+linear-gradient(
+145deg,
+rgba(29,29,29,0.98),
+rgba(15,15,15,0.98)
+);
+
+border: 1px solid #333;
+
+border-radius: 20px;
+
+padding: 18px;
+
+box-shadow:
+0 8px 22px rgba(0,0,0,0.32);
+
+overflow: hidden;
 }
+
+.order-card::before {
+content: "";
+
+position: absolute;
+
+left: 0;
+right: 0;
+top: 0;
+
+height: 2px;
+
+background:
+linear-gradient(
+90deg,
+transparent,
+#b51f1f,
+transparent
+);
+
+opacity: 0.8;
+}
+
+/* =========================================================
+   ВЕРХ ЗАКАЗА
+========================================================= */
 
 .order-top {
 display: flex;
+
 align-items: flex-start;
+
 justify-content: space-between;
-gap: 12px;
+
+gap: 14px;
 }
 
 .order-number {
-font-size: 18px;
-font-weight: 700;
+font-size: 21px;
+font-weight: 800;
 }
 
 .order-date {
-margin-top: 6px;
-color: #888;
+margin-top: 7px;
+
+color: #858585;
+
 font-size: 13px;
 }
 
+/* =========================================================
+   СТАТУС
+========================================================= */
+
 .status {
+
+display: inline-flex;
+
+align-items: center;
+
+gap: 7px;
+
 flex-shrink: 0;
-padding: 7px 10px;
-border-radius: 10px;
+
+padding: 9px 12px;
+
+border-radius: 12px;
+
 background: #242424;
+
 color: #fff;
+
 font-size: 12px;
-font-weight: 600;
+
+font-weight: 700;
+
+white-space: nowrap;
 }
 
-.status.created {
-color: #9fc5ff;
+.status-dot {
+
+width: 9px;
+height: 9px;
+
+border-radius: 50%;
+
+background: #ffd34d;
+
+box-shadow:
+0 0 8px rgba(255,211,77,0.45);
+
+flex-shrink: 0;
 }
 
-.status.processing {
-color: #ffd36a;
+.status.created .status-dot {
+background: #ffd34d;
 }
 
-.status.shipping {
-color: #8ee6ff;
+.status.processing .status-dot {
+background: #ffd34d;
+
+box-shadow:
+0 0 8px rgba(255,211,77,0.45);
 }
 
-.status.completed {
-color: #86e7a4;
+.status.shipping .status-dot {
+background: #3c8cff;
+
+box-shadow:
+0 0 8px rgba(60,140,255,0.5);
 }
 
-.status.cancelled {
-color: #ff8585;
+.status.pickup .status-dot {
+background: #ffffff;
+
+box-shadow:
+0 0 7px rgba(255,255,255,0.5);
 }
+
+.status.completed .status-dot {
+background: #39d66b;
+
+box-shadow:
+0 0 8px rgba(57,214,107,0.5);
+}
+
+.status.cancelled .status-dot {
+background: #ff3838;
+
+box-shadow:
+0 0 8px rgba(255,56,56,0.5);
+}
+
+/* =========================================================
+   ПРЕВЬЮ ТОВАРОВ В КАРТОЧКЕ
+========================================================= */
+
+.order-products-preview {
+
+display: flex;
+
+align-items: center;
+
+margin-top: 18px;
+
+min-height: 62px;
+}
+
+.preview-image {
+
+width: 62px;
+height: 62px;
+
+border-radius: 13px;
+
+object-fit: cover;
+
+background: #252525;
+
+border: 1px solid #3a3a3a;
+
+box-shadow:
+0 4px 12px rgba(0,0,0,0.3);
+
+margin-right: -10px;
+
+position: relative;
+
+z-index: 1;
+}
+
+.preview-more {
+
+width: 62px;
+height: 62px;
+
+border-radius: 13px;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+background: #242424;
+
+border: 1px solid #3a3a3a;
+
+color: #aaa;
+
+font-size: 13px;
+
+font-weight: 700;
+
+position: relative;
+
+z-index: 0;
+}
+
+.preview-empty {
+
+color: #777;
+
+font-size: 13px;
+}
+
+/* =========================================================
+   НИЗ КАРТОЧКИ
+========================================================= */
 
 .order-bottom {
+
 display: flex;
+
 align-items: center;
+
 justify-content: space-between;
-gap: 12px;
-margin-top: 16px;
+
+gap: 14px;
+
+margin-top: 19px;
+
+padding-top: 16px;
+
+border-top: 1px solid #2b2b2b;
 }
 
 .total {
-font-size: 16px;
-font-weight: 700;
+
+font-size: 23px;
+
+font-weight: 800;
+
+color: #fff;
 }
 
 .details-btn {
+
 border: 0;
-border-radius: 11px;
-padding: 10px 15px;
-background: #ffffff;
-color: #111;
-font-size: 13px;
-font-weight: 700;
+
+border-radius: 13px;
+
+padding: 12px 18px;
+
+background: #c52323;
+
+color: #fff;
+
+font-size: 14px;
+
+font-weight: 800;
+
 cursor: pointer;
+
+box-shadow:
+0 5px 14px rgba(0,0,0,0.35);
 }
 
 .details-btn:active {
-transform: scale(0.97);
+transform: scale(0.96);
 }
 
+/* =========================================================
+   MODAL
+========================================================= */
+
 .modal-bg {
+
 display: none;
+
 position: fixed;
+
 inset: 0;
+
 z-index: 1000;
-background: rgba(0, 0, 0, 0.72);
-padding: 20px;
+
+background: rgba(0,0,0,0.78);
+
+padding: 14px;
+
 overflow-y: auto;
 }
 
 .modal-bg.active {
+
 display: flex;
+
 align-items: center;
+
 justify-content: center;
 }
 
 .modal {
+
 width: 100%;
-max-width: 520px;
-max-height: 90vh;
+
+max-width: 540px;
+
+max-height: 92vh;
+
 overflow-y: auto;
-background: #171717;
-border: 1px solid #303030;
-border-radius: 20px;
-padding: 20px;
+
+background:
+linear-gradient(
+145deg,
+#202020,
+#111111
+);
+
+border: 1px solid #373737;
+
+border-radius: 22px;
+
+padding: 21px;
+
+box-shadow:
+0 15px 50px rgba(0,0,0,0.65);
 }
+
+/* =========================================================
+   MODAL TITLE
+========================================================= */
 
 .modal-title {
-font-size: 21px;
-font-weight: 700;
-margin-bottom: 18px;
+
+font-size: 23px;
+
+font-weight: 800;
+
+margin-bottom: 20px;
 }
 
+/* =========================================================
+   INFO
+========================================================= */
+
 .info-row {
-padding: 12px 0;
-border-bottom: 1px solid #292929;
+
+padding: 13px 0;
+
+border-bottom: 1px solid #2b2b2b;
 }
 
 .info-label {
-color: #888;
+
+color: #858585;
+
 font-size: 12px;
-margin-bottom: 5px;
+
+margin-bottom: 6px;
 }
 
 .info-value {
+
 color: #fff;
-font-size: 14px;
+
+font-size: 15px;
+
+font-weight: 600;
 }
 
+/* =========================================================
+   СТАТУС В MODAL
+========================================================= */
+
+.modal-status {
+
+display: inline-flex;
+
+align-items: center;
+
+gap: 9px;
+
+font-weight: 700;
+}
+
+.modal-status-dot {
+
+width: 11px;
+
+height: 11px;
+
+border-radius: 50%;
+
+background: #ffd34d;
+
+flex-shrink: 0;
+}
+
+.modal-status-dot.processing {
+background: #ffd34d;
+}
+
+.modal-status-dot.cancelled {
+background: #ff3838;
+}
+
+.modal-status-dot.shipping {
+background: #3c8cff;
+}
+
+.modal-status-dot.pickup {
+background: #fff;
+}
+
+.modal-status-dot.completed {
+background: #39d66b;
+}
+
+/* =========================================================
+   ТОВАРЫ
+========================================================= */
+
 .items {
-margin-top: 15px;
+
+margin-top: 17px;
 }
 
 .item {
+
 display: flex;
-justify-content: space-between;
+
+align-items: center;
+
 gap: 12px;
-padding: 10px 0;
-border-bottom: 1px solid #252525;
+
+padding: 11px 0;
+
+border-bottom: 1px solid #292929;
+
 font-size: 14px;
 }
 
-.item-name {
+.item-image {
+
+width: 54px;
+
+height: 54px;
+
+border-radius: 11px;
+
+object-fit: cover;
+
+background: #252525;
+
+border: 1px solid #393939;
+
+flex-shrink: 0;
+}
+
+.item-info {
+
 flex: 1;
+
+min-width: 0;
+}
+
+.item-name {
+
+color: #fff;
+
+font-weight: 600;
+
+line-height: 1.35;
+}
+
+.item-quantity {
+
+margin-top: 4px;
+
+color: #777;
+
+font-size: 12px;
 }
 
 .item-price {
+
 white-space: nowrap;
+
+font-size: 14px;
+
+font-weight: 700;
 }
 
+/* =========================================================
+   SUMMARY
+========================================================= */
+
 .summary {
-margin-top: 16px;
-padding: 15px;
-border-radius: 13px;
-background: #202020;
+
+margin-top: 17px;
+
+padding: 16px;
+
+border-radius: 15px;
+
+background:
+linear-gradient(
+145deg,
+#272727,
+#1c1c1c
+);
+
+border: 1px solid #303030;
 }
 
 .summary-row {
+
 display: flex;
+
 justify-content: space-between;
+
 gap: 12px;
-margin-bottom: 8px;
+
+margin-bottom: 9px;
+
 color: #aaa;
+
 font-size: 13px;
 }
 
 .summary-row:last-child {
+
 margin-bottom: 0;
 }
 
 .summary-total {
-margin-top: 10px;
-padding-top: 10px;
-border-top: 1px solid #333;
+
+margin-top: 11px;
+
+padding-top: 12px;
+
+border-top: 1px solid #383838;
+
 color: #fff;
-font-size: 17px;
-font-weight: 700;
+
+font-size: 19px;
+
+font-weight: 800;
 }
 
+/* =========================================================
+   DELIVERY NOTE
+========================================================= */
+
 .delivery-note {
-margin-top: 12px;
-color: #8d8d8d;
+
+margin-top: 13px;
+
+color: #888;
+
 font-size: 12px;
-line-height: 1.45;
+
+line-height: 1.5;
+}
+
+/* =========================================================
+   ВСЕ КНОПКИ
+========================================================= */
+
+.cancel-btn,
+.close-btn,
+.manager-btn,
+.dont-cancel,
+.confirm-cancel {
+
+width: 100%;
+
+border-radius: 13px;
+
+padding: 13px;
+
+font-size: 14px;
+
+font-weight: 800;
+
+cursor: pointer;
 }
 
 .cancel-btn {
-width: 100%;
+
 margin-top: 18px;
-padding: 12px;
-border: 1px solid #5a2929;
-border-radius: 12px;
-background: #241515;
-color: #ff8585;
-font-weight: 700;
-cursor: pointer;
+
+background: #c52323;
+
+border: 1px solid #d32b2b;
+
+color: #fff;
+
+box-shadow:
+0 5px 14px rgba(0,0,0,0.35);
 }
 
 .close-btn {
-width: 100%;
+
 margin-top: 10px;
-padding: 12px;
-border: 1px solid #333;
-border-radius: 12px;
-background: #242424;
+
+background: #a91e1e;
+
+border: 1px solid #bd2727;
+
 color: #fff;
-font-weight: 700;
-cursor: pointer;
 }
 
+.cancel-btn:active,
+.close-btn:active,
+.manager-btn:active,
+.dont-cancel:active,
+.confirm-cancel:active {
+
+transform: scale(0.97);
+}
+
+/* =========================================================
+   ОТМЕНА
+========================================================= */
+
 .cancel-form {
-margin-top: 15px;
+
+margin-top: 16px;
 }
 
 .cancel-option {
+
 display: block;
+
 margin-bottom: 9px;
-padding: 12px;
-border-radius: 11px;
+
+padding: 13px;
+
+border-radius: 12px;
+
 background: #222;
-border: 1px solid #303030;
+
+border: 1px solid #333;
+
 cursor: pointer;
+
+font-size: 14px;
+}
+
+.cancel-option:has(input:checked) {
+
+border-color: #a52323;
+
+background: #281818;
 }
 
 .cancel-option input {
+
 margin-right: 8px;
 }
 
 textarea {
+
 display: none;
+
 width: 100%;
+
 min-height: 90px;
+
 resize: vertical;
+
 margin-top: 10px;
+
 padding: 12px;
+
 border-radius: 11px;
-border: 1px solid #333;
+
+border: 1px solid #393939;
+
 background: #101010;
+
 color: #fff;
+
 outline: none;
+
+font-family: Arial, sans-serif;
 }
 
 textarea.visible {
+
 display: block;
 }
 
 .cancel-warning {
+
 display: none;
+
 margin-top: 15px;
+
 padding: 14px;
+
 border-radius: 12px;
-background: #211818;
-border: 1px solid #432626;
+
+background: #251818;
+
+border: 1px solid #4b2929;
+
 color: #ddd;
+
 line-height: 1.45;
+
 font-size: 13px;
 }
 
 .manager-btn {
+
 display: block;
-width: 100%;
+
 margin-top: 12px;
-padding: 12px;
-border-radius: 12px;
-background: #fff;
-color: #111;
+
+background: #c52323;
+
+border: 1px solid #d32b2b;
+
+color: #fff;
+
 text-decoration: none;
+
 text-align: center;
-font-weight: 700;
 }
 
 .cancel-actions {
+
 display: flex;
+
 gap: 10px;
+
 margin-top: 12px;
 }
 
 .cancel-actions button {
+
 flex: 1;
-padding: 12px;
-border-radius: 12px;
-cursor: pointer;
-font-weight: 700;
 }
 
 .dont-cancel {
-background: #242424;
-border: 1px solid #333;
+
+background: #b51f1f;
+
+border: 1px solid #c32929;
+
 color: #fff;
 }
 
 .confirm-cancel {
-background: #b52d2d;
-border: 1px solid #b52d2d;
+
+background: #d12424;
+
+border: 1px solid #e02e2e;
+
 color: #fff;
 }
 
 .cancel-result {
+
 display: none;
+
 margin-top: 15px;
+
 padding: 14px;
+
 border-radius: 12px;
+
 background: #202020;
+
 color: #ddd;
+
 text-align: center;
 }
 
-@media (max-width: 500px) {
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 560px) {
+
 .page {
-padding-left: 13px;
-padding-right: 13px;
+padding-left: 12px;
+padding-right: 12px;
 }
 
 h1 {
-font-size: 25px;
+font-size: 26px;
 }
 
 .order-top {
@@ -411,7 +998,54 @@ flex-direction: column;
 .status {
 align-self: flex-start;
 }
+
+.order-number {
+font-size: 20px;
 }
+
+.total {
+font-size: 22px;
+}
+
+.details-btn {
+padding: 12px 16px;
+}
+
+.preview-image,
+.preview-more {
+width: 58px;
+height: 58px;
+}
+
+.item-image {
+width: 50px;
+height: 50px;
+}
+
+.modal {
+padding: 18px;
+border-radius: 20px;
+}
+
+}
+
+/* =========================================================
+   СКРЫВАЕМ ПРОКРУТКУ
+========================================================= */
+
+::-webkit-scrollbar {
+width: 5px;
+}
+
+::-webkit-scrollbar-track {
+background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+background: #444;
+border-radius: 10px;
+}
+
 </style>
 </head>
 
@@ -420,33 +1054,65 @@ align-self: flex-start;
 <main class="page">
 
 <div class="header">
-<a href="index.html" class="back">← Назад</a>
 
-<h1>Мои заказы</h1>
+<a
+href="index.html"
+class="back"
+>
+← Назад
+</a>
+
+<h1>
+Мои заказы
+</h1>
 
 <div class="subtitle">
 Здесь отображаются только ваши заказы
 </div>
+
 </div>
 
-<div id="loading" class="loading">
+
+<div
+id="loading"
+class="loading"
+>
 Загружаем заказы...
 </div>
 
-<div id="error" class="error" style="display:none;"></div>
 
-<div id="empty" class="empty" style="display:none;">
+<div
+id="error"
+class="error"
+style="display:none;"
+></div>
+
+
+<div
+id="empty"
+class="empty"
+style="display:none;"
+>
 У вас пока нет заказов.
 </div>
 
-<div id="orders" class="orders"></div>
+
+<div
+id="orders"
+class="orders"
+></div>
 
 </main>
 
 
-<!-- ОКНО ПОДРОБНОСТЕЙ -->
+<!-- ======================================================
+     ПОДРОБНОСТИ
+====================================================== -->
 
-<div id="detailsModal" class="modal-bg">
+<div
+id="detailsModal"
+class="modal-bg"
+>
 
 <div class="modal">
 
@@ -454,50 +1120,115 @@ align-self: flex-start;
 Заказ <span id="modalOrderNumber"></span>
 </div>
 
-<div class="info-row">
-<div class="info-label">Дата заказа</div>
-<div id="modalDate" class="info-value">—</div>
-</div>
 
 <div class="info-row">
-<div class="info-label">Статус</div>
-<div id="modalStatus" class="info-value">—</div>
+
+<div class="info-label">
+Дата заказа
 </div>
 
+<div
+id="modalDate"
+class="info-value"
+>
+—
+</div>
+
+</div>
+
+
 <div class="info-row">
-<div class="info-label">Ожидание</div>
-<div id="modalWaiting" class="info-value">
+
+<div class="info-label">
+Статус
+</div>
+
+<div
+id="modalStatus"
+class="info-value"
+>
+—
+</div>
+
+</div>
+
+
+<div class="info-row">
+
+<div class="info-label">
+Ожидание
+</div>
+
+<div
+id="modalWaiting"
+class="info-value"
+>
 Информация уточняется менеджером
 </div>
+
 </div>
 
+
 <div class="items">
-<div class="info-label">Состав заказа</div>
-<div id="modalItems"></div>
+
+<div class="info-label">
+Состав заказа
 </div>
+
+<div id="modalItems"></div>
+
+</div>
+
 
 <div class="summary">
 
 <div class="summary-row">
-<span>Товары</span>
-<span id="modalProductTotal">0 ₽</span>
+
+<span>
+Товары
+</span>
+
+<span id="modalProductTotal">
+0 ₽
+</span>
+
 </div>
+
 
 <div class="summary-row">
-<span>Скидка</span>
-<span id="modalDiscount">0 ₽</span>
+
+<span>
+Скидка
+</span>
+
+<span id="modalDiscount">
+0 ₽
+</span>
+
 </div>
+
 
 <div class="summary-row summary-total">
-<span>Итого</span>
-<span id="modalTotal">0 ₽</span>
+
+<span>
+Итого
+</span>
+
+<span id="modalTotal">
+0 ₽
+</span>
+
 </div>
 
 </div>
+
 
 <div class="delivery-note">
+
 Точная стоимость доставки будет понятна при оформлении и согласовании заказа с менеджером.
+
 </div>
+
 
 <button
 id="cancelOrderButton"
@@ -506,6 +1237,7 @@ type="button"
 >
 Отменить заказ
 </button>
+
 
 <button
 id="closeDetails"
@@ -520,9 +1252,14 @@ type="button"
 </div>
 
 
-<!-- ОКНО ОТМЕНЫ -->
+<!-- ======================================================
+     ОТМЕНА
+====================================================== -->
 
-<div id="cancelModal" class="modal-bg">
+<div
+id="cancelModal"
+class="modal-bg"
+>
 
 <div class="modal">
 
@@ -534,55 +1271,75 @@ type="button"
 Почему вы хотите отменить заказ?
 </div>
 
+
 <div class="cancel-form">
 
 <label class="cancel-option">
+
 <input
 type="radio"
 name="cancelReason"
 value="Долго ждать"
 >
+
 Долго ждать
+
 </label>
 
+
 <label class="cancel-option">
+
 <input
 type="radio"
 name="cancelReason"
 value="Передумал насчёт моделей"
 >
+
 Передумал насчёт моделей
+
 </label>
 
+
 <label class="cancel-option">
+
 <input
 type="radio"
 name="cancelReason"
 value="Хочу перезаказать"
 >
+
 Хочу перезаказать
+
 </label>
 
+
 <label class="cancel-option">
+
 <input
 type="radio"
 name="cancelReason"
 value="Другая причина"
 id="otherReason"
 >
+
 Другая причина
+
 </label>
+
 
 <textarea
 id="otherReasonText"
 placeholder="Напишите причину..."
 ></textarea>
 
+
 <div
 id="cancelWarning"
 class="cancel-warning"
 >
+
 Если что-то не так с заказом или вы хотите уточнить детали, напишите нам.
+
 
 <a
 href="https://t.me/Lil_peepxx"
@@ -591,7 +1348,9 @@ class="manager-btn"
 >
 Написать менеджеру @Lil_peepxx
 </a>
+
 </div>
+
 
 <div class="cancel-actions">
 
@@ -603,6 +1362,7 @@ type="button"
 Не отменять
 </button>
 
+
 <button
 id="confirmCancel"
 class="confirm-cancel"
@@ -612,6 +1372,7 @@ type="button"
 </button>
 
 </div>
+
 
 <div
 id="cancelResult"
@@ -627,44 +1388,37 @@ class="cancel-result"
 
 <script>
 
-/*
-* =========================================
-* TELEGRAM MINI APP
-* =========================================
-*/
+/* =========================================================
+   TELEGRAM
+========================================================= */
 
-const tg = window.Telegram?.WebApp;
+const tg =
+window.Telegram?.WebApp;
 
 if (tg) {
+
 tg.ready();
+
 tg.expand();
+
 }
 
 
-/*
-* =========================================
-* SUPABASE FUNCTION
-* =========================================
-*/
+/* =========================================================
+   SUPABASE
+========================================================= */
 
 const CUSTOMER_ORDERS_URL =
 "https://qbuethosjrghgdwpanhb.supabase.co/functions/v1/customer-orders";
 
-/*
-* =========================================
-* SUPABASE PUBLISHABLE KEY
-* =========================================
-*/
 
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_l-Jn1GONymTw-fuN1eEgBw_FjtbUyzg";
 
 
-/*
-* =========================================
-* ЭЛЕМЕНТЫ
-* =========================================
-*/
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
 const loading =
 document.getElementById("loading");
@@ -688,11 +1442,9 @@ document.getElementById("cancelModal");
 let currentOrder = null;
 
 
-/*
-* =========================================
-* TELEGRAM USER ID
-* =========================================
-*/
+/* =========================================================
+   TELEGRAM USER ID
+========================================================= */
 
 function getTelegramUserId() {
 
@@ -702,25 +1454,28 @@ tg.initDataUnsafe &&
 tg.initDataUnsafe.user &&
 tg.initDataUnsafe.user.id
 ) {
+
 return String(
 tg.initDataUnsafe.user.id
 );
+
 }
 
 return null;
+
 }
 
 
-/*
-* =========================================
-* ФОРМАТИРОВАНИЕ ДАТЫ
-* =========================================
-*/
+/* =========================================================
+   DATE
+========================================================= */
 
 function formatDate(value) {
 
 if (!value) {
+
 return "—";
+
 }
 
 const date =
@@ -731,7 +1486,9 @@ Number.isNaN(
 date.getTime()
 )
 ) {
+
 return String(value);
+
 }
 
 return date.toLocaleString(
@@ -744,14 +1501,13 @@ hour: "2-digit",
 minute: "2-digit"
 }
 );
+
 }
 
 
-/*
-* =========================================
-* ДЕНЬГИ
-* =========================================
-*/
+/* =========================================================
+   MONEY
+========================================================= */
 
 function money(value) {
 
@@ -764,52 +1520,133 @@ value || 0
 }
 
 
-/*
-* =========================================
-* СТАТУС
-* =========================================
-*/
+/* =========================================================
+   ESCAPE
+========================================================= */
 
-function statusClass(status) {
+function escapeHtml(value) {
+
+return String(
+value ?? ""
+)
+
+.replace(
+/&/g,
+"&amp;"
+)
+
+.replace(
+/</g,
+"&lt;"
+)
+
+.replace(
+/>/g,
+"&gt;"
+)
+
+.replace(
+/"/g,
+"&quot;"
+)
+
+.replace(
+/'/g,
+"&#039;"
+);
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function getStatusInfo(status) {
 
 const value =
 String(
 status || ""
 ).toLowerCase();
 
-if (
-value.includes("выполн")
-) {
-return "completed";
-}
-
-if (
-value.includes("пути")
-) {
-return "shipping";
-}
 
 if (
 value.includes("отмен")
 ) {
-return "cancelled";
+
+return {
+className: "cancelled",
+label: status || "Отменён"
+};
+
 }
+
+
+if (
+value.includes("выполн")
+) {
+
+return {
+className: "completed",
+label: status || "Завершен"
+};
+
+}
+
+
+if (
+value.includes("пункт")
+||
+value.includes("выдач")
+) {
+
+return {
+className: "pickup",
+label: status || "Заказ в пункте выдачи"
+};
+
+}
+
+
+if (
+value.includes("передан")
+||
+value.includes("достав")
+||
+value.includes("пути")
+) {
+
+return {
+className: "shipping",
+label: status || "Передан в доставку"
+};
+
+}
+
 
 if (
 value.includes("создан")
 ) {
-return "created";
+
+return {
+className: "created",
+label: status || "В обработке"
+};
+
 }
 
-return "processing";
+
+return {
+className: "processing",
+label: status || "В обработке"
+};
+
 }
 
 
-/*
-* =========================================
-* ПОКАЗ ОШИБКИ
-* =========================================
-*/
+/* =========================================================
+   ERROR
+========================================================= */
 
 function showError(message) {
 
@@ -825,11 +1662,98 @@ message;
 }
 
 
-/*
-* =========================================
-* ЗАГРУЗКА ЗАКАЗОВ
-* =========================================
-*/
+/* =========================================================
+   PREVIEW IMAGES
+========================================================= */
+
+function getOrderItems(order) {
+
+return Array.isArray(order.items)
+? order.items
+: [];
+
+}
+
+
+function renderProductPreview(order) {
+
+const items =
+getOrderItems(order);
+
+if (!items.length) {
+
+return `
+<div class="order-products-preview">
+<div class="preview-empty">
+Состав заказа
+</div>
+</div>
+`;
+
+}
+
+
+const visibleItems =
+items.slice(0, 4);
+
+
+let html =
+'<div class="order-products-preview">';
+
+
+visibleItems.forEach(
+(item) => {
+
+const image =
+item.image_url ||
+item.image ||
+item.photo_url ||
+"";
+
+
+if (image) {
+
+html += `
+
+<img
+class="preview-image"
+src="${escapeHtml(image)}"
+alt=""
+onerror="this.style.display='none';"
+>
+
+`;
+
+}
+
+}
+);
+
+
+if (items.length > 4) {
+
+html += `
+
+<div class="preview-more">
++${items.length - 4}
+</div>
+
+`;
+
+}
+
+
+html +=
+"</div>";
+
+return html;
+
+}
+
+
+/* =========================================================
+   LOAD ORDERS
+========================================================= */
 
 async function loadOrders() {
 
@@ -844,6 +1768,7 @@ showError(
 );
 
 return;
+
 }
 
 
@@ -856,14 +1781,17 @@ CUSTOMER_ORDERS_URL,
 method: "POST",
 
 headers: {
+
 "Content-Type":
 "application/json",
 
 "apikey":
 SUPABASE_PUBLISHABLE_KEY
+
 },
 
-body: JSON.stringify({
+body:
+JSON.stringify({
 
 action:
 "list",
@@ -872,6 +1800,7 @@ telegram_user_id:
 telegramUserId
 
 })
+
 }
 );
 
@@ -915,7 +1844,9 @@ return;
 }
 
 
-renderOrders(orders);
+renderOrders(
+orders
+);
 
 
 } catch (error) {
@@ -935,11 +1866,9 @@ error.message ||
 }
 
 
-/*
-* =========================================
-* ОТОБРАЖЕНИЕ ЗАКАЗОВ
-* =========================================
-*/
+/* =========================================================
+   RENDER ORDERS
+========================================================= */
 
 function renderOrders(orders) {
 
@@ -970,9 +1899,15 @@ order.order_status ??
 "В обработке";
 
 
+const statusInfo =
+getStatusInfo(
+status
+);
+
+
 const total =
-order.total ??
 order.products_total_after_discount ??
+order.total ??
 0;
 
 
@@ -988,19 +1923,31 @@ card.innerHTML = `
 
 <div class="order-date">
 ${escapeHtml(
-formatDate(
-order.created_at
-)
+formatDate(order.created_at)
 )}
 </div>
 
 </div>
 
-<div class="status ${statusClass(status)}">
-${escapeHtml(status)}
+
+<div
+class="status ${statusInfo.className}"
+>
+
+<span class="status-dot"></span>
+
+<span>
+${escapeHtml(
+statusInfo.label
+)}
+</span>
+
 </div>
 
 </div>
+
+
+${renderProductPreview(order)}
 
 
 <div class="order-bottom">
@@ -1010,6 +1957,7 @@ ${escapeHtml(
 money(total)
 )}
 </div>
+
 
 <button
 class="details-btn"
@@ -1049,11 +1997,9 @@ card
 }
 
 
-/*
-* =========================================
-* ОКНО ПОДРОБНОСТЕЙ
-* =========================================
-*/
+/* =========================================================
+   OPEN DETAILS
+========================================================= */
 
 function openDetails(order) {
 
@@ -1072,6 +2018,12 @@ order.order_status ??
 "В обработке";
 
 
+const statusInfo =
+getStatusInfo(
+status
+);
+
+
 document.getElementById(
 "modalOrderNumber"
 ).textContent =
@@ -1086,15 +2038,93 @@ order.created_at
 );
 
 
+/* =========================================================
+   STATUS WITH DOT
+========================================================= */
+
+const modalStatus =
 document.getElementById(
 "modalStatus"
-).textContent =
-status;
+);
 
 
-/*
-* Состав заказа
-*/
+modalStatus.innerHTML = `
+
+<span class="modal-status">
+
+<span
+class="modal-status-dot ${statusInfo.className}"
+></span>
+
+<span>
+${escapeHtml(
+statusInfo.label
+)}
+</span>
+
+</span>
+
+`;
+
+
+/* =========================================================
+   WAITING
+========================================================= */
+
+const waiting =
+document.getElementById(
+"modalWaiting"
+);
+
+
+const statusLower =
+String(
+status
+).toLowerCase();
+
+
+if (
+statusLower.includes("пункт") ||
+statusLower.includes("выдач")
+) {
+
+waiting.textContent =
+"Заказ находится в пункте выдачи.";
+
+} else if (
+statusLower.includes("передан") ||
+statusLower.includes("достав") ||
+statusLower.includes("пути")
+) {
+
+waiting.textContent =
+"Заказ передан в доставку.";
+
+} else if (
+statusLower.includes("выполн")
+) {
+
+waiting.textContent =
+"Заказ выполнен.";
+
+} else if (
+statusLower.includes("отмен")
+) {
+
+waiting.textContent =
+"Заказ отменён.";
+
+} else {
+
+waiting.textContent =
+"Ориентировочное время отправки уточняется менеджером.";
+
+}
+
+
+/* =========================================================
+   ITEMS
+========================================================= */
 
 const itemsBox =
 document.getElementById(
@@ -1107,21 +2137,28 @@ itemsBox.innerHTML =
 
 
 const items =
-Array.isArray(
-order.items
-)
-? order.items
-: [];
+getOrderItems(
+order
+);
 
 
 if (!items.length) {
 
-itemsBox.innerHTML =
-`<div class="item">
-<span class="item-name">
+itemsBox.innerHTML = `
+
+<div class="item">
+
+<div class="item-info">
+
+<div class="item-name">
 Информация о товарах отсутствует
-</span>
-</div>`;
+</div>
+
+</div>
+
+</div>
+
+`;
 
 } else {
 
@@ -1147,30 +2184,65 @@ item.quantity ??
 1;
 
 
+const price =
+Number(
+item.price || 0
+);
+
+
 const itemTotal =
 item.total ??
 (
-Number(
-item.price || 0
-) *
-Number(
-quantity
-)
+price *
+Number(quantity)
 );
+
+
+const image =
+item.image_url ||
+item.image ||
+item.photo_url ||
+"";
 
 
 row.innerHTML = `
 
-<span class="item-name">
-${escapeHtml(name)}
-× ${escapeHtml(quantity)}
-</span>
+${
+image
+?
+`
+<img
+class="item-image"
+src="${escapeHtml(image)}"
+alt=""
+onerror="this.style.display='none';"
+>
+`
+:
+`
+<div class="item-image"></div>
+`
+}
 
-<span class="item-price">
+
+<div class="item-info">
+
+<div class="item-name">
+${escapeHtml(name)}
+</div>
+
+<div class="item-quantity">
+Количество: ${escapeHtml(quantity)}
+</div>
+
+</div>
+
+
+<div class="item-price">
 ${escapeHtml(
 money(itemTotal)
 )}
-</span>
+</div>
 
 `;
 
@@ -1185,8 +2257,13 @@ row
 }
 
 
+/* =========================================================
+   TOTALS
+========================================================= */
+
 const productTotal =
 order.product_total ??
+order.products_total ??
 0;
 
 
@@ -1204,75 +2281,34 @@ order.total ??
 document.getElementById(
 "modalProductTotal"
 ).textContent =
-money(productTotal);
+money(
+productTotal
+);
 
 
 document.getElementById(
 "modalDiscount"
 ).textContent =
 discountAmount > 0
-? "-" + money(
+?
+"-" + money(
 discountAmount
 )
-: "0 ₽";
+:
+"0 ₽";
 
 
 document.getElementById(
 "modalTotal"
 ).textContent =
-money(total);
-
-
-/*
-* Пока товар не отправлен,
-* показываем общий текст.
-*/
-
-const waiting =
-document.getElementById(
-"modalWaiting"
+money(
+total
 );
 
 
-if (
-String(status)
-.toLowerCase()
-.includes("пути")
-) {
-
-waiting.textContent =
-"Заказ уже находится в пути.";
-
-} else if (
-String(status)
-.toLowerCase()
-.includes("выполн")
-) {
-
-waiting.textContent =
-"Заказ выполнен.";
-
-} else if (
-String(status)
-.toLowerCase()
-.includes("отмен")
-) {
-
-waiting.textContent =
-"Заказ отменён.";
-
-} else {
-
-waiting.textContent =
-"Ориентировочное время отправки уточняется менеджером.";
-
-}
-
-
-/*
-* Отмена доступна только
-* для активных заказов.
-*/
+/* =========================================================
+   CANCEL BUTTON
+========================================================= */
 
 const cancelButton =
 document.getElementById(
@@ -1281,12 +2317,8 @@ document.getElementById(
 
 
 if (
-String(status)
-.toLowerCase()
-.includes("отмен") ||
-String(status)
-.toLowerCase()
-.includes("выполн")
+statusLower.includes("отмен") ||
+statusLower.includes("выполн")
 ) {
 
 cancelButton.style.display =
@@ -1307,11 +2339,9 @@ detailsModal.classList.add(
 }
 
 
-/*
-* =========================================
-* ЗАКРЫТЬ ПОДРОБНОСТИ
-* =========================================
-*/
+/* =========================================================
+   CLOSE DETAILS
+========================================================= */
 
 document.getElementById(
 "closeDetails"
@@ -1327,11 +2357,9 @@ detailsModal.classList.remove(
 );
 
 
-/*
-* =========================================
-* НАЧАТЬ ОТМЕНУ
-* =========================================
-*/
+/* =========================================================
+   START CANCEL
+========================================================= */
 
 document.getElementById(
 "cancelOrderButton"
@@ -1360,11 +2388,9 @@ cancelModal.classList.add(
 );
 
 
-/*
-* =========================================
-* RADIO "ДРУГАЯ ПРИЧИНА"
-* =========================================
-*/
+/* =========================================================
+   RADIO
+========================================================= */
 
 document
 .querySelectorAll(
@@ -1401,29 +2427,6 @@ textarea.classList.remove(
 
 }
 
-}
-);
-
-}
-);
-
-
-/*
-* =========================================
-* ПОКАЗ ПРЕДУПРЕЖДЕНИЯ
-* =========================================
-*/
-
-document
-.querySelectorAll(
-'input[name="cancelReason"]'
-)
-.forEach(
-(radio) => {
-
-radio.addEventListener(
-"change",
-() => {
 
 document.getElementById(
 "cancelWarning"
@@ -1437,11 +2440,9 @@ document.getElementById(
 );
 
 
-/*
-* =========================================
-* НЕ ОТМЕНЯТЬ
-* =========================================
-*/
+/* =========================================================
+   DON'T CANCEL
+========================================================= */
 
 document.getElementById(
 "dontCancel"
@@ -1466,11 +2467,9 @@ detailsModal.classList.add(
 );
 
 
-/*
-* =========================================
-* СБРОС ФОРМЫ
-* =========================================
-*/
+/* =========================================================
+   RESET
+========================================================= */
 
 function resetCancelForm() {
 
@@ -1515,11 +2514,9 @@ document.getElementById(
 }
 
 
-/*
-* =========================================
-* ПОДТВЕРЖДЕНИЕ ОТМЕНЫ
-* =========================================
-*/
+/* =========================================================
+   CONFIRM CANCEL
+========================================================= */
 
 document.getElementById(
 "confirmCancel"
@@ -1618,14 +2615,17 @@ CUSTOMER_ORDERS_URL,
 method: "POST",
 
 headers: {
+
 "Content-Type":
 "application/json",
 
 "apikey":
 SUPABASE_PUBLISHABLE_KEY
+
 },
 
-body: JSON.stringify({
+body:
+JSON.stringify({
 
 action:
 "cancel",
@@ -1681,7 +2681,6 @@ cancelModal.classList.remove(
 "active"
 );
 
-
 loadOrders();
 
 },
@@ -1716,11 +2715,9 @@ button.textContent =
 );
 
 
-/*
-* =========================================
-* ЗАКРЫТИЕ ПО КЛИКУ ВНЕ ОКНА
-* =========================================
-*/
+/* =========================================================
+   CLOSE BY BACKGROUND
+========================================================= */
 
 detailsModal.addEventListener(
 "click",
@@ -1760,46 +2757,9 @@ cancelModal.classList.remove(
 );
 
 
-/*
-* =========================================
-* ЗАЩИТА HTML
-* =========================================
-*/
-
-function escapeHtml(value) {
-
-return String(
-value ?? ""
-)
-.replace(
-/&/g,
-"&amp;"
-)
-.replace(
-/</g,
-"&lt;"
-)
-.replace(
-/>/g,
-"&gt;"
-)
-.replace(
-/"/g,
-"&quot;"
-)
-.replace(
-/'/g,
-"&#039;"
-);
-
-}
-
-
-/*
-* =========================================
-* СТАРТ
-* =========================================
-*/
+/* =========================================================
+   START
+========================================================= */
 
 loadOrders();
 
