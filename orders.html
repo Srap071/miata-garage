@@ -1,2765 +1,3308 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+
 <meta charset="UTF-8">
 
 <meta
-name="viewport"
-content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
 >
 
-<title>Мои заказы — Miata Garage</title>
+<meta
+  name="theme-color"
+  content="#090909"
+>
+
+<meta
+  name="telegram-web-app-capable"
+  content="yes"
+>
+
+<title>Miata Garage — Мои заказы</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
 
-/* =========================================================
-   ОСНОВА
-========================================================= */
+/* =========================
+   BASE
+========================= */
 
 * {
-box-sizing: border-box;
--webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
 }
 
-html,
-body {
-margin: 0;
-padding: 0;
-min-height: 100%;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-background-color: #0b0b0b;
-color: #fff;
-font-family: Arial, sans-serif;
+
+  margin: 0;
+
+  color: #fff;
+
+  background:
+    linear-gradient(
+      rgba(5,5,6,.55),
+      rgba(5,5,6,.68)
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(110,0,15,.16),
+      transparent 30%
+    ),
+    repeating-linear-gradient(
+      135deg,
+      #1a1a1a 0px,
+      #1a1a1a 2px,
+      #0c0c0c 2px,
+      #0c0c0c 7px
+    );
+
+  background-attachment: fixed;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  min-height: 100vh;
+
+  padding-bottom: 90px;
 }
 
-/* =========================================================
-   КАРБОН
-========================================================= */
-
-body::before {
-content: "";
-position: fixed;
-inset: 0;
-z-index: -2;
-
-background-color: #101010;
-
-background-image:
-linear-gradient(
-45deg,
-rgba(255,255,255,0.025) 25%,
-transparent 25%,
-transparent 75%,
-rgba(255,255,255,0.025) 75%
-),
-linear-gradient(
-45deg,
-rgba(255,255,255,0.025) 25%,
-transparent 25%,
-transparent 75%,
-rgba(255,255,255,0.025) 75%
-);
-
-background-position:
-0 0,
-6px 6px;
-
-background-size:
-12px 12px;
-
-pointer-events: none;
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
-/* =========================================================
-   СТРАНИЦА
-========================================================= */
-
-.page {
-width: 100%;
-max-width: 720px;
-margin: 0 auto;
-padding: 18px 14px 120px;
+button {
+  cursor: pointer;
 }
 
-/* =========================================================
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.hidden {
+  display: none !important;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* =========================
    HEADER
-========================================================= */
+========================= */
 
-.header {
-margin-bottom: 22px;
+header {
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 50;
+
+  height: 66px;
+
+  border-bottom: 1px solid #292929;
+
+  background: rgba(7,7,8,.96);
+
+  backdrop-filter: blur(16px);
 }
 
-.back {
-display: inline-flex;
-align-items: center;
-justify-content: center;
+.header-inner {
 
-padding: 11px 17px;
+  max-width: 1450px;
 
-border-radius: 13px;
+  height: 100%;
 
-border: 1px solid #5d1717;
+  margin: auto;
 
-background: #b51f1f;
+  padding: 0 10px;
 
-color: #fff;
+  display: flex;
 
-text-decoration: none;
+  align-items: center;
 
-font-size: 14px;
-font-weight: 700;
-
-margin-bottom: 18px;
-
-box-shadow:
-0 4px 14px rgba(0,0,0,0.35);
+  gap: 8px;
 }
 
-.back:active {
-transform: scale(0.97);
+.logo-small {
+
+  font-size: 19px;
+
+  font-weight: 950;
+
+  letter-spacing: -1px;
+
+  white-space: nowrap;
+
+  line-height: 1;
+
+  margin-right: auto;
 }
 
-h1 {
-margin: 0;
-
-font-size: 29px;
-line-height: 1.2;
-font-weight: 800;
+.logo-small .red {
+  color: #ed001b;
 }
 
-.subtitle {
-margin-top: 8px;
+.logo-sub {
 
-color: #929292;
+  display: block;
 
-font-size: 14px;
+  margin-top: 3px;
+
+  font-size: 6px;
+
+  letter-spacing: 2px;
+
+  color: #888;
+
+  font-weight: 900;
 }
 
-/* =========================================================
-   ЗАГРУЗКА / ОШИБКА / EMPTY
-========================================================= */
+.header-actions {
 
-.loading,
-.empty,
-.error {
-padding: 26px 18px;
+  display: flex;
 
-border-radius: 17px;
+  align-items: center;
 
-background:
-linear-gradient(
-145deg,
-rgba(32,32,32,0.96),
-rgba(19,19,19,0.96)
-);
-
-border: 1px solid #303030;
-
-text-align: center;
-
-color: #aaa;
+  gap: 6px;
 }
 
-.error {
-color: #ff7777;
+
+/* =========================
+   RED BUTTONS
+========================= */
+
+.red-button {
+
+  border: 1px solid #ed001b;
+
+  background: #ed001b;
+
+  color: #fff;
+
+  border-radius: 10px;
+
+  font-weight: 900;
+
+  transition: .2s;
 }
 
-/* =========================================================
-   ЗАКАЗЫ
-========================================================= */
+.red-button:hover {
 
-.orders {
-display: flex;
-flex-direction: column;
-gap: 14px;
+  background: #ff102a;
+
+  transform: translateY(-1px);
 }
 
-/* =========================================================
-   КАРТОЧКА ЗАКАЗА
-========================================================= */
+.header-back {
+
+  height: 36px;
+
+  padding: 0 12px;
+
+  font-size: 10px;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.main {
+
+  max-width: 1450px;
+
+  margin: auto;
+
+  padding: 38px 10px 80px;
+}
+
+.page-head {
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 25px;
+}
+
+.page-title {
+
+  margin: 0;
+
+  font-size: 32px;
+
+  line-height: 1;
+
+  text-transform: uppercase;
+
+  letter-spacing: -1px;
+}
+
+.page-subtitle {
+
+  color: #888;
+
+  margin-top: 8px;
+
+  font-size: 12px;
+}
+
+
+/* =========================
+   LOADING / EMPTY
+========================= */
+
+.message {
+
+  border: 1px solid #29292e;
+
+  border-radius: 14px;
+
+  padding: 25px 18px;
+
+  background:
+    linear-gradient(
+      rgba(17,17,19,.92),
+      rgba(11,11,13,.96)
+    );
+
+  color: #888;
+
+  text-align: center;
+
+  font-size: 13px;
+}
+
+
+/* =========================
+   ORDERS
+========================= */
+
+.orders-list {
+
+  display: grid;
+
+  gap: 12px;
+}
 
 .order-card {
 
-position: relative;
+  border: 1px solid #29292e;
 
-background:
-linear-gradient(
-145deg,
-rgba(29,29,29,0.98),
-rgba(15,15,15,0.98)
-);
+  border-radius: 14px;
 
-border: 1px solid #333;
+  overflow: hidden;
 
-border-radius: 20px;
+  background:
+    linear-gradient(
+      rgba(17,17,19,.94),
+      rgba(9,9,11,.97)
+    );
 
-padding: 18px;
+  box-shadow:
+    0 12px 35px rgba(0,0,0,.22);
 
-box-shadow:
-0 8px 22px rgba(0,0,0,0.32);
-
-overflow: hidden;
+  transition: .2s;
 }
 
-.order-card::before {
-content: "";
+.order-card:hover {
 
-position: absolute;
-
-left: 0;
-right: 0;
-top: 0;
-
-height: 2px;
-
-background:
-linear-gradient(
-90deg,
-transparent,
-#b51f1f,
-transparent
-);
-
-opacity: 0.8;
+  border-color: #4a4a4e;
 }
-
-/* =========================================================
-   ВЕРХ ЗАКАЗА
-========================================================= */
 
 .order-top {
-display: flex;
 
-align-items: flex-start;
+  padding: 15px 16px 12px;
 
-justify-content: space-between;
+  border-bottom: 1px solid #292929;
 
-gap: 14px;
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  gap: 15px;
 }
 
 .order-number {
-font-size: 21px;
-font-weight: 800;
+
+  font-size: 18px;
+
+  font-weight: 950;
 }
 
 .order-date {
-margin-top: 7px;
 
-color: #858585;
+  color: #777;
 
-font-size: 13px;
+  font-size: 10px;
+
+  margin-top: 5px;
 }
 
-/* =========================================================
-   СТАТУС
-========================================================= */
+
+/* =========================
+   STATUS
+========================= */
 
 .status {
 
-display: inline-flex;
+  display: inline-flex;
 
-align-items: center;
+  align-items: center;
 
-gap: 7px;
+  gap: 7px;
 
-flex-shrink: 0;
+  color: #ddd;
 
-padding: 9px 12px;
+  font-size: 11px;
 
-border-radius: 12px;
+  font-weight: 900;
 
-background: #242424;
-
-color: #fff;
-
-font-size: 12px;
-
-font-weight: 700;
-
-white-space: nowrap;
+  text-align: right;
 }
 
 .status-dot {
 
-width: 9px;
-height: 9px;
+  width: 9px;
 
-border-radius: 50%;
+  height: 9px;
 
-background: #ffd34d;
+  min-width: 9px;
 
-box-shadow:
-0 0 8px rgba(255,211,77,0.45);
+  border-radius: 50%;
 
-flex-shrink: 0;
+  display: inline-block;
+
+  box-shadow:
+    0 0 8px rgba(255,255,255,.12);
 }
 
-.status.created .status-dot {
-background: #ffd34d;
+.status-processing .status-dot {
+  background: #f2c94c;
 }
 
-.status.processing .status-dot {
-background: #ffd34d;
-
-box-shadow:
-0 0 8px rgba(255,211,77,0.45);
+.status-cancelled .status-dot {
+  background: #ed001b;
 }
 
-.status.shipping .status-dot {
-background: #3c8cff;
-
-box-shadow:
-0 0 8px rgba(60,140,255,0.5);
+.status-assembly .status-dot {
+  background: #3f8cff;
 }
 
-.status.pickup .status-dot {
-background: #ffffff;
-
-box-shadow:
-0 0 7px rgba(255,255,255,0.5);
+.status-delivery .status-dot {
+  background: #ff8c32;
 }
 
-.status.completed .status-dot {
-background: #39d66b;
-
-box-shadow:
-0 0 8px rgba(57,214,107,0.5);
+.status-pickup .status-dot {
+  background: #d8d8d8;
 }
 
-.status.cancelled .status-dot {
-background: #ff3838;
-
-box-shadow:
-0 0 8px rgba(255,56,56,0.5);
+.status-completed .status-dot {
+  background: #3ad66f;
 }
 
-/* =========================================================
-   ПРЕВЬЮ ТОВАРОВ В КАРТОЧКЕ
-========================================================= */
 
-.order-products-preview {
+/* =========================
+   ORDER BODY
+========================= */
 
-display: flex;
+.order-body {
 
-align-items: center;
-
-margin-top: 18px;
-
-min-height: 62px;
+  padding: 13px 16px 16px;
 }
 
-.preview-image {
+.order-products {
 
-width: 62px;
-height: 62px;
+  display: grid;
 
-border-radius: 13px;
-
-object-fit: cover;
-
-background: #252525;
-
-border: 1px solid #3a3a3a;
-
-box-shadow:
-0 4px 12px rgba(0,0,0,0.3);
-
-margin-right: -10px;
-
-position: relative;
-
-z-index: 1;
+  gap: 9px;
 }
 
-.preview-more {
+.order-product {
 
-width: 62px;
-height: 62px;
+  display: grid;
 
-border-radius: 13px;
+  grid-template-columns:
+    58px
+    minmax(0,1fr)
+    auto;
 
-display: flex;
+  align-items: center;
 
-align-items: center;
+  gap: 11px;
 
-justify-content: center;
-
-background: #242424;
-
-border: 1px solid #3a3a3a;
-
-color: #aaa;
-
-font-size: 13px;
-
-font-weight: 700;
-
-position: relative;
-
-z-index: 0;
+  min-height: 58px;
 }
 
-.preview-empty {
+.order-product-image {
 
-color: #777;
+  width: 58px;
 
-font-size: 13px;
+  height: 58px;
+
+  border-radius: 9px;
+
+  object-fit: cover;
+
+  background: #171719;
+
+  border: 1px solid #29292e;
+
+  display: block;
 }
 
-/* =========================================================
-   НИЗ КАРТОЧКИ
-========================================================= */
+.order-product-info {
 
-.order-bottom {
-
-display: flex;
-
-align-items: center;
-
-justify-content: space-between;
-
-gap: 14px;
-
-margin-top: 19px;
-
-padding-top: 16px;
-
-border-top: 1px solid #2b2b2b;
+  min-width: 0;
 }
 
-.total {
+.order-product-name {
 
-font-size: 23px;
+  font-size: 12px;
 
-font-weight: 800;
+  font-weight: 900;
 
-color: #fff;
+  line-height: 1.25;
+
+  overflow-wrap: anywhere;
 }
 
-.details-btn {
+.order-product-quantity {
 
-border: 0;
+  margin-top: 4px;
 
-border-radius: 13px;
+  color: #777;
 
-padding: 12px 18px;
-
-background: #c52323;
-
-color: #fff;
-
-font-size: 14px;
-
-font-weight: 800;
-
-cursor: pointer;
-
-box-shadow:
-0 5px 14px rgba(0,0,0,0.35);
+  font-size: 10px;
 }
 
-.details-btn:active {
-transform: scale(0.96);
+.order-product-price {
+
+  font-size: 13px;
+
+  font-weight: 950;
+
+  white-space: nowrap;
 }
 
-/* =========================================================
-   MODAL
-========================================================= */
 
-.modal-bg {
+/* =========================
+   ORDER INFO
+========================= */
 
-display: none;
+.order-info {
 
-position: fixed;
+  margin-top: 14px;
 
-inset: 0;
+  padding-top: 12px;
 
-z-index: 1000;
+  border-top: 1px solid #292929;
 
-background: rgba(0,0,0,0.78);
+  display: grid;
 
-padding: 14px;
+  grid-template-columns:
+    1fr
+    1fr;
 
-overflow-y: auto;
+  gap: 9px;
 }
 
-.modal-bg.active {
+.info-item {
 
-display: flex;
+  border: 1px solid #242428;
 
-align-items: center;
+  border-radius: 9px;
 
-justify-content: center;
-}
+  padding: 9px 10px;
 
-.modal {
-
-width: 100%;
-
-max-width: 540px;
-
-max-height: 92vh;
-
-overflow-y: auto;
-
-background:
-linear-gradient(
-145deg,
-#202020,
-#111111
-);
-
-border: 1px solid #373737;
-
-border-radius: 22px;
-
-padding: 21px;
-
-box-shadow:
-0 15px 50px rgba(0,0,0,0.65);
-}
-
-/* =========================================================
-   MODAL TITLE
-========================================================= */
-
-.modal-title {
-
-font-size: 23px;
-
-font-weight: 800;
-
-margin-bottom: 20px;
-}
-
-/* =========================================================
-   INFO
-========================================================= */
-
-.info-row {
-
-padding: 13px 0;
-
-border-bottom: 1px solid #2b2b2b;
+  background: rgba(8,8,10,.45);
 }
 
 .info-label {
 
-color: #858585;
+  color: #666;
 
-font-size: 12px;
+  font-size: 9px;
 
-margin-bottom: 6px;
+  text-transform: uppercase;
+
+  font-weight: 900;
+
+  letter-spacing: .5px;
 }
 
 .info-value {
 
-color: #fff;
+  margin-top: 4px;
 
-font-size: 15px;
+  font-size: 11px;
 
-font-weight: 600;
+  font-weight: 800;
+
+  overflow-wrap: anywhere;
 }
 
-/* =========================================================
-   СТАТУС В MODAL
-========================================================= */
+
+/* =========================
+   TOTAL
+========================= */
+
+.order-total {
+
+  margin-top: 14px;
+
+  padding-top: 13px;
+
+  border-top: 1px solid #292929;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+.order-total-label {
+
+  color: #999;
+
+  font-size: 12px;
+
+  font-weight: 900;
+}
+
+.order-total-price {
+
+  color: #fff;
+
+  font-size: 24px;
+
+  line-height: 1;
+
+  font-weight: 950;
+
+  white-space: nowrap;
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.order-actions {
+
+  margin-top: 14px;
+
+  display: grid;
+
+  gap: 7px;
+}
+
+.order-button {
+
+  width: 100%;
+
+  min-height: 44px;
+
+  border-radius: 10px;
+
+  border: 1px solid #ed001b;
+
+  background: #ed001b;
+
+  color: #fff;
+
+  font-size: 11px;
+
+  font-weight: 950;
+
+  transition: .2s;
+
+  padding: 8px 12px;
+}
+
+.order-button:hover {
+
+  background: #ff102a;
+
+  transform: translateY(-1px);
+}
+
+.order-button-small {
+
+  display: block;
+
+  margin-top: 3px;
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  opacity: .58;
+}
+
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 100;
+
+  background: rgba(0,0,0,.8);
+
+  backdrop-filter: blur(8px);
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: flex-end;
+
+  padding: 8px;
+}
+
+.modal-box {
+
+  width: 100%;
+
+  max-width: 700px;
+
+  max-height: 94vh;
+
+  overflow-y: auto;
+
+  border: 1px solid #3a3a3e;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      rgba(10,10,11,.55),
+      rgba(10,10,11,.68)
+    ),
+    radial-gradient(
+      circle at 80% 10%,
+      rgba(100,0,15,.15),
+      transparent 35%
+    ),
+    repeating-linear-gradient(
+      135deg,
+      #222 0px,
+      #222 2px,
+      #111 2px,
+      #111 7px
+    );
+
+  padding: 18px;
+
+  box-shadow:
+    0 20px 70px rgba(0,0,0,.65);
+}
+
+.modal-close {
+
+  float: right;
+
+  width: 36px;
+
+  height: 36px;
+
+  border-radius: 50%;
+
+  border: 1px solid #ed001b;
+
+  background: #ed001b;
+
+  color: #fff;
+
+  font-weight: 900;
+
+  font-size: 16px;
+}
+
+.modal-title {
+
+  clear: both;
+
+  padding-top: 12px;
+
+  margin-bottom: 5px;
+
+  font-size: 25px;
+
+  font-weight: 950;
+}
+
+.modal-subtitle {
+
+  color: #777;
+
+  font-size: 11px;
+
+  margin-bottom: 18px;
+}
+
+
+/* =========================
+   MODAL STATUS
+========================= */
 
 .modal-status {
 
-display: inline-flex;
+  display: flex;
 
-align-items: center;
+  align-items: center;
 
-gap: 9px;
+  gap: 8px;
 
-font-weight: 700;
+  margin-bottom: 18px;
+
+  font-size: 13px;
+
+  font-weight: 900;
 }
 
-.modal-status-dot {
 
-width: 11px;
+/* =========================
+   MODAL PRODUCTS
+========================= */
 
-height: 11px;
+.details-products {
 
-border-radius: 50%;
+  display: grid;
 
-background: #ffd34d;
-
-flex-shrink: 0;
+  gap: 9px;
 }
 
-.modal-status-dot.processing {
-background: #ffd34d;
+.details-product {
+
+  display: grid;
+
+  grid-template-columns:
+    55px
+    minmax(0,1fr)
+    auto;
+
+  gap: 10px;
+
+  align-items: center;
+
+  padding: 10px;
+
+  border: 1px solid #29292e;
+
+  border-radius: 10px;
+
+  background:
+    rgba(8,8,10,.55);
 }
 
-.modal-status-dot.cancelled {
-background: #ff3838;
+.details-product img {
+
+  width: 55px;
+
+  height: 55px;
+
+  object-fit: cover;
+
+  border-radius: 8px;
+
+  background: #171719;
+
+  border: 1px solid #29292e;
 }
 
-.modal-status-dot.shipping {
-background: #3c8cff;
+.details-product-name {
+
+  font-size: 12px;
+
+  font-weight: 900;
+
+  line-height: 1.3;
 }
 
-.modal-status-dot.pickup {
-background: #fff;
+.details-product-meta {
+
+  margin-top: 4px;
+
+  color: #777;
+
+  font-size: 10px;
 }
 
-.modal-status-dot.completed {
-background: #39d66b;
+.details-product-total {
+
+  font-size: 13px;
+
+  font-weight: 950;
+
+  white-space: nowrap;
 }
 
-/* =========================================================
-   ТОВАРЫ
-========================================================= */
 
-.items {
+/* =========================
+   MODAL INFO
+========================= */
 
-margin-top: 17px;
+.details-info {
+
+  margin-top: 15px;
+
+  display: grid;
+
+  gap: 8px;
 }
 
-.item {
+.details-row {
 
-display: flex;
+  display: flex;
 
-align-items: center;
+  justify-content: space-between;
 
-gap: 12px;
+  gap: 15px;
 
-padding: 11px 0;
+  padding: 10px 0;
 
-border-bottom: 1px solid #292929;
+  border-bottom: 1px solid #292929;
 
-font-size: 14px;
+  font-size: 12px;
 }
 
-.item-image {
+.details-row span:first-child {
 
-width: 54px;
-
-height: 54px;
-
-border-radius: 11px;
-
-object-fit: cover;
-
-background: #252525;
-
-border: 1px solid #393939;
-
-flex-shrink: 0;
+  color: #777;
 }
 
-.item-info {
+.details-row span:last-child {
 
-flex: 1;
+  text-align: right;
 
-min-width: 0;
+  font-weight: 800;
+
+  overflow-wrap: anywhere;
 }
 
-.item-name {
 
-color: #fff;
+/* =========================
+   MODAL TOTAL
+========================= */
 
-font-weight: 600;
+.details-total {
 
-line-height: 1.35;
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-top: 18px;
+
+  padding: 16px;
+
+  border: 1px solid #3a2529;
+
+  border-radius: 12px;
+
+  background: rgba(90,0,15,.16);
 }
 
-.item-quantity {
+.details-total span:first-child {
 
-margin-top: 4px;
+  color: #aaa;
 
-color: #777;
+  font-size: 13px;
 
-font-size: 12px;
+  font-weight: 900;
 }
 
-.item-price {
+.details-total span:last-child {
 
-white-space: nowrap;
+  color: #fff;
 
-font-size: 14px;
+  font-size: 25px;
 
-font-weight: 700;
+  font-weight: 950;
 }
 
-/* =========================================================
-   SUMMARY
-========================================================= */
 
-.summary {
+/* =========================
+   MODAL ACTION
+========================= */
 
-margin-top: 17px;
+.details-action {
 
-padding: 16px;
-
-border-radius: 15px;
-
-background:
-linear-gradient(
-145deg,
-#272727,
-#1c1c1c
-);
-
-border: 1px solid #303030;
+  margin-top: 12px;
 }
 
-.summary-row {
+.details-action button {
 
-display: flex;
+  width: 100%;
 
-justify-content: space-between;
+  min-height: 46px;
 
-gap: 12px;
+  border: 1px solid #ed001b;
 
-margin-bottom: 9px;
+  border-radius: 10px;
 
-color: #aaa;
+  background: #ed001b;
 
-font-size: 13px;
+  color: white;
+
+  font-size: 11px;
+
+  font-weight: 950;
 }
 
-.summary-row:last-child {
+.details-action button:hover {
 
-margin-bottom: 0;
+  background: #ff102a;
 }
 
-.summary-total {
+.details-action small {
 
-margin-top: 11px;
+  display: block;
 
-padding-top: 12px;
+  margin-top: 3px;
 
-border-top: 1px solid #383838;
+  font-size: 8px;
 
-color: #fff;
-
-font-size: 19px;
-
-font-weight: 800;
+  opacity: .58;
 }
 
-/* =========================================================
-   DELIVERY NOTE
-========================================================= */
 
-.delivery-note {
+/* =========================
+   CANCEL MODAL
+========================= */
 
-margin-top: 13px;
+.cancel-text {
 
-color: #888;
+  color: #aaa;
 
-font-size: 12px;
+  font-size: 12px;
 
-line-height: 1.5;
+  line-height: 1.5;
+
+  margin-bottom: 14px;
 }
 
-/* =========================================================
-   ВСЕ КНОПКИ
-========================================================= */
+.cancel-input {
 
-.cancel-btn,
-.close-btn,
-.manager-btn,
-.dont-cancel,
-.confirm-cancel {
+  width: 100%;
 
-width: 100%;
+  min-height: 95px;
 
-border-radius: 13px;
+  resize: vertical;
 
-padding: 13px;
+  border: 1px solid #34343a;
 
-font-size: 14px;
+  background: rgba(8,8,10,.88);
 
-font-weight: 800;
+  color: white;
 
-cursor: pointer;
+  padding: 12px;
+
+  border-radius: 9px;
+
+  outline: none;
 }
 
-.cancel-btn {
+.cancel-input:focus {
 
-margin-top: 18px;
-
-background: #c52323;
-
-border: 1px solid #d32b2b;
-
-color: #fff;
-
-box-shadow:
-0 5px 14px rgba(0,0,0,0.35);
-}
-
-.close-btn {
-
-margin-top: 10px;
-
-background: #a91e1e;
-
-border: 1px solid #bd2727;
-
-color: #fff;
-}
-
-.cancel-btn:active,
-.close-btn:active,
-.manager-btn:active,
-.dont-cancel:active,
-.confirm-cancel:active {
-
-transform: scale(0.97);
-}
-
-/* =========================================================
-   ОТМЕНА
-========================================================= */
-
-.cancel-form {
-
-margin-top: 16px;
-}
-
-.cancel-option {
-
-display: block;
-
-margin-bottom: 9px;
-
-padding: 13px;
-
-border-radius: 12px;
-
-background: #222;
-
-border: 1px solid #333;
-
-cursor: pointer;
-
-font-size: 14px;
-}
-
-.cancel-option:has(input:checked) {
-
-border-color: #a52323;
-
-background: #281818;
-}
-
-.cancel-option input {
-
-margin-right: 8px;
-}
-
-textarea {
-
-display: none;
-
-width: 100%;
-
-min-height: 90px;
-
-resize: vertical;
-
-margin-top: 10px;
-
-padding: 12px;
-
-border-radius: 11px;
-
-border: 1px solid #393939;
-
-background: #101010;
-
-color: #fff;
-
-outline: none;
-
-font-family: Arial, sans-serif;
-}
-
-textarea.visible {
-
-display: block;
-}
-
-.cancel-warning {
-
-display: none;
-
-margin-top: 15px;
-
-padding: 14px;
-
-border-radius: 12px;
-
-background: #251818;
-
-border: 1px solid #4b2929;
-
-color: #ddd;
-
-line-height: 1.45;
-
-font-size: 13px;
-}
-
-.manager-btn {
-
-display: block;
-
-margin-top: 12px;
-
-background: #c52323;
-
-border: 1px solid #d32b2b;
-
-color: #fff;
-
-text-decoration: none;
-
-text-align: center;
+  border-color: #ed001b;
 }
 
 .cancel-actions {
 
-display: flex;
+  display: grid;
 
-gap: 10px;
+  grid-template-columns: 1fr 1fr;
 
-margin-top: 12px;
+  gap: 8px;
+
+  margin-top: 12px;
 }
 
 .cancel-actions button {
 
-flex: 1;
+  min-height: 43px;
+
+  border-radius: 9px;
+
+  font-size: 10px;
+
+  font-weight: 900;
 }
 
-.dont-cancel {
+.cancel-confirm {
 
-background: #b51f1f;
+  border: 1px solid #ed001b;
 
-border: 1px solid #c32929;
+  background: #ed001b;
 
-color: #fff;
+  color: white;
 }
 
-.confirm-cancel {
+.cancel-back {
 
-background: #d12424;
+  border: 1px solid #ed001b;
 
-border: 1px solid #e02e2e;
+  background: #ed001b;
 
-color: #fff;
+  color: white;
 }
 
-.cancel-result {
 
-display: none;
+/* =========================
+   MOBILE NAV
+========================= */
 
-margin-top: 15px;
+.mobile-nav {
 
-padding: 14px;
+  display: flex;
 
-border-radius: 12px;
+  position: fixed;
 
-background: #202020;
+  bottom: 0;
 
-color: #ddd;
+  left: 0;
 
-text-align: center;
+  right: 0;
+
+  height: 65px;
+
+  padding-bottom: env(safe-area-inset-bottom);
+
+  background: rgba(8,8,9,.97);
+
+  border-top: 1px solid #292929;
+
+  z-index: 70;
+
+  justify-content: space-around;
 }
 
-/* =========================================================
-   MOBILE
-========================================================= */
+.mobile-nav button {
 
-@media (max-width: 560px) {
+  border: 0;
 
-.page {
-padding-left: 12px;
-padding-right: 12px;
+  background: transparent;
+
+  color: #777;
+
+  font-size: 9px;
+
+  font-weight: bold;
 }
 
-h1 {
-font-size: 26px;
+.mobile-nav button.active {
+
+  color: #fff;
 }
 
-.order-top {
-flex-direction: column;
+.mobile-nav button span {
+
+  display: block;
+
+  font-size: 20px;
+
+  margin-bottom: 2px;
 }
 
-.status {
-align-self: flex-start;
+
+/* =========================
+   DESKTOP
+========================= */
+
+@media (min-width: 701px) {
+
+  .header-inner {
+    padding: 0 24px;
+  }
+
+  .logo-small {
+    font-size: 25px;
+  }
+
+  .logo-sub {
+    font-size: 8px;
+  }
+
+  .header-back {
+    height: 40px;
+    font-size: 12px;
+    padding: 0 16px;
+  }
+
+  .main {
+    padding: 65px 35px 100px;
+  }
+
+  .page-title {
+    font-size: 46px;
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+  }
+
+  .orders-list {
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+  }
+
+  .order-product-image {
+    width: 68px;
+    height: 68px;
+  }
+
+  .order-product {
+    grid-template-columns:
+      68px
+      minmax(0,1fr)
+      auto;
+  }
+
+  .order-product-name {
+    font-size: 14px;
+  }
+
+  .order-product-price {
+    font-size: 15px;
+  }
+
+  .modal {
+    align-items: center;
+    padding: 15px;
+  }
+
+  .modal-box {
+    max-height: 92vh;
+    padding: 24px;
+  }
+
+  .modal-title {
+    font-size: 27px;
+  }
+
 }
 
-.order-number {
-font-size: 20px;
+
+/* =========================
+   VERY SMALL PHONES
+========================= */
+
+@media (max-width: 380px) {
+
+  .page-title {
+    font-size: 28px;
+  }
+
+  .order-top {
+    padding: 13px;
+  }
+
+  .order-body {
+    padding: 12px 13px 14px;
+  }
+
+  .order-number {
+    font-size: 16px;
+  }
+
+  .status {
+    font-size: 9px;
+  }
+
+  .order-info {
+    grid-template-columns: 1fr;
+  }
+
+  .order-total-price {
+    font-size: 21px;
+  }
+
+  .header-back {
+    padding: 0 9px;
+    font-size: 9px;
+  }
+
 }
 
-.total {
-font-size: 22px;
-}
 
-.details-btn {
-padding: 12px 16px;
-}
-
-.preview-image,
-.preview-more {
-width: 58px;
-height: 58px;
-}
-
-.item-image {
-width: 50px;
-height: 50px;
-}
-
-.modal {
-padding: 18px;
-border-radius: 20px;
-}
-
-}
-
-/* =========================================================
-   СКРЫВАЕМ ПРОКРУТКУ
-========================================================= */
+/* =========================
+   SCROLLBAR
+========================= */
 
 ::-webkit-scrollbar {
-width: 5px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-background: transparent;
+  background: #0b0b0c;
 }
 
 ::-webkit-scrollbar-thumb {
-background: #444;
-border-radius: 10px;
+  background: #333;
+  border-radius: 10px;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<main class="page">
 
-<div class="header">
+<!-- =========================
+     HEADER
+========================= -->
 
-<a
-href="index.html"
-class="back"
->
-← Назад
-</a>
+<header>
 
-<h1>
-Мои заказы
-</h1>
+  <div class="header-inner">
 
-<div class="subtitle">
-Здесь отображаются только ваши заказы
-</div>
+    <a href="index.html" class="logo-small">
 
-</div>
+      <span style="color:#fff;">
+        MIATA
+      </span>
 
+      <span class="red">
+        GARAGE
+      </span>
 
-<div
-id="loading"
-class="loading"
->
-Загружаем заказы...
-</div>
+      <span class="logo-sub">
+        • DIECAST 1:64
+      </span>
 
+    </a>
 
-<div
-id="error"
-class="error"
-style="display:none;"
-></div>
+    <div class="header-actions">
 
+      <button
+        class="red-button header-back"
+        onclick="goHome()"
+      >
+        ← ГЛАВНАЯ
+      </button>
 
-<div
-id="empty"
-class="empty"
-style="display:none;"
->
-У вас пока нет заказов.
-</div>
+    </div>
+
+  </div>
+
+</header>
 
 
-<div
-id="orders"
-class="orders"
-></div>
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="main">
+
+  <div class="page-head">
+
+    <div>
+
+      <h1 class="page-title">
+        Мои заказы
+      </h1>
+
+      <div class="page-subtitle">
+        История ваших заказов Miata Garage
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="ordersContainer"
+    class="orders-list"
+  >
+
+    <div class="message">
+      Загрузка заказов...
+    </div>
+
+  </div>
 
 </main>
 
 
-<!-- ======================================================
-     ПОДРОБНОСТИ
-====================================================== -->
+<!-- =========================
+     DETAILS MODAL
+========================= -->
 
 <div
-id="detailsModal"
-class="modal-bg"
+  class="modal hidden"
+  id="detailsModal"
 >
 
-<div class="modal">
+  <div class="modal-box">
 
-<div class="modal-title">
-Заказ <span id="modalOrderNumber"></span>
+    <button
+      class="modal-close"
+      onclick="closeModal('detailsModal')"
+    >
+      ✕
+    </button>
+
+    <div
+      id="detailsContent"
+    ></div>
+
+  </div>
+
 </div>
 
 
-<div class="info-row">
-
-<div class="info-label">
-Дата заказа
-</div>
+<!-- =========================
+     CANCEL MODAL
+========================= -->
 
 <div
-id="modalDate"
-class="info-value"
->
-—
-</div>
-
-</div>
-
-
-<div class="info-row">
-
-<div class="info-label">
-Статус
-</div>
-
-<div
-id="modalStatus"
-class="info-value"
->
-—
-</div>
-
-</div>
-
-
-<div class="info-row">
-
-<div class="info-label">
-Ожидание
-</div>
-
-<div
-id="modalWaiting"
-class="info-value"
->
-Информация уточняется менеджером
-</div>
-
-</div>
-
-
-<div class="items">
-
-<div class="info-label">
-Состав заказа
-</div>
-
-<div id="modalItems"></div>
-
-</div>
-
-
-<div class="summary">
-
-<div class="summary-row">
-
-<span>
-Товары
-</span>
-
-<span id="modalProductTotal">
-0 ₽
-</span>
-
-</div>
-
-
-<div class="summary-row">
-
-<span>
-Скидка
-</span>
-
-<span id="modalDiscount">
-0 ₽
-</span>
-
-</div>
-
-
-<div class="summary-row summary-total">
-
-<span>
-Итого
-</span>
-
-<span id="modalTotal">
-0 ₽
-</span>
-
-</div>
-
-</div>
-
-
-<div class="delivery-note">
-
-Точная стоимость доставки будет понятна при оформлении и согласовании заказа с менеджером.
-
-</div>
-
-
-<button
-id="cancelOrderButton"
-class="cancel-btn"
-type="button"
->
-Отменить заказ
-</button>
-
-
-<button
-id="closeDetails"
-class="close-btn"
-type="button"
->
-Закрыть
-</button>
-
-</div>
-
-</div>
-
-
-<!-- ======================================================
-     ОТМЕНА
-====================================================== -->
-
-<div
-id="cancelModal"
-class="modal-bg"
+  class="modal hidden"
+  id="cancelModal"
 >
 
-<div class="modal">
+  <div class="modal-box">
 
-<div class="modal-title">
-Отмена заказа
-</div>
+    <button
+      class="modal-close"
+      onclick="closeModal('cancelModal')"
+    >
+      ✕
+    </button>
 
-<div>
-Почему вы хотите отменить заказ?
-</div>
+    <div class="modal-title">
+      Отмена заказа
+    </div>
 
+    <div class="modal-subtitle">
+      Заказ будет передан менеджеру на отмену.
+    </div>
 
-<div class="cancel-form">
+    <div class="cancel-text">
+      Если хотите, укажите причину отмены.
+    </div>
 
-<label class="cancel-option">
+    <textarea
+      id="cancelReason"
+      class="cancel-input"
+      placeholder="Причина отмены..."
+    ></textarea>
 
-<input
-type="radio"
-name="cancelReason"
-value="Долго ждать"
->
+    <div class="cancel-actions">
 
-Долго ждать
+      <button
+        class="cancel-back"
+        onclick="closeModal('cancelModal')"
+      >
+        НАЗАД
+      </button>
 
-</label>
+      <button
+        class="cancel-confirm"
+        onclick="confirmCancel()"
+      >
+        ОТМЕНИТЬ ЗАКАЗ
+      </button>
 
+    </div>
 
-<label class="cancel-option">
-
-<input
-type="radio"
-name="cancelReason"
-value="Передумал насчёт моделей"
->
-
-Передумал насчёт моделей
-
-</label>
-
-
-<label class="cancel-option">
-
-<input
-type="radio"
-name="cancelReason"
-value="Хочу перезаказать"
->
-
-Хочу перезаказать
-
-</label>
-
-
-<label class="cancel-option">
-
-<input
-type="radio"
-name="cancelReason"
-value="Другая причина"
-id="otherReason"
->
-
-Другая причина
-
-</label>
-
-
-<textarea
-id="otherReasonText"
-placeholder="Напишите причину..."
-></textarea>
-
-
-<div
-id="cancelWarning"
-class="cancel-warning"
->
-
-Если что-то не так с заказом или вы хотите уточнить детали, напишите нам.
-
-
-<a
-href="https://t.me/Lil_peepxx"
-target="_blank"
-class="manager-btn"
->
-Написать менеджеру @Lil_peepxx
-</a>
+  </div>
 
 </div>
 
 
-<div class="cancel-actions">
+<!-- =========================
+     MOBILE NAV
+========================= -->
 
-<button
-id="dontCancel"
-class="dont-cancel"
-type="button"
->
-Не отменять
-</button>
+<div class="mobile-nav">
 
+  <button
+    onclick="goHome()"
+  >
+    <span>🏠</span>
+    Главная
+  </button>
 
-<button
-id="confirmCancel"
-class="confirm-cancel"
-type="button"
->
-Отменить
-</button>
+  <button
+    onclick="goToCatalog()"
+  >
+    <span>▦</span>
+    Каталог
+  </button>
 
-</div>
+  <button
+    class="active"
+    onclick="reloadOrders()"
+  >
+    <span>📋</span>
+    Мои заказы
+  </button>
 
-
-<div
-id="cancelResult"
-class="cancel-result"
-></div>
-
-</div>
-
-</div>
+  <button
+    onclick="goToCart()"
+  >
+    <span>🛒</span>
+    Корзина
+  </button>
 
 </div>
 
 
 <script>
 
-/* =========================================================
+/* =========================
+   CONFIG
+========================= */
+
+const SUPABASE_URL =
+  "https://qbuethosjrghgdwpanhb.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_l-Jn1GONymTw-fuN1eEgBw_FjtbUyzg";
+
+const CUSTOMER_ORDERS_URL =
+  SUPABASE_URL +
+  "/functions/v1/customer-orders";
+
+
+/*
+  Менеджер.
+  Одна кнопка:
+  "Вопросы по заказу?"
+  "Написать менеджеру"
+*/
+
+const MANAGER_URL =
+  "https://t.me/lil_peepxx";
+
+
+/* =========================
+   DATA
+========================= */
+
+let orders = [];
+
+let selectedOrderForCancel = null;
+
+
+/* =========================
    TELEGRAM
-========================================================= */
+========================= */
 
-const tg =
-window.Telegram?.WebApp;
+function initTelegram() {
 
-if (tg) {
+  if (
+    window.Telegram &&
+    window.Telegram.WebApp
+  ) {
 
-tg.ready();
+    const tg =
+      window.Telegram.WebApp;
 
-tg.expand();
+    tg.ready();
+
+    tg.expand();
+
+  }
 
 }
 
 
-/* =========================================================
-   SUPABASE
-========================================================= */
-
-const CUSTOMER_ORDERS_URL =
-"https://qbuethosjrghgdwpanhb.supabase.co/functions/v1/customer-orders";
-
-
-const SUPABASE_PUBLISHABLE_KEY =
-"sb_publishable_l-Jn1GONymTw-fuN1eEgBw_FjtbUyzg";
-
-
-/* =========================================================
-   ELEMENTS
-========================================================= */
-
-const loading =
-document.getElementById("loading");
-
-const errorBox =
-document.getElementById("error");
-
-const emptyBox =
-document.getElementById("empty");
-
-const ordersContainer =
-document.getElementById("orders");
-
-const detailsModal =
-document.getElementById("detailsModal");
-
-const cancelModal =
-document.getElementById("cancelModal");
-
-
-let currentOrder = null;
-
-
-/* =========================================================
+/* =========================
    TELEGRAM USER ID
-========================================================= */
+========================= */
 
 function getTelegramUserId() {
 
-if (
-tg &&
-tg.initDataUnsafe &&
-tg.initDataUnsafe.user &&
-tg.initDataUnsafe.user.id
-) {
-
-return String(
-tg.initDataUnsafe.user.id
-);
-
-}
-
-return null;
+  return (
+    window.Telegram?.WebApp
+      ?.initDataUnsafe
+      ?.user
+      ?.id
+    || null
+  );
 
 }
 
 
-/* =========================================================
-   DATE
-========================================================= */
+/* =========================
+   HEADERS
+========================= */
 
-function formatDate(value) {
+function apiHeaders() {
 
-if (!value) {
+  return {
 
-return "—";
+    "Content-Type":
+      "application/json",
 
-}
+    "apikey":
+      SUPABASE_PUBLISHABLE_KEY
 
-const date =
-new Date(value);
-
-if (
-Number.isNaN(
-date.getTime()
-)
-) {
-
-return String(value);
-
-}
-
-return date.toLocaleString(
-"ru-RU",
-{
-day: "2-digit",
-month: "2-digit",
-year: "numeric",
-hour: "2-digit",
-minute: "2-digit"
-}
-);
+  };
 
 }
 
 
-/* =========================================================
-   MONEY
-========================================================= */
-
-function money(value) {
-
-return Number(
-value || 0
-).toLocaleString(
-"ru-RU"
-) + " ₽";
-
-}
-
-
-/* =========================================================
-   ESCAPE
-========================================================= */
+/* =========================
+   ESCAPE HTML
+========================= */
 
 function escapeHtml(value) {
 
-return String(
-value ?? ""
-)
-
-.replace(
-/&/g,
-"&amp;"
-)
-
-.replace(
-/</g,
-"&lt;"
-)
-
-.replace(
-/>/g,
-"&gt;"
-)
-
-.replace(
-/"/g,
-"&quot;"
-)
-
-.replace(
-/'/g,
-"&#039;"
-);
+  return String(
+    value ?? ""
+  )
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#039;");
 
 }
 
 
-/* =========================================================
-   STATUS
-========================================================= */
+/* =========================
+   ESCAPE ATTRIBUTE
+========================= */
 
-function getStatusInfo(status) {
+function escapeAttribute(value) {
 
-const value =
-String(
-status || ""
-).toLowerCase();
+  return escapeHtml(value);
+
+}
 
 
-if (
-value.includes("отмен")
+/* =========================
+   PRICE
+========================= */
+
+function formatPrice(value) {
+
+  const number =
+    Number(value || 0);
+
+  return number.toLocaleString(
+    "ru-RU",
+    {
+      maximumFractionDigits: 2
+    }
+  );
+
+}
+
+
+/* =========================
+   DATE
+========================= */
+
+function formatDate(value) {
+
+  if (!value) {
+    return "—";
+  }
+
+  const date =
+    new Date(value);
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+    return "—";
+  }
+
+  return date.toLocaleString(
+    "ru-RU",
+    {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    }
+  );
+
+}
+
+
+/* =========================
+   STATUS NORMALIZE
+========================= */
+
+function normalizeStatus(
+  status
 ) {
 
-return {
-className: "cancelled",
-label: status || "Отменён"
-};
+  const raw =
+    String(
+      status || ""
+    ).trim();
+
+  const lower =
+    raw.toLowerCase();
+
+  if (
+    lower === "processing" ||
+    lower === "new" ||
+    lower === "в обработке"
+  ) {
+
+    return {
+      text: "В обработке",
+      className: "status-processing",
+      canCancel: true
+    };
+
+  }
+
+
+  if (
+    lower === "cancelled" ||
+    lower === "canceled" ||
+    lower === "отменён" ||
+    lower === "отменен"
+  ) {
+
+    return {
+      text: "Отменён",
+      className: "status-cancelled",
+      canCancel: false
+    };
+
+  }
+
+
+  if (
+    lower.includes("сборк") ||
+    lower.includes("принят") ||
+    lower === "assembly"
+  ) {
+
+    return {
+      text: "Принят / В сборке",
+      className: "status-assembly",
+      canCancel: false
+    };
+
+  }
+
+
+  if (
+    lower.includes("достав") ||
+    lower.includes("передан") ||
+    lower === "delivery"
+  ) {
+
+    return {
+      text: "Передан в доставку",
+      className: "status-delivery",
+      canCancel: false
+    };
+
+  }
+
+
+  if (
+    lower.includes("пункт") ||
+    lower.includes("выдач") ||
+    lower === "pickup"
+  ) {
+
+    return {
+      text: "Заказ в пункте выдачи",
+      className: "status-pickup",
+      canCancel: false
+    };
+
+  }
+
+
+  if (
+    lower.includes("заверш") ||
+    lower === "completed" ||
+    lower === "done"
+  ) {
+
+    return {
+      text: "Завершен",
+      className: "status-completed",
+      canCancel: false
+    };
+
+  }
+
+
+  return {
+
+    text:
+      raw ||
+      "В обработке",
+
+    className:
+      "status-processing",
+
+    canCancel:
+      true
+
+  };
 
 }
 
 
-if (
-value.includes("выполн")
-) {
+/* =========================
+   ORDER NUMBER
+========================= */
 
-return {
-className: "completed",
-label: status || "Завершен"
-};
+function getOrderNumber(order) {
 
-}
-
-
-if (
-value.includes("пункт")
-||
-value.includes("выдач")
-) {
-
-return {
-className: "pickup",
-label: status || "Заказ в пункте выдачи"
-};
+  return (
+    order.order_number ??
+    order.Order_number ??
+    order.id ??
+    "—"
+  );
 
 }
 
 
-if (
-value.includes("передан")
-||
-value.includes("достав")
-||
-value.includes("пути")
-) {
+/* =========================
+   ORDER STATUS
+========================= */
 
-return {
-className: "shipping",
-label: status || "Передан в доставку"
-};
+function getOrderStatus(order) {
 
-}
-
-
-if (
-value.includes("создан")
-) {
-
-return {
-className: "created",
-label: status || "В обработке"
-};
+  return (
+    order.order_status ??
+    order.status ??
+    "В обработке"
+  );
 
 }
 
 
-return {
-className: "processing",
-label: status || "В обработке"
-};
-
-}
-
-
-/* =========================================================
-   ERROR
-========================================================= */
-
-function showError(message) {
-
-loading.style.display =
-"none";
-
-errorBox.style.display =
-"block";
-
-errorBox.textContent =
-message;
-
-}
-
-
-/* =========================================================
-   PREVIEW IMAGES
-========================================================= */
+/* =========================
+   ORDER ITEMS
+========================= */
 
 function getOrderItems(order) {
 
-return Array.isArray(order.items)
-? order.items
-: [];
+  if (
+    Array.isArray(order.items)
+  ) {
+
+    return order.items;
+
+  }
+
+  if (
+    typeof order.items === "string"
+  ) {
+
+    try {
+
+      const parsed =
+        JSON.parse(order.items);
+
+      return Array.isArray(parsed)
+        ? parsed
+        : [];
+
+    } catch {
+
+      return [];
+
+    }
+
+  }
+
+  return [];
 
 }
 
 
-function renderProductPreview(order) {
+/* =========================
+   IMAGE FROM ITEM
+========================= */
 
-const items =
-getOrderItems(order);
+function getItemImage(item) {
 
-if (!items.length) {
-
-return `
-<div class="order-products-preview">
-<div class="preview-empty">
-Состав заказа
-</div>
-</div>
-`;
-
-}
-
-
-const visibleItems =
-items.slice(0, 4);
-
-
-let html =
-'<div class="order-products-preview">';
-
-
-visibleItems.forEach(
-(item) => {
-
-const image =
-item.image_url ||
-item.image ||
-item.photo_url ||
-"";
-
-
-if (image) {
-
-html += `
-
-<img
-class="preview-image"
-src="${escapeHtml(image)}"
-alt=""
-onerror="this.style.display='none';"
->
-
-`;
-
-}
-
-}
-);
-
-
-if (items.length > 4) {
-
-html += `
-
-<div class="preview-more">
-+${items.length - 4}
-</div>
-
-`;
+  return (
+    item?.image_url ||
+    item?.image ||
+    item?.photo_url ||
+    item?.imageUrl ||
+    "miata-logo.png"
+  );
 
 }
 
 
-html +=
-"</div>";
+/* =========================
+   PRODUCT LOOKUP
+========================= */
 
-return html;
+async function enrichItemsWithImages(
+  items
+) {
+
+  if (!items.length) {
+    return items;
+  }
+
+  try {
+
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/products" +
+        "?select=id,name,image_url",
+        {
+          method: "GET",
+          headers: {
+            "apikey":
+              SUPABASE_PUBLISHABLE_KEY
+          }
+        }
+      );
+
+    if (!response.ok) {
+      return items;
+    }
+
+    const products =
+      await response.json();
+
+    if (!Array.isArray(products)) {
+      return items;
+    }
+
+
+    return items.map(item => {
+
+      const currentImage =
+        getItemImage(item);
+
+      if (
+        currentImage &&
+        currentImage !==
+        "miata-logo.png"
+      ) {
+
+        return item;
+
+      }
+
+
+      const itemId =
+        Number(
+          item?.product_id ??
+          item?.id ??
+          0
+        );
+
+
+      let product =
+        products.find(
+          p =>
+            Number(p.id) ===
+            itemId
+        );
+
+
+      if (!product) {
+
+        const itemName =
+          String(
+            item?.name || ""
+          )
+          .trim()
+          .toLowerCase();
+
+        if (itemName) {
+
+          product =
+            products.find(
+              p =>
+                String(
+                  p.name || ""
+                )
+                .trim()
+                .toLowerCase() ===
+                itemName
+            );
+
+        }
+
+      }
+
+
+      if (
+        product?.image_url
+      ) {
+
+        return {
+
+          ...item,
+
+          image_url:
+            product.image_url
+
+        };
+
+      }
+
+      return item;
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "Ошибка получения фото:",
+      error
+    );
+
+    return items;
+
+  }
 
 }
 
 
-/* =========================================================
+/* =========================
    LOAD ORDERS
-========================================================= */
+========================= */
 
 async function loadOrders() {
 
-const telegramUserId =
-getTelegramUserId();
+  const container =
+    document.getElementById(
+      "ordersContainer"
+    );
+
+  const telegramUserId =
+    getTelegramUserId();
 
 
-if (!telegramUserId) {
+  if (!telegramUserId) {
 
-showError(
-"Не удалось определить ваш Telegram ID. Откройте магазин через Telegram."
-);
+    container.innerHTML = `
 
-return;
+      <div class="message">
+
+        Откройте магазин
+        через Telegram,
+        чтобы увидеть ваши заказы.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML = `
+
+    <div class="message">
+
+      Загрузка заказов...
+
+    </div>
+
+  `;
+
+
+  try {
+
+    const response =
+      await fetch(
+        CUSTOMER_ORDERS_URL,
+        {
+
+          method: "POST",
+
+          headers:
+            apiHeaders(),
+
+          body:
+            JSON.stringify({
+
+              action: "list",
+
+              telegram_user_id:
+                telegramUserId
+
+            })
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      !response.ok ||
+      !data?.success
+    ) {
+
+      throw new Error(
+        data?.error ||
+        "Не удалось загрузить заказы."
+      );
+
+    }
+
+
+    orders =
+      Array.isArray(data.orders)
+        ? data.orders
+        : [];
+
+
+    /*
+      Подтягиваем фото
+      товаров для старых заказов,
+      где image_url ещё не сохранён.
+    */
+
+    for (
+      const order of orders
+    ) {
+
+      const items =
+        getOrderItems(order);
+
+      order.items =
+        await enrichItemsWithImages(
+          items
+        );
+
+    }
+
+
+    renderOrders();
+
+  } catch (error) {
+
+    console.error(
+      "Orders load error:",
+      error
+    );
+
+
+    container.innerHTML = `
+
+      <div class="message">
+
+        Не удалось загрузить заказы.<br><br>
+
+        ${escapeHtml(
+          error?.message ||
+          "Попробуйте открыть страницу ещё раз."
+        )}
+
+      </div>
+
+    `;
+
+  }
 
 }
 
 
-try {
-
-const response =
-await fetch(
-CUSTOMER_ORDERS_URL,
-{
-method: "POST",
-
-headers: {
-
-"Content-Type":
-"application/json",
-
-"apikey":
-SUPABASE_PUBLISHABLE_KEY
-
-},
-
-body:
-JSON.stringify({
-
-action:
-"list",
-
-telegram_user_id:
-telegramUserId
-
-})
-
-}
-);
-
-
-const data =
-await response.json();
-
-
-if (
-!response.ok ||
-data.success === false
-) {
-
-throw new Error(
-data.error ||
-"Не удалось загрузить заказы"
-);
-
-}
-
-
-const orders =
-Array.isArray(
-data.orders
-)
-? data.orders
-: [];
-
-
-loading.style.display =
-"none";
-
-
-if (!orders.length) {
-
-emptyBox.style.display =
-"block";
-
-return;
-
-}
-
-
-renderOrders(
-orders
-);
-
-
-} catch (error) {
-
-console.error(
-"loadOrders error:",
-error
-);
-
-showError(
-error.message ||
-"Ошибка загрузки заказов"
-);
-
-}
-
-}
-
-
-/* =========================================================
+/* =========================
    RENDER ORDERS
-========================================================= */
+========================= */
 
-function renderOrders(orders) {
+function renderOrders() {
 
-ordersContainer.innerHTML =
-"";
-
-
-orders.forEach(
-(order) => {
-
-const card =
-document.createElement(
-"div"
-);
-
-card.className =
-"order-card";
+  const container =
+    document.getElementById(
+      "ordersContainer"
+    );
 
 
-const orderNumber =
-order.order_number ??
-order.id ??
-"—";
+  if (!orders.length) {
+
+    container.innerHTML = `
+
+      <div class="message">
+
+        У вас пока нет заказов.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
 
 
-const status =
-order.order_status ??
-"В обработке";
-
-
-const statusInfo =
-getStatusInfo(
-status
-);
-
-
-const total =
-order.products_total_after_discount ??
-order.total ??
-0;
-
-
-card.innerHTML = `
-
-<div class="order-top">
-
-<div>
-
-<div class="order-number">
-Заказ #${escapeHtml(orderNumber)}
-</div>
-
-<div class="order-date">
-${escapeHtml(
-formatDate(order.created_at)
-)}
-</div>
-
-</div>
-
-
-<div
-class="status ${statusInfo.className}"
->
-
-<span class="status-dot"></span>
-
-<span>
-${escapeHtml(
-statusInfo.label
-)}
-</span>
-
-</div>
-
-</div>
-
-
-${renderProductPreview(order)}
-
-
-<div class="order-bottom">
-
-<div class="total">
-${escapeHtml(
-money(total)
-)}
-</div>
-
-
-<button
-class="details-btn"
-type="button"
->
-Подробнее
-</button>
-
-</div>
-
-`;
-
-
-card
-.querySelector(
-".details-btn"
-)
-.addEventListener(
-"click",
-() => {
-
-openDetails(
-order
-);
-
-}
-);
-
-
-ordersContainer.appendChild(
-card
-);
-
-}
-);
+  container.innerHTML =
+    orders
+      .map(
+        (
+          order,
+          index
+        ) =>
+          renderOrderCard(
+            order,
+            index
+          )
+      )
+      .join("");
 
 }
 
 
-/* =========================================================
+/* =========================
+   RENDER ORDER CARD
+========================= */
+
+function renderOrderCard(
+  order,
+  index
+) {
+
+  const number =
+    getOrderNumber(order);
+
+  const status =
+    normalizeStatus(
+      getOrderStatus(order)
+    );
+
+  const items =
+    getOrderItems(order);
+
+
+  const total =
+    Number(
+      order.total ??
+      order.products_total_after_discount ??
+      order.product_total ??
+      0
+    );
+
+
+  const productsHtml =
+    items.length
+
+      ? items
+          .map(
+            item =>
+              renderOrderProduct(
+                item
+              )
+          )
+          .join("")
+
+      : `
+
+        <div
+          style="
+            color:#777;
+            font-size:11px;
+            padding:8px 0;
+          "
+        >
+          Товары заказа
+        </div>
+
+      `;
+
+
+  let actionHtml = "";
+
+
+  if (
+    status.canCancel
+  ) {
+
+    actionHtml = `
+
+      <button
+        class="order-button"
+        onclick="openCancelModal(${index})"
+      >
+        ОТМЕНИТЬ ЗАКАЗ
+      </button>
+
+    `;
+
+  } else {
+
+    actionHtml = `
+
+      <a
+        class="order-button"
+        href="${MANAGER_URL}"
+        target="_blank"
+        rel="noopener"
+        style="
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          text-align:center;
+          flex-direction:column;
+        "
+      >
+
+        <span>
+          Вопросы по заказу?
+        </span>
+
+        <span
+          class="order-button-small"
+        >
+          Написать менеджеру
+        </span>
+
+      </a>
+
+    `;
+
+  }
+
+
+  return `
+
+    <article class="order-card">
+
+
+      <div class="order-top">
+
+
+        <div>
+
+          <div class="order-number">
+            Заказ №${escapeHtml(number)}
+          </div>
+
+          <div class="order-date">
+            ${escapeHtml(
+              formatDate(
+                order.created_at
+              )
+            )}
+          </div>
+
+        </div>
+
+
+        <div
+          class="
+            status
+            ${status.className}
+          "
+        >
+
+          <span
+            class="status-dot"
+          ></span>
+
+          <span>
+            ${escapeHtml(
+              status.text
+            )}
+          </span>
+
+        </div>
+
+
+      </div>
+
+
+      <div class="order-body">
+
+
+        <div class="order-products">
+
+          ${productsHtml}
+
+        </div>
+
+
+        <div class="order-info">
+
+
+          <div class="info-item">
+
+            <div class="info-label">
+              Получатель
+            </div>
+
+            <div class="info-value">
+              ${escapeHtml(
+                order.customer_name ||
+                "—"
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <div class="info-label">
+              Город
+            </div>
+
+            <div class="info-value">
+              ${escapeHtml(
+                order.city ||
+                "—"
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <div class="info-label">
+              Доставка
+            </div>
+
+            <div class="info-value">
+              ${escapeHtml(
+                order.delivery_method ||
+                "—"
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <div class="info-label">
+              Оплата
+            </div>
+
+            <div class="info-value">
+              ${escapeHtml(
+                order.payment_status ||
+                "не оплачено"
+              )}
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+        <div class="order-total">
+
+          <div class="order-total-label">
+            ИТОГО
+          </div>
+
+          <div class="order-total-price">
+            ${formatPrice(total)} ₽
+          </div>
+
+        </div>
+
+
+        <div class="order-actions">
+
+
+          <button
+            class="order-button"
+            onclick="openDetails(${index})"
+          >
+            ПОДРОБНЕЕ
+          </button>
+
+
+          ${actionHtml}
+
+
+        </div>
+
+
+      </div>
+
+
+    </article>
+
+  `;
+
+}
+
+
+/* =========================
+   RENDER PRODUCT
+========================= */
+
+function renderOrderProduct(
+  item
+) {
+
+  const image =
+    getItemImage(item);
+
+  const name =
+    item?.name ||
+    "Товар";
+
+
+  const quantity =
+    Number(
+      item?.quantity || 1
+    );
+
+
+  const price =
+    Number(
+      item?.price || 0
+    );
+
+
+  const itemTotal =
+    Number(
+      item?.total ??
+      (
+        price *
+        quantity
+      )
+    );
+
+
+  return `
+
+    <div class="order-product">
+
+
+      <img
+        class="order-product-image"
+        src="${escapeAttribute(image)}"
+        alt=""
+        onerror="
+          this.onerror=null;
+          this.src='miata-logo.png';
+        "
+      >
+
+
+      <div
+        class="order-product-info"
+      >
+
+        <div
+          class="order-product-name"
+        >
+          ${escapeHtml(name)}
+        </div>
+
+        <div
+          class="order-product-quantity"
+        >
+          ${quantity}
+          ×
+          ${formatPrice(price)} ₽
+        </div>
+
+      </div>
+
+
+      <div
+        class="order-product-price"
+      >
+        ${formatPrice(itemTotal)} ₽
+      </div>
+
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================
    OPEN DETAILS
-========================================================= */
+========================= */
 
-function openDetails(order) {
-
-currentOrder =
-order;
-
-
-const orderNumber =
-order.order_number ??
-order.id ??
-"—";
-
-
-const status =
-order.order_status ??
-"В обработке";
-
-
-const statusInfo =
-getStatusInfo(
-status
-);
-
-
-document.getElementById(
-"modalOrderNumber"
-).textContent =
-"#" + orderNumber;
-
-
-document.getElementById(
-"modalDate"
-).textContent =
-formatDate(
-order.created_at
-);
-
-
-/* =========================================================
-   STATUS WITH DOT
-========================================================= */
-
-const modalStatus =
-document.getElementById(
-"modalStatus"
-);
-
-
-modalStatus.innerHTML = `
-
-<span class="modal-status">
-
-<span
-class="modal-status-dot ${statusInfo.className}"
-></span>
-
-<span>
-${escapeHtml(
-statusInfo.label
-)}
-</span>
-
-</span>
-
-`;
-
-
-/* =========================================================
-   WAITING
-========================================================= */
-
-const waiting =
-document.getElementById(
-"modalWaiting"
-);
-
-
-const statusLower =
-String(
-status
-).toLowerCase();
-
-
-if (
-statusLower.includes("пункт") ||
-statusLower.includes("выдач")
+async function openDetails(
+  index
 ) {
 
-waiting.textContent =
-"Заказ находится в пункте выдачи.";
+  const order =
+    orders[index];
 
-} else if (
-statusLower.includes("передан") ||
-statusLower.includes("достав") ||
-statusLower.includes("пути")
+  if (!order) {
+    return;
+  }
+
+
+  const items =
+    getOrderItems(order);
+
+
+  /*
+    На всякий случай ещё раз
+    проверяем фотографии.
+  */
+
+  order.items =
+    await enrichItemsWithImages(
+      items
+    );
+
+
+  const status =
+    normalizeStatus(
+      getOrderStatus(order)
+    );
+
+
+  const number =
+    getOrderNumber(order);
+
+
+  const total =
+    Number(
+      order.total ??
+      order.products_total_after_discount ??
+      order.product_total ??
+      0
+    );
+
+
+  const productsHtml =
+    getOrderItems(order)
+      .map(
+        item =>
+          renderDetailsProduct(
+            item
+          )
+      )
+      .join("");
+
+
+  let actionHtml = "";
+
+
+  if (
+    status.canCancel
+  ) {
+
+    actionHtml = `
+
+      <div class="details-action">
+
+        <button
+          onclick="closeModal('detailsModal'); openCancelModal(${index});"
+        >
+          ОТМЕНИТЬ ЗАКАЗ
+        </button>
+
+      </div>
+
+    `;
+
+  } else {
+
+    actionHtml = `
+
+      <div class="details-action">
+
+        <a
+          href="${MANAGER_URL}"
+          target="_blank"
+          rel="noopener"
+          style="
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            flex-direction:column;
+            min-height:46px;
+            border:1px solid #ed001b;
+            border-radius:10px;
+            background:#ed001b;
+            color:#fff;
+            text-decoration:none;
+            font-size:11px;
+            font-weight:950;
+          "
+        >
+
+          <span>
+            Вопросы по заказу?
+          </span>
+
+          <small>
+            Написать менеджеру
+          </small>
+
+        </a>
+
+      </div>
+
+    `;
+
+  }
+
+
+  const content =
+    document.getElementById(
+      "detailsContent"
+    );
+
+
+  content.innerHTML = `
+
+
+    <div class="modal-title">
+
+      Заказ №${escapeHtml(number)}
+
+    </div>
+
+
+    <div class="modal-subtitle">
+
+      ${escapeHtml(
+        formatDate(
+          order.created_at
+        )
+      )}
+
+    </div>
+
+
+    <div
+      class="
+        modal-status
+        ${status.className}
+      "
+    >
+
+      <span
+        class="status-dot"
+      ></span>
+
+      <span>
+        ${escapeHtml(
+          status.text
+        )}
+      </span>
+
+    </div>
+
+
+    <div class="details-products">
+
+      ${productsHtml}
+
+    </div>
+
+
+    <div class="details-info">
+
+
+      <div class="details-row">
+
+        <span>
+          Получатель
+        </span>
+
+        <span>
+          ${escapeHtml(
+            order.customer_name ||
+            "—"
+          )}
+        </span>
+
+      </div>
+
+
+      <div class="details-row">
+
+        <span>
+          Telegram / телефон
+        </span>
+
+        <span>
+          ${escapeHtml(
+            order.customer_contact ||
+            "—"
+          )}
+        </span>
+
+      </div>
+
+
+      <div class="details-row">
+
+        <span>
+          Город
+        </span>
+
+        <span>
+          ${escapeHtml(
+            order.city ||
+            "—"
+          )}
+        </span>
+
+      </div>
+
+
+      <div class="details-row">
+
+        <span>
+          Доставка
+        </span>
+
+        <span>
+          ${escapeHtml(
+            order.delivery_method ||
+            "—"
+          )}
+        </span>
+
+      </div>
+
+
+      <div class="details-row">
+
+        <span>
+          Оплата
+        </span>
+
+        <span>
+          ${escapeHtml(
+            order.payment_status ||
+            "не оплачено"
+          )}
+        </span>
+
+      </div>
+
+
+      ${
+        order.comment
+          ? `
+
+            <div class="details-row">
+
+              <span>
+                Комментарий
+              </span>
+
+              <span>
+                ${escapeHtml(
+                  order.comment
+                )}
+              </span>
+
+            </div>
+
+          `
+          : ""
+      }
+
+
+    </div>
+
+
+    <div class="details-total">
+
+      <span>
+        ИТОГО
+      </span>
+
+      <span>
+        ${formatPrice(total)} ₽
+      </span>
+
+    </div>
+
+
+    ${actionHtml}
+
+
+  `;
+
+
+  openModal(
+    "detailsModal"
+  );
+
+}
+
+
+/* =========================
+   DETAILS PRODUCT
+========================= */
+
+function renderDetailsProduct(
+  item
 ) {
 
-waiting.textContent =
-"Заказ передан в доставку.";
+  const image =
+    getItemImage(item);
 
-} else if (
-statusLower.includes("выполн")
+  const name =
+    item?.name ||
+    "Товар";
+
+
+  const quantity =
+    Number(
+      item?.quantity || 1
+    );
+
+
+  const price =
+    Number(
+      item?.price || 0
+    );
+
+
+  const total =
+    Number(
+      item?.total ??
+      (
+        price *
+        quantity
+      )
+    );
+
+
+  return `
+
+    <div
+      class="details-product"
+    >
+
+
+      <img
+        src="${escapeAttribute(image)}"
+        alt=""
+        onerror="
+          this.onerror=null;
+          this.src='miata-logo.png';
+        "
+      >
+
+
+      <div>
+
+        <div
+          class="details-product-name"
+        >
+          ${escapeHtml(name)}
+        </div>
+
+        <div
+          class="details-product-meta"
+        >
+          ${quantity}
+          ×
+          ${formatPrice(price)} ₽
+        </div>
+
+      </div>
+
+
+      <div
+        class="details-product-total"
+      >
+        ${formatPrice(total)} ₽
+      </div>
+
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================
+   CANCEL
+========================= */
+
+function openCancelModal(
+  index
 ) {
 
-waiting.textContent =
-"Заказ выполнен.";
+  const order =
+    orders[index];
 
-} else if (
-statusLower.includes("отмен")
-) {
-
-waiting.textContent =
-"Заказ отменён.";
-
-} else {
-
-waiting.textContent =
-"Ориентировочное время отправки уточняется менеджером.";
-
-}
+  if (!order) {
+    return;
+  }
 
 
-/* =========================================================
-   ITEMS
-========================================================= */
-
-const itemsBox =
-document.getElementById(
-"modalItems"
-);
+  const status =
+    normalizeStatus(
+      getOrderStatus(order)
+    );
 
 
-itemsBox.innerHTML =
-"";
+  /*
+    Отмена разрешена
+    только для "В обработке".
+  */
+
+  if (
+    !status.canCancel
+  ) {
+
+    openDetails(index);
+
+    return;
+
+  }
 
 
-const items =
-getOrderItems(
-order
-);
+  selectedOrderForCancel =
+    index;
 
 
-if (!items.length) {
-
-itemsBox.innerHTML = `
-
-<div class="item">
-
-<div class="item-info">
-
-<div class="item-name">
-Информация о товарах отсутствует
-</div>
-
-</div>
-
-</div>
-
-`;
-
-} else {
-
-items.forEach(
-(item) => {
-
-const row =
-document.createElement(
-"div"
-);
-
-row.className =
-"item";
+  const reason =
+    document.getElementById(
+      "cancelReason"
+    );
 
 
-const name =
-item.name ??
-"Товар";
+  if (reason) {
+    reason.value = "";
+  }
 
 
-const quantity =
-item.quantity ??
-1;
-
-
-const price =
-Number(
-item.price || 0
-);
-
-
-const itemTotal =
-item.total ??
-(
-price *
-Number(quantity)
-);
-
-
-const image =
-item.image_url ||
-item.image ||
-item.photo_url ||
-"";
-
-
-row.innerHTML = `
-
-${
-image
-?
-`
-<img
-class="item-image"
-src="${escapeHtml(image)}"
-alt=""
-onerror="this.style.display='none';"
->
-`
-:
-`
-<div class="item-image"></div>
-`
-}
-
-
-<div class="item-info">
-
-<div class="item-name">
-${escapeHtml(name)}
-</div>
-
-<div class="item-quantity">
-Количество: ${escapeHtml(quantity)}
-</div>
-
-</div>
-
-
-<div class="item-price">
-${escapeHtml(
-money(itemTotal)
-)}
-</div>
-
-`;
-
-
-itemsBox.appendChild(
-row
-);
-
-}
-);
+  openModal(
+    "cancelModal"
+  );
 
 }
 
 
-/* =========================================================
-   TOTALS
-========================================================= */
-
-const productTotal =
-order.product_total ??
-order.products_total ??
-0;
-
-
-const discountAmount =
-order.discount_amount ??
-0;
-
-
-const total =
-order.products_total_after_discount ??
-order.total ??
-0;
-
-
-document.getElementById(
-"modalProductTotal"
-).textContent =
-money(
-productTotal
-);
-
-
-document.getElementById(
-"modalDiscount"
-).textContent =
-discountAmount > 0
-?
-"-" + money(
-discountAmount
-)
-:
-"0 ₽";
-
-
-document.getElementById(
-"modalTotal"
-).textContent =
-money(
-total
-);
-
-
-/* =========================================================
-   CANCEL BUTTON
-========================================================= */
-
-const cancelButton =
-document.getElementById(
-"cancelOrderButton"
-);
-
-
-if (
-statusLower.includes("отмен") ||
-statusLower.includes("выполн")
-) {
-
-cancelButton.style.display =
-"none";
-
-} else {
-
-cancelButton.style.display =
-"block";
-
-}
-
-
-detailsModal.classList.add(
-"active"
-);
-
-}
-
-
-/* =========================================================
-   CLOSE DETAILS
-========================================================= */
-
-document.getElementById(
-"closeDetails"
-).addEventListener(
-"click",
-() => {
-
-detailsModal.classList.remove(
-"active"
-);
-
-}
-);
-
-
-/* =========================================================
-   START CANCEL
-========================================================= */
-
-document.getElementById(
-"cancelOrderButton"
-).addEventListener(
-"click",
-() => {
-
-if (!currentOrder) {
-return;
-}
-
-
-resetCancelForm();
-
-
-detailsModal.classList.remove(
-"active"
-);
-
-
-cancelModal.classList.add(
-"active"
-);
-
-}
-);
-
-
-/* =========================================================
-   RADIO
-========================================================= */
-
-document
-.querySelectorAll(
-'input[name="cancelReason"]'
-)
-.forEach(
-(radio) => {
-
-radio.addEventListener(
-"change",
-() => {
-
-const textarea =
-document.getElementById(
-"otherReasonText"
-);
-
-
-if (
-document.getElementById(
-"otherReason"
-).checked
-) {
-
-textarea.classList.add(
-"visible"
-);
-
-} else {
-
-textarea.classList.remove(
-"visible"
-);
-
-}
-
-
-document.getElementById(
-"cancelWarning"
-).style.display =
-"block";
-
-}
-);
-
-}
-);
-
-
-/* =========================================================
-   DON'T CANCEL
-========================================================= */
-
-document.getElementById(
-"dontCancel"
-).addEventListener(
-"click",
-() => {
-
-cancelModal.classList.remove(
-"active"
-);
-
-
-if (currentOrder) {
-
-detailsModal.classList.add(
-"active"
-);
-
-}
-
-}
-);
-
-
-/* =========================================================
-   RESET
-========================================================= */
-
-function resetCancelForm() {
-
-document
-.querySelectorAll(
-'input[name="cancelReason"]'
-)
-.forEach(
-(radio) => {
-
-radio.checked =
-false;
-
-}
-);
-
-
-document.getElementById(
-"otherReasonText"
-).value =
-"";
-
-
-document.getElementById(
-"otherReasonText"
-).classList.remove(
-"visible"
-);
-
-
-document.getElementById(
-"cancelWarning"
-).style.display =
-"none";
-
-
-document.getElementById(
-"cancelResult"
-).style.display =
-"none";
-
-}
-
-
-/* =========================================================
+/* =========================
    CONFIRM CANCEL
-========================================================= */
+========================= */
 
-document.getElementById(
-"confirmCancel"
-).addEventListener(
-"click",
-async () => {
+async function confirmCancel() {
 
-if (!currentOrder) {
-return;
+  if (
+    selectedOrderForCancel ===
+    null
+  ) {
+
+    return;
+
+  }
+
+
+  const order =
+    orders[
+      selectedOrderForCancel
+    ];
+
+
+  if (!order) {
+    return;
+  }
+
+
+  const telegramUserId =
+    getTelegramUserId();
+
+
+  if (!telegramUserId) {
+
+    alert(
+      "Не удалось определить Telegram ID."
+    );
+
+    return;
+
+  }
+
+
+  const reason =
+    document
+      .getElementById(
+        "cancelReason"
+      )
+      ?.value
+      ?.trim()
+    || "";
+
+
+  const buttons =
+    document.querySelectorAll(
+      "#cancelModal button"
+    );
+
+
+  buttons.forEach(
+    button => {
+      button.disabled = true;
+    }
+  );
+
+
+  try {
+
+    const response =
+      await fetch(
+        CUSTOMER_ORDERS_URL,
+        {
+
+          method: "POST",
+
+          headers:
+            apiHeaders(),
+
+          body:
+            JSON.stringify({
+
+              action:
+                "cancel",
+
+              telegram_user_id:
+                telegramUserId,
+
+              order_id:
+                order.id,
+
+              cancel_reason:
+                reason
+
+            })
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      !response.ok ||
+      !data?.success
+    ) {
+
+      throw new Error(
+        data?.error ||
+        "Не удалось отменить заказ."
+      );
+
+    }
+
+
+    closeModal(
+      "cancelModal"
+    );
+
+
+    selectedOrderForCancel =
+      null;
+
+
+    await loadOrders();
+
+
+    alert(
+      "Заказ отменён."
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Cancel order error:",
+      error
+    );
+
+
+    alert(
+      error?.message ||
+      "Не удалось отменить заказ."
+    );
+
+
+  } finally {
+
+    buttons.forEach(
+      button => {
+        button.disabled = false;
+      }
+    );
+
+  }
+
 }
 
 
-const selected =
-document.querySelector(
-'input[name="cancelReason"]:checked'
-);
+/* =========================
+   MODALS
+========================= */
 
+function openModal(id) {
 
-if (!selected) {
+  const modal =
+    document.getElementById(id);
 
-alert(
-"Выберите причину отмены."
-);
+  if (!modal) {
+    return;
+  }
 
-return;
+  modal.classList.remove(
+    "hidden"
+  );
 
-}
-
-
-let reason =
-selected.value;
-
-
-if (
-reason ===
-"Другая причина"
-) {
-
-const customReason =
-document.getElementById(
-"otherReasonText"
-).value.trim();
-
-
-if (!customReason) {
-
-alert(
-"Напишите причину отмены."
-);
-
-return;
+  document.body.style.overflow =
+    "hidden";
 
 }
 
 
-reason =
-customReason;
+function closeModal(id) {
+
+  const modal =
+    document.getElementById(id);
+
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.add(
+    "hidden"
+  );
+
+  document.body.style.overflow =
+    "";
 
 }
 
 
-const telegramUserId =
-getTelegramUserId();
+/* =========================
+   CLOSE ON BACKDROP
+========================= */
+
+document
+  .querySelectorAll(".modal")
+  .forEach(
+    modal => {
+
+      modal.addEventListener(
+        "click",
+        event => {
+
+          if (
+            event.target ===
+            modal
+          ) {
+
+            closeModal(
+              modal.id
+            );
+
+          }
+
+        }
+      );
+
+    }
+  );
 
 
-if (!telegramUserId) {
+/* =========================
+   NAVIGATION
+========================= */
 
-alert(
-"Не удалось определить Telegram ID."
-);
+function goHome() {
 
-return;
-
-}
-
-
-const button =
-document.getElementById(
-"confirmCancel"
-);
-
-
-button.disabled =
-true;
-
-button.textContent =
-"Отменяем...";
-
-
-try {
-
-const response =
-await fetch(
-CUSTOMER_ORDERS_URL,
-{
-method: "POST",
-
-headers: {
-
-"Content-Type":
-"application/json",
-
-"apikey":
-SUPABASE_PUBLISHABLE_KEY
-
-},
-
-body:
-JSON.stringify({
-
-action:
-"cancel",
-
-telegram_user_id:
-telegramUserId,
-
-order_id:
-currentOrder.id,
-
-cancel_reason:
-reason
-
-})
-
-}
-);
-
-
-const data =
-await response.json();
-
-
-if (
-!response.ok ||
-data.success === false
-) {
-
-throw new Error(
-data.error ||
-"Не удалось отменить заказ."
-);
+  window.location.href =
+    "index.html";
 
 }
 
 
-document.getElementById(
-"cancelResult"
-).style.display =
-"block";
+function goToCatalog() {
 
-
-document.getElementById(
-"cancelResult"
-).textContent =
-"❌ Заказ отменён.";
-
-
-setTimeout(
-() => {
-
-cancelModal.classList.remove(
-"active"
-);
-
-loadOrders();
-
-},
-1200
-);
-
-
-} catch (error) {
-
-console.error(
-"cancel order error:",
-error
-);
-
-
-alert(
-error.message ||
-"Не удалось отменить заказ."
-);
-
-} finally {
-
-button.disabled =
-false;
-
-button.textContent =
-"Отменить";
+  window.location.href =
+    "catalog.html";
 
 }
 
-}
-);
 
+function reloadOrders() {
 
-/* =========================================================
-   CLOSE BY BACKGROUND
-========================================================= */
-
-detailsModal.addEventListener(
-"click",
-(event) => {
-
-if (
-event.target ===
-detailsModal
-) {
-
-detailsModal.classList.remove(
-"active"
-);
+  loadOrders();
 
 }
 
-}
-);
 
+function goToCart() {
 
-cancelModal.addEventListener(
-"click",
-(event) => {
+  /*
+    Открываем главную.
+    На главной уже есть
+    рабочая корзина.
+  */
 
-if (
-event.target ===
-cancelModal
-) {
-
-cancelModal.classList.remove(
-"active"
-);
+  window.location.href =
+    "index.html";
 
 }
 
-}
-);
 
-
-/* =========================================================
+/* =========================
    START
-========================================================= */
+========================= */
+
+initTelegram();
 
 loadOrders();
 
