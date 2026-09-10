@@ -650,6 +650,15 @@ tg.expand();
 const CUSTOMER_ORDERS_URL =
 "https://qbuethosjrghgdwpanhb.supabase.co/functions/v1/customer-orders";
 
+/*
+* =========================================
+* SUPABASE PUBLISHABLE KEY
+* =========================================
+*/
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_l-Jn1GONymTw-fuN1eEgBw_FjtbUyzg";
+
 
 /*
 * =========================================
@@ -848,12 +857,20 @@ method: "POST",
 
 headers: {
 "Content-Type":
-"application/json"
+"application/json",
+
+"apikey":
+SUPABASE_PUBLISHABLE_KEY
 },
 
 body: JSON.stringify({
+
+action:
+"list",
+
 telegram_user_id:
 telegramUserId
+
 })
 }
 );
@@ -1594,17 +1611,6 @@ button.textContent =
 
 try {
 
-/*
-* ВАЖНО:
-*
-* Эта часть отправляет запрос
-* в customer-orders.
-*
-* Если твоя функция customer-orders
-* ещё не поддерживает действие
-* cancel — она вернёт ошибку.
-*/
-
 const response =
 await fetch(
 CUSTOMER_ORDERS_URL,
@@ -1613,7 +1619,10 @@ method: "POST",
 
 headers: {
 "Content-Type":
-"application/json"
+"application/json",
+
+"apikey":
+SUPABASE_PUBLISHABLE_KEY
 },
 
 body: JSON.stringify({
